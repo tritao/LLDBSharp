@@ -1,0 +1,8 @@
+*.sln
+*.metagen
+*.csproj
+*.csproj.user
+*.ilk
+gmake/
+vs2012/
+vs2013/
