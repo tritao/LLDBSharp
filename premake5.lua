@@ -16,7 +16,7 @@ solution "LLDBSharp"
   objdir (path.join(builddir, "obj"))
   targetdir (libdir)  
 
-  project "LLDBSharpGen"
+  project "LLDBSharp.Gen"
 
     kind  "ConsoleApp"
     language "C#"
@@ -38,7 +38,7 @@ solution "LLDBSharp"
     files { "LLDBSharp/*.cs" }
     flags { "Unsafe" }
 
-  project "LLDBSharpExample"
+  project "LLDBSharp.Example"
 
     kind  "ConsoleApp"
     language "C#"
