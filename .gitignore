@@ -7,3 +7,11 @@ gmake/
 vs2010/
 vs2012/
 vs2013/
+lib/
+obj/
+*.dll
+*.exe
+*.mdb
+*.pdb
+*.dylib
+*.so
