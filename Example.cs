@@ -4,6 +4,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace LLDBSharp
 {
@@ -24,7 +25,7 @@ namespace LLDBSharp
 
 			var exe = "mono";
 			var exeArgs = new List<string> {
-				"hello.exe",
+				"Managed.exe",
 			};
 
 			Console.WriteLine ("Creating a target for {0}", exe);
@@ -33,7 +34,7 @@ namespace LLDBSharp
 			if (target == null)
 				throw new Exception ("Could not create LLDB target");
 
-			var mainBreakpoint = target.BreakpointCreateByName ("mono_runtime_invoke", target.GetExecutable().Filename);
+			var mainBreakpoint = target.BreakpointCreateByName ("NativeFunc", target.GetExecutable().Filename);
 
 			var currentDir = Directory.GetCurrentDirectory ();
 			var error = new LLDB.Error();
@@ -46,11 +47,8 @@ namespace LLDBSharp
 			var stringArgsArr = stringArgs.ToArray ();
 			unsafe {
 				fixed (IntPtr* ptr = stringArgsArr) {
-					unsafe
-					{
-						process = target.Launch(debugger.GetListener(), (sbyte**)ptr, null, null, null, null, currentDir,
-							0, false, error);
-					}					
+					process = target.Launch (debugger.GetListener (), (sbyte**)ptr, null, null, null, null, currentDir,
+						0, false, error);
 				}
 			}
 
@@ -60,21 +58,34 @@ namespace LLDBSharp
 			var state = process.State;
 			Console.WriteLine ("Process state: {0}", state.ToString());
 
+			Console.WriteLine ("Stack trace:");
+
 			for (uint threadIndex = 0; threadIndex < process.NumThreads; ++threadIndex) {
 				var thread = process.GetThreadAtIndex (threadIndex);
 
-				Console.WriteLine ("Stack trace");
 				for (uint frameIndex = 0; frameIndex < thread.NumFrames; ++frameIndex) {
 					var frame = thread.GetFrameAtIndex (frameIndex);
 					var function = frame.GetFunction ();
-
 					var symbol = frame.GetSymbol ();
-					Console.WriteLine ("\t{0}", function.Name != null ?
-						function.Name : symbol.Name);
+					Console.WriteLine ("\t{0}", function.Name ?? symbol.Name);
 				}
 			}
 
+			string stdout = string.Empty;
+			unsafe {
+				var sb = new sbyte [1024];
+				fixed (sbyte* ptr = &sb[0]) {
+					var ret = process.GetSTDOUT (ptr, (uint)sb.Length);
+					if (ret > 0)
+						stdout = Marshal.PtrToStringAnsi ((IntPtr)ptr);
+				}
+			}
+
+			Console.WriteLine ("Stdout: {0}", stdout);
+
 			error = process.Continue ();
+
+			mainBreakpoint.Dispose ();
 		}
 	}
 }
