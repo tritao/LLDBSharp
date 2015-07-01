@@ -11,8 +11,11 @@ namespace LLDBSharp
 	{
 		static void Main(string[] args)
 		{
-			// FIXME: Set LLDB_DEBUGSERVER_PATH on MacOSX
-			var debugServerPath = "/Users/joao/Dev/llvm/lldb_build/bin/debugserver";
+			var xcodePath = CppSharp.XcodeToolchain.GetXcodePath();
+			var debugServerPath = Path.Combine(xcodePath,
+				"Contents/SharedFrameworks/LLDB.framework/Versions/Current/Resources/debugserver");
+
+			Environment.SetEnvironmentVariable("LLDB_DEBUGSERVER_PATH", debugServerPath);
 
 			LLDB.Debugger.Initialize ();
 

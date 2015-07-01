@@ -48,7 +48,7 @@ solution "LLDBSharp"
     language "C#"
     flags { "Unsafe" }
 
-    files { "Example.cs" }
+    files { "Example.cs", "XcodeToolchain.cs" }
     links { "System.Core", "LLDBSharp" }
 
   project "NativeLib"
