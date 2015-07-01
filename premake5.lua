@@ -14,7 +14,9 @@ solution "LLDBSharp"
 
   location (builddir)
   objdir (path.join(builddir, "obj"))
-  targetdir (libdir)  
+  targetdir (libdir)
+
+  if os.isdir(CPPSHARP_DIR) then
 
   project "LLDBSharp.Gen"
 
@@ -30,6 +32,8 @@ solution "LLDBSharp"
       CPPSHARP_DIR .. "CppSharp.Parser.CSharp",
       CPPSHARP_DIR .. "CppSharp.Generator",
     }
+
+  end
 
   project "LLDBSharp"
 
