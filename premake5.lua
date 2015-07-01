@@ -1,6 +1,10 @@
 
 local CPPSHARP_DIR = "CppSharp/"
-local NEWTONSOFT_DIR = "Newtonsoft.Json.6.0.8/lib/net45/",
+local NEWTONSOFT_DIR = "Newtonsoft.Json.6.0.8/lib/net45/"
+
+action = _ACTION or ""
+builddir = path.getabsolute("./" .. action);
+libdir = path.join(builddir, "lib", "%{cfg.buildcfg}_%{cfg.platform}");
 
 solution "LLDBSharp"
 
@@ -8,14 +12,19 @@ solution "LLDBSharp"
   platforms { "x32", "x64" }
   flags { "Symbols" }
 
-  project "LLDBBSharpGen"
+  location (builddir)
+  objdir (path.join(builddir, "obj"))
+  targetdir (libdir)  
+
+  project "LLDBSharpGen"
 
     kind  "ConsoleApp"
     language "C#"
 
-    files { "*.cs" }
+    files { "LLDBSharpGen.cs" }
     links
     {
+      "System.Core",
       CPPSHARP_DIR .. "CppSharp",
       CPPSHARP_DIR .. "CppSharp.AST",
       CPPSHARP_DIR .. "CppSharp.Parser.CSharp",
@@ -36,7 +45,18 @@ solution "LLDBSharp"
     flags { "Unsafe" }
 
     files { "Example.cs" }
-    links { "LLDBSharp" }
+    links { "System.Core", "LLDBSharp" }
 
+  project "NativeLib"
+    kind  "SharedLib"
+    language "C++"
 
+    files { "tests/Native.cpp" }
+    links { "c" }
 
+  project "Managed"
+    kind  "ConsoleApp"
+    language "C#"
+
+    files { "tests/Managed.cs" }
+    links { "System" }
