@@ -4,5 +4,6 @@
 *.csproj.user
 *.ilk
 gmake/
+vs2010/
 vs2012/
 vs2013/

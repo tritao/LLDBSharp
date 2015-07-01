@@ -1,0 +1,230 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{818B1EBD-EDF5-D233-3634-84D9A2DDB088}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>LLDBSharp</RootNamespace>
+    <AssemblyName>LLDBSharp</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>lib\Debug_x32\</OutputPath>
+    <BaseIntermediateOutputPath>obj\x32\Debug\LLDBSharp\</BaseIntermediateOutputPath>
+    <IntermediateOutputPath>$(BaseIntermediateOutputPath)</IntermediateOutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
+    <PlatformTarget>x64</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>lib\Debug_x64\</OutputPath>
+    <BaseIntermediateOutputPath>obj\x64\Debug\LLDBSharp\</BaseIntermediateOutputPath>
+    <IntermediateOutputPath>$(BaseIntermediateOutputPath)</IntermediateOutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>lib\Release_x32\</OutputPath>
+    <BaseIntermediateOutputPath>obj\x32\Release\LLDBSharp\</BaseIntermediateOutputPath>
+    <IntermediateOutputPath>$(BaseIntermediateOutputPath)</IntermediateOutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+    <PlatformTarget>x64</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>lib\Release_x64\</OutputPath>
+    <BaseIntermediateOutputPath>obj\x64\Release\LLDBSharp\</BaseIntermediateOutputPath>
+    <IntermediateOutputPath>$(BaseIntermediateOutputPath)</IntermediateOutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\LLDBSharp\SBAddress.cs">
+      <Link>LLDBSharp\SBAddress.cs</Link>
+    </Compile>
+    <Compile Include="..\LLDBSharp\SBAttachInfo.cs">
+      <Link>LLDBSharp\SBAttachInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\LLDBSharp\SBBlock.cs">
+      <Link>LLDBSharp\SBBlock.cs</Link>
+    </Compile>
+    <Compile Include="..\LLDBSharp\SBBreakpoint.cs">
+      <Link>LLDBSharp\SBBreakpoint.cs</Link>
+    </Compile>
+    <Compile Include="..\LLDBSharp\SBBreakpointLocation.cs">
+      <Link>LLDBSharp\SBBreakpointLocation.cs</Link>
+    </Compile>
+    <Compile Include="..\LLDBSharp\SBBroadcaster.cs">
+      <Link>LLDBSharp\SBBroadcaster.cs</Link>
+    </Compile>
+    <Compile Include="..\LLDBSharp\SBCommandInterpreter.cs">
+      <Link>LLDBSharp\SBCommandInterpreter.cs</Link>
+    </Compile>
+    <Compile Include="..\LLDBSharp\SBCommandReturnObject.cs">
+      <Link>LLDBSharp\SBCommandReturnObject.cs</Link>
+    </Compile>
+    <Compile Include="..\LLDBSharp\SBCommunication.cs">
+      <Link>LLDBSharp\SBCommunication.cs</Link>
+    </Compile>
+    <Compile Include="..\LLDBSharp\SBCompileUnit.cs">
+      <Link>LLDBSharp\SBCompileUnit.cs</Link>
+    </Compile>
+    <Compile Include="..\LLDBSharp\SBData.cs">
+      <Link>LLDBSharp\SBData.cs</Link>
+    </Compile>
+    <Compile Include="..\LLDBSharp\SBDebugger.cs">
+      <Link>LLDBSharp\SBDebugger.cs</Link>
+    </Compile>
+    <Compile Include="..\LLDBSharp\SBDeclaration.cs">
+      <Link>LLDBSharp\SBDeclaration.cs</Link>
+    </Compile>
+    <Compile Include="..\LLDBSharp\SBDefines.cs">
+      <Link>LLDBSharp\SBDefines.cs</Link>
+    </Compile>
+    <Compile Include="..\LLDBSharp\SBError.cs">
+      <Link>LLDBSharp\SBError.cs</Link>
+    </Compile>
+    <Compile Include="..\LLDBSharp\SBEvent.cs">
+      <Link>LLDBSharp\SBEvent.cs</Link>
+    </Compile>
+    <Compile Include="..\LLDBSharp\SBExecutionContext.cs">
+      <Link>LLDBSharp\SBExecutionContext.cs</Link>
+    </Compile>
+    <Compile Include="..\LLDBSharp\SBFileSpec.cs">
+      <Link>LLDBSharp\SBFileSpec.cs</Link>
+    </Compile>
+    <Compile Include="..\LLDBSharp\SBFileSpecList.cs">
+      <Link>LLDBSharp\SBFileSpecList.cs</Link>
+    </Compile>
+    <Compile Include="..\LLDBSharp\SBFrame.cs">
+      <Link>LLDBSharp\SBFrame.cs</Link>
+    </Compile>
+    <Compile Include="..\LLDBSharp\SBFunction.cs">
+      <Link>LLDBSharp\SBFunction.cs</Link>
+    </Compile>
+    <Compile Include="..\LLDBSharp\SBHostOS.cs">
+      <Link>LLDBSharp\SBHostOS.cs</Link>
+    </Compile>
+    <Compile Include="..\LLDBSharp\SBInstruction.cs">
+      <Link>LLDBSharp\SBInstruction.cs</Link>
+    </Compile>
+    <Compile Include="..\LLDBSharp\SBInstructionList.cs">
+      <Link>LLDBSharp\SBInstructionList.cs</Link>
+    </Compile>
+    <Compile Include="..\LLDBSharp\SBLaunchInfo.cs">
+      <Link>LLDBSharp\SBLaunchInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\LLDBSharp\SBLineEntry.cs">
+      <Link>LLDBSharp\SBLineEntry.cs</Link>
+    </Compile>
+    <Compile Include="..\LLDBSharp\SBListener.cs">
+      <Link>LLDBSharp\SBListener.cs</Link>
+    </Compile>
+    <Compile Include="..\LLDBSharp\SBModule.cs">
+      <Link>LLDBSharp\SBModule.cs</Link>
+    </Compile>
+    <Compile Include="..\LLDBSharp\SBPlatform.cs">
+      <Link>LLDBSharp\SBPlatform.cs</Link>
+    </Compile>
+    <Compile Include="..\LLDBSharp\SBProcess.cs">
+      <Link>LLDBSharp\SBProcess.cs</Link>
+    </Compile>
+    <Compile Include="..\LLDBSharp\SBQueue.cs">
+      <Link>LLDBSharp\SBQueue.cs</Link>
+    </Compile>
+    <Compile Include="..\LLDBSharp\SBQueueItem.cs">
+      <Link>LLDBSharp\SBQueueItem.cs</Link>
+    </Compile>
+    <Compile Include="..\LLDBSharp\SBSection.cs">
+      <Link>LLDBSharp\SBSection.cs</Link>
+    </Compile>
+    <Compile Include="..\LLDBSharp\SBSourceManager.cs">
+      <Link>LLDBSharp\SBSourceManager.cs</Link>
+    </Compile>
+    <Compile Include="..\LLDBSharp\SBStream.cs">
+      <Link>LLDBSharp\SBStream.cs</Link>
+    </Compile>
+    <Compile Include="..\LLDBSharp\SBStringList.cs">
+      <Link>LLDBSharp\SBStringList.cs</Link>
+    </Compile>
+    <Compile Include="..\LLDBSharp\SBSymbol.cs">
+      <Link>LLDBSharp\SBSymbol.cs</Link>
+    </Compile>
+    <Compile Include="..\LLDBSharp\SBSymbolContext.cs">
+      <Link>LLDBSharp\SBSymbolContext.cs</Link>
+    </Compile>
+    <Compile Include="..\LLDBSharp\SBSymbolContextList.cs">
+      <Link>LLDBSharp\SBSymbolContextList.cs</Link>
+    </Compile>
+    <Compile Include="..\LLDBSharp\SBTarget.cs">
+      <Link>LLDBSharp\SBTarget.cs</Link>
+    </Compile>
+    <Compile Include="..\LLDBSharp\SBThread.cs">
+      <Link>LLDBSharp\SBThread.cs</Link>
+    </Compile>
+    <Compile Include="..\LLDBSharp\SBType.cs">
+      <Link>LLDBSharp\SBType.cs</Link>
+    </Compile>
+    <Compile Include="..\LLDBSharp\SBValue.cs">
+      <Link>LLDBSharp\SBValue.cs</Link>
+    </Compile>
+    <Compile Include="..\LLDBSharp\SBValueList.cs">
+      <Link>LLDBSharp\SBValueList.cs</Link>
+    </Compile>
+    <Compile Include="..\LLDBSharp\SBVariablesOptions.cs">
+      <Link>LLDBSharp\SBVariablesOptions.cs</Link>
+    </Compile>
+    <Compile Include="..\LLDBSharp\SBWatchpoint.cs">
+      <Link>LLDBSharp\SBWatchpoint.cs</Link>
+    </Compile>
+    <Compile Include="..\LLDBSharp\SharingPtr.cs">
+      <Link>LLDBSharp\SharingPtr.cs</Link>
+    </Compile>
+    <Compile Include="..\LLDBSharp\lldb-defines.cs">
+      <Link>LLDBSharp\lldb-defines.cs</Link>
+    </Compile>
+    <Compile Include="..\LLDBSharp\lldb-enumerations.cs">
+      <Link>LLDBSharp\lldb-enumerations.cs</Link>
+    </Compile>
+    <Compile Include="..\LLDBSharp\lldb-types.cs">
+      <Link>LLDBSharp\lldb-types.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
