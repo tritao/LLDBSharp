@@ -1,0 +1,9 @@
+[submodule "deps/cecil"]
+	path = deps/cecil
+	url = git://github.com/mono/cecil.git
+[submodule "deps/debugger-libs"]
+	path = deps/debugger-libs
+	url = git://github.com/mono/debugger-libs.git
+[submodule "deps/nrefactory"]
+	path = deps/nrefactory
+	url = git://github.com/ICSharpCode/nrefactory.git
