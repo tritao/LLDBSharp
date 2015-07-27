@@ -27,10 +27,10 @@ solution "LLDBSharp"
     links
     {
       "System.Core",
-      CPPSHARP_DIR .. "CppSharp",
-      CPPSHARP_DIR .. "CppSharp.AST",
-      CPPSHARP_DIR .. "CppSharp.Parser.CSharp",
-      CPPSHARP_DIR .. "CppSharp.Generator",
+      path.join(CPPSHARP_DIR, "CppSharp"),
+      path.join(CPPSHARP_DIR, "CppSharp.AST"),
+      path.join(CPPSHARP_DIR, "CppSharp.Parser.CSharp"),
+      path.join(CPPSHARP_DIR, "CppSharp.Generator")
     }
 
   end
