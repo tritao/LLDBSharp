@@ -1,6 +1,7 @@
 # LLDBSharp
 LLDB C# bindings generated with CppSharp
 
+LLDB MSVC shared library binary: https://dl.dropboxusercontent.com/u/194502/dev/liblldb.dll.7z
 LLDB OSX shared library binary: https://dl.dropboxusercontent.com/u/194502/liblldb.dylib
 
 # Building LLDB shared library
