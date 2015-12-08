@@ -157,8 +157,7 @@ namespace LLDB
 
         public void RedirectToFileHandle(global::System.IntPtr fh, bool transfer_fh_ownership)
         {
-            var arg0 = fh
-            ;
+            var arg0 = fh;
             Internal.RedirectToFileHandle_0(__Instance, arg0, transfer_fh_ownership);
         }
 

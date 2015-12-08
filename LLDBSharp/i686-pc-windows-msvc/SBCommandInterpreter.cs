@@ -635,7 +635,7 @@ namespace LLDB
         public bool SetCommandOverrideCallback(string command_name, LLDB.CommandOverrideCallback callback, global::System.IntPtr baton)
         {
             var arg0 = Marshal.StringToHGlobalAnsi(command_name);
-            var arg1 = Marshal.GetFunctionPointerForDelegate(callback);
+            var arg1 = callback == null ? global::System.IntPtr.Zero : Marshal.GetFunctionPointerForDelegate(callback);
             var arg2 = baton;
             var __ret = Internal.SetCommandOverrideCallback_0(__Instance, arg0, arg1, arg2);
             Marshal.FreeHGlobal(arg0);

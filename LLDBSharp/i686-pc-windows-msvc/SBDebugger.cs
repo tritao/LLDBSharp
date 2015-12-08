@@ -118,7 +118,7 @@ namespace LLDB
         public LLDB.Error Initialize(LLDB.Debugger _0, LLDB.InputReader.__AnonymousDelegate0 _1, global::System.IntPtr _2, LLDB.InputReaderGranularity _3, string _4, string _5, bool _6)
         {
             var arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
-            var arg1 = Marshal.GetFunctionPointerForDelegate(_1);
+            var arg1 = _1 == null ? global::System.IntPtr.Zero : Marshal.GetFunctionPointerForDelegate(_1);
             var arg2 = _2;
             var arg3 = _3;
             var arg4 = Marshal.StringToHGlobalAnsi(_4);
@@ -662,22 +662,19 @@ namespace LLDB
 
         public void SetInputFileHandle(global::System.IntPtr f, bool transfer_ownership)
         {
-            var arg0 = f
-            ;
+            var arg0 = f;
             Internal.SetInputFileHandle_0(__Instance, arg0, transfer_ownership);
         }
 
         public void SetOutputFileHandle(global::System.IntPtr f, bool transfer_ownership)
         {
-            var arg0 = f
-            ;
+            var arg0 = f;
             Internal.SetOutputFileHandle_0(__Instance, arg0, transfer_ownership);
         }
 
         public void SetErrorFileHandle(global::System.IntPtr f, bool transfer_ownership)
         {
-            var arg0 = f
-            ;
+            var arg0 = f;
             Internal.SetErrorFileHandle_0(__Instance, arg0, transfer_ownership);
         }
 
@@ -716,10 +713,8 @@ namespace LLDB
         {
             var arg0 = ReferenceEquals(process, null) ? global::System.IntPtr.Zero : process.__Instance;
             var arg1 = ReferenceEquals(@event, null) ? global::System.IntPtr.Zero : @event.__Instance;
-            var arg2 = @out
-            ;
-            var arg3 = err
-            ;
+            var arg2 = @out;
+            var arg3 = err;
             Internal.HandleProcessEvent_0(__Instance, arg0, arg1, arg2, arg3);
         }
 
@@ -878,7 +873,7 @@ namespace LLDB
 
         public void SetLoggingCallback(LLDB.LogOutputCallback log_callback, global::System.IntPtr baton)
         {
-            var arg0 = Marshal.GetFunctionPointerForDelegate(log_callback);
+            var arg0 = log_callback == null ? global::System.IntPtr.Zero : Marshal.GetFunctionPointerForDelegate(log_callback);
             var arg1 = baton;
             Internal.SetLoggingCallback_0(__Instance, arg0, arg1);
         }
@@ -934,13 +929,19 @@ namespace LLDB
             Internal.RunCommandInterpreter_0(__Instance, auto_handle_events, spawn_thread);
         }
 
-        public void RunCommandInterpreter(bool auto_handle_events, bool spawn_thread, LLDB.CommandInterpreterRunOptions options, int* num_errors, bool* quit_requested, bool* stopped_for_crash)
+        public void RunCommandInterpreter(bool auto_handle_events, bool spawn_thread, LLDB.CommandInterpreterRunOptions options, ref int num_errors, ref bool quit_requested, ref bool stopped_for_crash)
         {
             var arg2 = ReferenceEquals(options, null) ? global::System.IntPtr.Zero : options.__Instance;
-            var arg3 = num_errors;
-            var arg4 = quit_requested;
-            var arg5 = stopped_for_crash;
-            Internal.RunCommandInterpreter_1(__Instance, auto_handle_events, spawn_thread, arg2, arg3, arg4, arg5);
+            fixed (int* arg3 = &num_errors)
+            {
+                fixed (bool* arg4 = &quit_requested)
+                {
+                    fixed (bool* arg5 = &stopped_for_crash)
+                    {
+                        Internal.RunCommandInterpreter_1(__Instance, auto_handle_events, spawn_thread, arg2, arg3, arg4, arg5);
+                    }
+                }
+            }
         }
 
         public static void Initialize()
@@ -969,7 +970,7 @@ namespace LLDB
 
         public static LLDB.Debugger Create(bool source_init_files, LLDB.LogOutputCallback log_callback, global::System.IntPtr baton)
         {
-            var arg1 = Marshal.GetFunctionPointerForDelegate(log_callback);
+            var arg1 = log_callback == null ? global::System.IntPtr.Zero : Marshal.GetFunctionPointerForDelegate(log_callback);
             var arg2 = baton;
             var __ret = new LLDB.Debugger.Internal();
             Internal.Create_2(new IntPtr(&__ret), source_init_files, arg1, arg2);
@@ -1074,8 +1075,7 @@ namespace LLDB
             get
             {
                 var __ret = Internal.GetInputFileHandle_0(__Instance);
-                return __ret
-                ;
+                return __ret;
             }
         }
 
@@ -1084,8 +1084,7 @@ namespace LLDB
             get
             {
                 var __ret = Internal.GetOutputFileHandle_0(__Instance);
-                return __ret
-                ;
+                return __ret;
             }
         }
 
@@ -1094,8 +1093,7 @@ namespace LLDB
             get
             {
                 var __ret = Internal.GetErrorFileHandle_0(__Instance);
-                return __ret
-                ;
+                return __ret;
             }
         }
 

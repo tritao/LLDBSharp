@@ -406,7 +406,7 @@ namespace LLDB
 
         public void SetCallback(LLDB.Breakpoint.BreakpointHitCallback callback, global::System.IntPtr baton)
         {
-            var arg0 = Marshal.GetFunctionPointerForDelegate(callback);
+            var arg0 = callback == null ? global::System.IntPtr.Zero : Marshal.GetFunctionPointerForDelegate(callback);
             var arg1 = baton;
             Internal.SetCallback_0(__Instance, arg0, arg1);
         }

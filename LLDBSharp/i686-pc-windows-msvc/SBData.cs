@@ -443,44 +443,54 @@ namespace LLDB
             return __ret;
         }
 
-        public bool SetDataFromUInt64Array(ulong* array, uint array_len)
+        public bool SetDataFromUInt64Array(ref ulong array, uint array_len)
         {
-            var arg0 = array;
-            var arg1 = array_len;
-            var __ret = Internal.SetDataFromUInt64Array_0(__Instance, arg0, arg1);
-            return __ret;
+            fixed (ulong* arg0 = &array)
+            {
+                var arg1 = array_len;
+                var __ret = Internal.SetDataFromUInt64Array_0(__Instance, arg0, arg1);
+                return __ret;
+            }
         }
 
-        public bool SetDataFromUInt32Array(uint* array, uint array_len)
+        public bool SetDataFromUInt32Array(ref uint array, uint array_len)
         {
-            var arg0 = array;
-            var arg1 = array_len;
-            var __ret = Internal.SetDataFromUInt32Array_0(__Instance, arg0, arg1);
-            return __ret;
+            fixed (uint* arg0 = &array)
+            {
+                var arg1 = array_len;
+                var __ret = Internal.SetDataFromUInt32Array_0(__Instance, arg0, arg1);
+                return __ret;
+            }
         }
 
-        public bool SetDataFromSInt64Array(long* array, uint array_len)
+        public bool SetDataFromSInt64Array(ref long array, uint array_len)
         {
-            var arg0 = array;
-            var arg1 = array_len;
-            var __ret = Internal.SetDataFromSInt64Array_0(__Instance, arg0, arg1);
-            return __ret;
+            fixed (long* arg0 = &array)
+            {
+                var arg1 = array_len;
+                var __ret = Internal.SetDataFromSInt64Array_0(__Instance, arg0, arg1);
+                return __ret;
+            }
         }
 
-        public bool SetDataFromSInt32Array(int* array, uint array_len)
+        public bool SetDataFromSInt32Array(ref int array, uint array_len)
         {
-            var arg0 = array;
-            var arg1 = array_len;
-            var __ret = Internal.SetDataFromSInt32Array_0(__Instance, arg0, arg1);
-            return __ret;
+            fixed (int* arg0 = &array)
+            {
+                var arg1 = array_len;
+                var __ret = Internal.SetDataFromSInt32Array_0(__Instance, arg0, arg1);
+                return __ret;
+            }
         }
 
-        public bool SetDataFromDoubleArray(double* array, uint array_len)
+        public bool SetDataFromDoubleArray(ref double array, uint array_len)
         {
-            var arg0 = array;
-            var arg1 = array_len;
-            var __ret = Internal.SetDataFromDoubleArray_0(__Instance, arg0, arg1);
-            return __ret;
+            fixed (double* arg0 = &array)
+            {
+                var arg1 = array_len;
+                var __ret = Internal.SetDataFromDoubleArray_0(__Instance, arg0, arg1);
+                return __ret;
+            }
         }
 
         public static LLDB.Data CreateDataFromCString(LLDB.ByteOrder endian, uint addr_byte_size, string data)
@@ -494,59 +504,69 @@ namespace LLDB
             return LLDB.Data.__CreateInstance(__ret);
         }
 
-        public static LLDB.Data CreateDataFromUInt64Array(LLDB.ByteOrder endian, uint addr_byte_size, ulong* array, uint array_len)
+        public static LLDB.Data CreateDataFromUInt64Array(LLDB.ByteOrder endian, uint addr_byte_size, ref ulong array, uint array_len)
         {
             var arg0 = endian;
             var arg1 = addr_byte_size;
-            var arg2 = array;
-            var arg3 = array_len;
-            var __ret = new LLDB.Data.Internal();
-            Internal.CreateDataFromUInt64Array_0(new IntPtr(&__ret), arg0, arg1, arg2, arg3);
-            return LLDB.Data.__CreateInstance(__ret);
+            fixed (ulong* arg2 = &array)
+            {
+                var arg3 = array_len;
+                var __ret = new LLDB.Data.Internal();
+                Internal.CreateDataFromUInt64Array_0(new IntPtr(&__ret), arg0, arg1, arg2, arg3);
+                return LLDB.Data.__CreateInstance(__ret);
+            }
         }
 
-        public static LLDB.Data CreateDataFromUInt32Array(LLDB.ByteOrder endian, uint addr_byte_size, uint* array, uint array_len)
+        public static LLDB.Data CreateDataFromUInt32Array(LLDB.ByteOrder endian, uint addr_byte_size, ref uint array, uint array_len)
         {
             var arg0 = endian;
             var arg1 = addr_byte_size;
-            var arg2 = array;
-            var arg3 = array_len;
-            var __ret = new LLDB.Data.Internal();
-            Internal.CreateDataFromUInt32Array_0(new IntPtr(&__ret), arg0, arg1, arg2, arg3);
-            return LLDB.Data.__CreateInstance(__ret);
+            fixed (uint* arg2 = &array)
+            {
+                var arg3 = array_len;
+                var __ret = new LLDB.Data.Internal();
+                Internal.CreateDataFromUInt32Array_0(new IntPtr(&__ret), arg0, arg1, arg2, arg3);
+                return LLDB.Data.__CreateInstance(__ret);
+            }
         }
 
-        public static LLDB.Data CreateDataFromSInt64Array(LLDB.ByteOrder endian, uint addr_byte_size, long* array, uint array_len)
+        public static LLDB.Data CreateDataFromSInt64Array(LLDB.ByteOrder endian, uint addr_byte_size, ref long array, uint array_len)
         {
             var arg0 = endian;
             var arg1 = addr_byte_size;
-            var arg2 = array;
-            var arg3 = array_len;
-            var __ret = new LLDB.Data.Internal();
-            Internal.CreateDataFromSInt64Array_0(new IntPtr(&__ret), arg0, arg1, arg2, arg3);
-            return LLDB.Data.__CreateInstance(__ret);
+            fixed (long* arg2 = &array)
+            {
+                var arg3 = array_len;
+                var __ret = new LLDB.Data.Internal();
+                Internal.CreateDataFromSInt64Array_0(new IntPtr(&__ret), arg0, arg1, arg2, arg3);
+                return LLDB.Data.__CreateInstance(__ret);
+            }
         }
 
-        public static LLDB.Data CreateDataFromSInt32Array(LLDB.ByteOrder endian, uint addr_byte_size, int* array, uint array_len)
+        public static LLDB.Data CreateDataFromSInt32Array(LLDB.ByteOrder endian, uint addr_byte_size, ref int array, uint array_len)
         {
             var arg0 = endian;
             var arg1 = addr_byte_size;
-            var arg2 = array;
-            var arg3 = array_len;
-            var __ret = new LLDB.Data.Internal();
-            Internal.CreateDataFromSInt32Array_0(new IntPtr(&__ret), arg0, arg1, arg2, arg3);
-            return LLDB.Data.__CreateInstance(__ret);
+            fixed (int* arg2 = &array)
+            {
+                var arg3 = array_len;
+                var __ret = new LLDB.Data.Internal();
+                Internal.CreateDataFromSInt32Array_0(new IntPtr(&__ret), arg0, arg1, arg2, arg3);
+                return LLDB.Data.__CreateInstance(__ret);
+            }
         }
 
-        public static LLDB.Data CreateDataFromDoubleArray(LLDB.ByteOrder endian, uint addr_byte_size, double* array, uint array_len)
+        public static LLDB.Data CreateDataFromDoubleArray(LLDB.ByteOrder endian, uint addr_byte_size, ref double array, uint array_len)
         {
             var arg0 = endian;
             var arg1 = addr_byte_size;
-            var arg2 = array;
-            var arg3 = array_len;
-            var __ret = new LLDB.Data.Internal();
-            Internal.CreateDataFromDoubleArray_0(new IntPtr(&__ret), arg0, arg1, arg2, arg3);
-            return LLDB.Data.__CreateInstance(__ret);
+            fixed (double* arg2 = &array)
+            {
+                var arg3 = array_len;
+                var __ret = new LLDB.Data.Internal();
+                Internal.CreateDataFromDoubleArray_0(new IntPtr(&__ret), arg0, arg1, arg2, arg3);
+                return LLDB.Data.__CreateInstance(__ret);
+            }
         }
 
         public byte AddressByteSize

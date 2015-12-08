@@ -29,6 +29,7 @@ namespace Mono
             options.Headers.Add("lldb/API/LLDB.h");
 
             options.GenerateProperties = true;
+            options.CompileCode = true;
         }
 
         public void SetupPasses(Driver driver)
@@ -42,8 +43,8 @@ namespace Mono
             ctx.IgnoreHeadersWithName("lldb/lldb-forward.h");
             ctx.IgnoreHeadersWithName("lldb/API/SBDefines.h");
 
-            //ctx.SetMethodParameterUsage("lldb::SBTarget", "LaunchSimple", 1, ParameterUsage.Out);
-            //ctx.SetMethodParameterUsage("lldb::SBTarget", "Launch", 9, ParameterUsage.Out);
+            ctx.SetMethodParameterUsage("lldb::SBTarget", "LaunchSimple", 1, ParameterUsage.Out);
+            ctx.SetMethodParameterUsage("lldb::SBTarget", "Launch", 9, ParameterUsage.Out);
 
             ctx.RemoveEnumItemsPrefix("lldb::StateType", "eState");
             ctx.RemoveEnumItemsPrefix("lldb::LaunchFlags", "eLaunchFlag");

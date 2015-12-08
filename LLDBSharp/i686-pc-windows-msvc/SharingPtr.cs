@@ -36,7 +36,7 @@ namespace lldb_private
         [StructLayout(LayoutKind.Explicit, Size = 0)]
         public partial struct Internal
         {
-            [FieldOffset(0)]
+            [FieldOffset(13268780)]
             public global::System.IntPtr baton_;
         }
     }

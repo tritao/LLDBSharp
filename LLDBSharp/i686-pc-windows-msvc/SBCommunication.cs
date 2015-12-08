@@ -290,7 +290,7 @@ namespace LLDB
 
         public bool SetReadThreadBytesReceivedCallback(LLDB.Communication.ReadThreadBytesReceived callback, global::System.IntPtr callback_baton)
         {
-            var arg0 = Marshal.GetFunctionPointerForDelegate(callback);
+            var arg0 = callback == null ? global::System.IntPtr.Zero : Marshal.GetFunctionPointerForDelegate(callback);
             var arg1 = callback_baton;
             var __ret = Internal.SetReadThreadBytesReceivedCallback_0(__Instance, arg0, arg1);
             return __ret;

@@ -223,16 +223,14 @@ namespace LLDB
 
         public uint PutOutput(global::System.IntPtr fh)
         {
-            var arg0 = fh
-            ;
+            var arg0 = fh;
             var __ret = Internal.PutOutput_0(__Instance, arg0);
             return __ret;
         }
 
         public uint PutError(global::System.IntPtr fh)
         {
-            var arg0 = fh
-            ;
+            var arg0 = fh;
             var __ret = Internal.PutError_0(__Instance, arg0);
             return __ret;
         }
@@ -372,8 +370,7 @@ namespace LLDB
         {
             set
             {
-                var arg0 = value
-                ;
+                var arg0 = value;
                 Internal.SetImmediateOutputFile_0(__Instance, arg0);
             }
         }
@@ -382,8 +379,7 @@ namespace LLDB
         {
             set
             {
-                var arg0 = value
-                ;
+                var arg0 = value;
                 Internal.SetImmediateErrorFile_0(__Instance, arg0);
             }
         }

@@ -221,8 +221,7 @@ namespace LLDB
 
         public void Print(global::System.IntPtr @out)
         {
-            var arg0 = @out
-            ;
+            var arg0 = @out;
             Internal.Print_0(__Instance, arg0);
         }
 

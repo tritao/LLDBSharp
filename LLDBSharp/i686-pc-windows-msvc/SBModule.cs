@@ -940,12 +940,14 @@ namespace LLDB
         /// <para>    ///     version numbers that were copied into \a versions.
         /// </para>
         /// </remarks>
-        public uint GetVersion(uint* versions, uint num_versions)
+        public uint GetVersion(ref uint versions, uint num_versions)
         {
-            var arg0 = versions;
-            var arg1 = num_versions;
-            var __ret = Internal.GetVersion_0(__Instance, arg0, arg1);
-            return __ret;
+            fixed (uint* arg0 = &versions)
+            {
+                var arg1 = num_versions;
+                var __ret = Internal.GetVersion_0(__Instance, arg0, arg1);
+                return __ret;
+            }
         }
 
         /// <summary>

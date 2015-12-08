@@ -491,8 +491,7 @@ namespace LLDB
         public void ReportEventState(LLDB.Event @event, global::System.IntPtr @out)
         {
             var arg0 = ReferenceEquals(@event, null) ? global::System.IntPtr.Zero : @event.__Instance;
-            var arg1 = @out
-            ;
+            var arg1 = @out;
             Internal.ReportEventState_0(__Instance, arg0, arg1);
         }
 

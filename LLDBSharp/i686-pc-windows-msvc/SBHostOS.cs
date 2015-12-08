@@ -158,7 +158,7 @@ namespace LLDB
         public static global::System.IntPtr ThreadCreate(string name, LLDB.thread_func_t thread_function, global::System.IntPtr thread_arg, LLDB.Error err)
         {
             var arg0 = Marshal.StringToHGlobalAnsi(name);
-            var arg1 = Marshal.GetFunctionPointerForDelegate(thread_function);
+            var arg1 = thread_function == null ? global::System.IntPtr.Zero : Marshal.GetFunctionPointerForDelegate(thread_function);
             var arg2 = thread_arg;
             var arg3 = ReferenceEquals(err, null) ? global::System.IntPtr.Zero : err.__Instance;
             var __ret = Internal.ThreadCreate_0(arg0, arg1, arg2, arg3);
@@ -182,13 +182,15 @@ namespace LLDB
             return __ret;
         }
 
-        public static bool ThreadJoin(global::System.IntPtr thread, uint* result, LLDB.Error err)
+        public static bool ThreadJoin(global::System.IntPtr thread, ref uint result, LLDB.Error err)
         {
             var arg0 = thread;
-            var arg1 = result;
-            var arg2 = ReferenceEquals(err, null) ? global::System.IntPtr.Zero : err.__Instance;
-            var __ret = Internal.ThreadJoin_0(arg0, arg1, arg2);
-            return __ret;
+            fixed (uint* arg1 = &result)
+            {
+                var arg2 = ReferenceEquals(err, null) ? global::System.IntPtr.Zero : err.__Instance;
+                var __ret = Internal.ThreadJoin_0(arg0, arg1, arg2);
+                return __ret;
+            }
         }
     }
 }
