@@ -39,8 +39,13 @@ solution "LLDBSharp"
 
     kind  "SharedLib"
     language "C#"
-    files { "LLDBSharp/*.cs" }
     flags { "Unsafe" }
+
+    filter "system:macosx"
+      files { "LLDBSharp/i686-apple-darwin/*.cs" }
+
+    filter "system:windows"
+      files { "LLDBSharp/i686-pc-windows-msvc/*.cs" }
 
   project "LLDBSharp.Example"
 
