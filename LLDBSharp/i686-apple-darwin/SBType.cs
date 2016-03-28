@@ -73,36 +73,41 @@ namespace LLDB
         }
 
         public global::System.IntPtr __Instance { get; protected set; }
+
+        protected int __PointerAdjustment;
         public static readonly System.Collections.Concurrent.ConcurrentDictionary<IntPtr, TypeMember> NativeToManagedMap = new System.Collections.Concurrent.ConcurrentDictionary<IntPtr, TypeMember>();
+        protected void*[] __OriginalVTables;
 
-        private readonly bool __ownsNativeInstance;
+        protected bool __ownsNativeInstance;
 
-        public static TypeMember __CreateInstance(global::System.IntPtr native)
+        public static TypeMember __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
         {
-            return new TypeMember((TypeMember.Internal*) native);
+            return new TypeMember(native.ToPointer(), skipVTables);
         }
 
-        public static TypeMember __CreateInstance(TypeMember.Internal native)
+        public static TypeMember __CreateInstance(TypeMember.Internal native, bool skipVTables = false)
         {
-            return new TypeMember(native);
+            return new TypeMember(native, skipVTables);
         }
 
-        private static TypeMember.Internal* __CopyValue(TypeMember.Internal native)
+        private static void* __CopyValue(TypeMember.Internal native)
         {
-            var ret = (TypeMember.Internal*) Marshal.AllocHGlobal(4);
-            *ret = native;
-            return ret;
+            var ret = Marshal.AllocHGlobal(4);
+            LLDB.TypeMember.Internal.cctor_1(ret, new global::System.IntPtr(&native));
+            return ret.ToPointer();
         }
 
-        private TypeMember(TypeMember.Internal native)
-            : this(__CopyValue(native))
+        private TypeMember(TypeMember.Internal native, bool skipVTables = false)
+            : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
         }
 
-        protected TypeMember(TypeMember.Internal* native, bool isInternalImpl = false)
+        protected TypeMember(void* native, bool skipVTables = false)
         {
+            if (native == null)
+                return;
             __Instance = new global::System.IntPtr(native);
         }
 
@@ -111,7 +116,18 @@ namespace LLDB
             __Instance = Marshal.AllocHGlobal(4);
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
-            Internal.ctor_0(__Instance);
+            Internal.ctor_0((__Instance + __PointerAdjustment));
+        }
+
+        public TypeMember(LLDB.TypeMember rhs)
+        {
+            __Instance = Marshal.AllocHGlobal(4);
+            __ownsNativeInstance = true;
+            NativeToManagedMap[__Instance] = this;
+            if (ReferenceEquals(rhs, null))
+                throw new global::System.ArgumentNullException("rhs", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = rhs.__Instance;
+            Internal.cctor_1((__Instance + __PointerAdjustment), arg0);
         }
 
         public void Dispose()
@@ -121,48 +137,39 @@ namespace LLDB
 
         protected virtual void Dispose(bool disposing)
         {
-            DestroyNativeInstance(false);
-        }
-
-        public virtual void DestroyNativeInstance()
-        {
-            DestroyNativeInstance(true);
-        }
-
-        private void DestroyNativeInstance(bool force)
-        {
             LLDB.TypeMember __dummy;
             NativeToManagedMap.TryRemove(__Instance, out __dummy);
-            if (__ownsNativeInstance || force)
-                Internal.dtor_0(__Instance);
+            Internal.dtor_0((__Instance + __PointerAdjustment));
             if (__ownsNativeInstance)
                 Marshal.FreeHGlobal(__Instance);
         }
 
         public bool IsValid()
         {
-            var __ret = Internal.IsValid_0(__Instance);
+            var __ret = Internal.IsValid_0((__Instance + __PointerAdjustment));
             return __ret;
         }
 
         public LLDB.Type GetType()
         {
             var __ret = new LLDB.Type.Internal();
-            Internal.GetType_0(new IntPtr(&__ret), __Instance);
+            Internal.GetType_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
             return LLDB.Type.__CreateInstance(__ret);
         }
 
         public bool IsBitfield()
         {
-            var __ret = Internal.IsBitfield_0(__Instance);
+            var __ret = Internal.IsBitfield_0((__Instance + __PointerAdjustment));
             return __ret;
         }
 
         public bool GetDescription(LLDB.Stream description, LLDB.DescriptionLevel description_level)
         {
-            var arg0 = ReferenceEquals(description, null) ? global::System.IntPtr.Zero : description.__Instance;
+            if (ReferenceEquals(description, null))
+                throw new global::System.ArgumentNullException("description", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = description.__Instance;
             var arg1 = description_level;
-            var __ret = Internal.GetDescription_0(__Instance, arg0, arg1);
+            var __ret = Internal.GetDescription_0((__Instance + __PointerAdjustment), arg0, arg1);
             return __ret;
         }
 
@@ -170,7 +177,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetName_0(__Instance);
+                var __ret = Internal.GetName_0((__Instance + __PointerAdjustment));
                 return Marshal.PtrToStringAnsi(__ret);
             }
         }
@@ -179,7 +186,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetOffsetInBytes_0(__Instance);
+                var __ret = Internal.GetOffsetInBytes_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
         }
@@ -188,7 +195,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetOffsetInBits_0(__Instance);
+                var __ret = Internal.GetOffsetInBits_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
         }
@@ -197,7 +204,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetBitfieldSizeInBits_0(__Instance);
+                var __ret = Internal.GetBitfieldSizeInBits_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
         }
@@ -257,6 +264,16 @@ namespace LLDB
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
+                EntryPoint="_ZN4lldb20SBTypeMemberFunction16GetDemangledNameEv")]
+            internal static extern global::System.IntPtr GetDemangledName_0(global::System.IntPtr instance);
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
+                EntryPoint="_ZN4lldb20SBTypeMemberFunction14GetMangledNameEv")]
+            internal static extern global::System.IntPtr GetMangledName_0(global::System.IntPtr instance);
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
                 EntryPoint="_ZN4lldb20SBTypeMemberFunction20GetNumberOfArgumentsEv")]
             internal static extern uint GetNumberOfArguments_0(global::System.IntPtr instance);
 
@@ -267,36 +284,41 @@ namespace LLDB
         }
 
         public global::System.IntPtr __Instance { get; protected set; }
+
+        protected int __PointerAdjustment;
         public static readonly System.Collections.Concurrent.ConcurrentDictionary<IntPtr, TypeMemberFunction> NativeToManagedMap = new System.Collections.Concurrent.ConcurrentDictionary<IntPtr, TypeMemberFunction>();
+        protected void*[] __OriginalVTables;
 
-        private readonly bool __ownsNativeInstance;
+        protected bool __ownsNativeInstance;
 
-        public static TypeMemberFunction __CreateInstance(global::System.IntPtr native)
+        public static TypeMemberFunction __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
         {
-            return new TypeMemberFunction((TypeMemberFunction.Internal*) native);
+            return new TypeMemberFunction(native.ToPointer(), skipVTables);
         }
 
-        public static TypeMemberFunction __CreateInstance(TypeMemberFunction.Internal native)
+        public static TypeMemberFunction __CreateInstance(TypeMemberFunction.Internal native, bool skipVTables = false)
         {
-            return new TypeMemberFunction(native);
+            return new TypeMemberFunction(native, skipVTables);
         }
 
-        private static TypeMemberFunction.Internal* __CopyValue(TypeMemberFunction.Internal native)
+        private static void* __CopyValue(TypeMemberFunction.Internal native)
         {
-            var ret = (TypeMemberFunction.Internal*) Marshal.AllocHGlobal(8);
-            *ret = native;
-            return ret;
+            var ret = Marshal.AllocHGlobal(8);
+            LLDB.TypeMemberFunction.Internal.cctor_1(ret, new global::System.IntPtr(&native));
+            return ret.ToPointer();
         }
 
-        private TypeMemberFunction(TypeMemberFunction.Internal native)
-            : this(__CopyValue(native))
+        private TypeMemberFunction(TypeMemberFunction.Internal native, bool skipVTables = false)
+            : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
         }
 
-        protected TypeMemberFunction(TypeMemberFunction.Internal* native, bool isInternalImpl = false)
+        protected TypeMemberFunction(void* native, bool skipVTables = false)
         {
+            if (native == null)
+                return;
             __Instance = new global::System.IntPtr(native);
         }
 
@@ -305,7 +327,18 @@ namespace LLDB
             __Instance = Marshal.AllocHGlobal(8);
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
-            Internal.ctor_0(__Instance);
+            Internal.ctor_0((__Instance + __PointerAdjustment));
+        }
+
+        public TypeMemberFunction(LLDB.TypeMemberFunction rhs)
+        {
+            __Instance = Marshal.AllocHGlobal(8);
+            __ownsNativeInstance = true;
+            NativeToManagedMap[__Instance] = this;
+            if (ReferenceEquals(rhs, null))
+                throw new global::System.ArgumentNullException("rhs", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = rhs.__Instance;
+            Internal.cctor_1((__Instance + __PointerAdjustment), arg0);
         }
 
         public void Dispose()
@@ -315,57 +348,47 @@ namespace LLDB
 
         protected virtual void Dispose(bool disposing)
         {
-            DestroyNativeInstance(false);
-        }
-
-        public virtual void DestroyNativeInstance()
-        {
-            DestroyNativeInstance(true);
-        }
-
-        private void DestroyNativeInstance(bool force)
-        {
             LLDB.TypeMemberFunction __dummy;
             NativeToManagedMap.TryRemove(__Instance, out __dummy);
-            if (__ownsNativeInstance || force)
-                Internal.dtor_0(__Instance);
+            Internal.dtor_0((__Instance + __PointerAdjustment));
             if (__ownsNativeInstance)
                 Marshal.FreeHGlobal(__Instance);
         }
 
         public bool IsValid()
         {
-            var __ret = Internal.IsValid_0(__Instance);
+            var __ret = Internal.IsValid_0((__Instance + __PointerAdjustment));
             return __ret;
         }
 
         public LLDB.Type GetType()
         {
             var __ret = new LLDB.Type.Internal();
-            Internal.GetType_0(new IntPtr(&__ret), __Instance);
+            Internal.GetType_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
             return LLDB.Type.__CreateInstance(__ret);
         }
 
         public LLDB.Type GetReturnType()
         {
             var __ret = new LLDB.Type.Internal();
-            Internal.GetReturnType_0(new IntPtr(&__ret), __Instance);
+            Internal.GetReturnType_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
             return LLDB.Type.__CreateInstance(__ret);
         }
 
         public LLDB.Type GetArgumentTypeAtIndex(uint _0)
         {
-            var arg0 = _0;
             var __ret = new LLDB.Type.Internal();
-            Internal.GetArgumentTypeAtIndex_0(new IntPtr(&__ret), __Instance, arg0);
+            Internal.GetArgumentTypeAtIndex_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), _0);
             return LLDB.Type.__CreateInstance(__ret);
         }
 
         public bool GetDescription(LLDB.Stream description, LLDB.DescriptionLevel description_level)
         {
-            var arg0 = ReferenceEquals(description, null) ? global::System.IntPtr.Zero : description.__Instance;
+            if (ReferenceEquals(description, null))
+                throw new global::System.ArgumentNullException("description", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = description.__Instance;
             var arg1 = description_level;
-            var __ret = Internal.GetDescription_0(__Instance, arg0, arg1);
+            var __ret = Internal.GetDescription_0((__Instance + __PointerAdjustment), arg0, arg1);
             return __ret;
         }
 
@@ -373,7 +396,25 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetName_0(__Instance);
+                var __ret = Internal.GetName_0((__Instance + __PointerAdjustment));
+                return Marshal.PtrToStringAnsi(__ret);
+            }
+        }
+
+        public string DemangledName
+        {
+            get
+            {
+                var __ret = Internal.GetDemangledName_0((__Instance + __PointerAdjustment));
+                return Marshal.PtrToStringAnsi(__ret);
+            }
+        }
+
+        public string MangledName
+        {
+            get
+            {
+                var __ret = Internal.GetMangledName_0((__Instance + __PointerAdjustment));
                 return Marshal.PtrToStringAnsi(__ret);
             }
         }
@@ -382,7 +423,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetNumberOfArguments_0(__Instance);
+                var __ret = Internal.GetNumberOfArguments_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
         }
@@ -391,7 +432,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetKind_0(__Instance);
+                var __ret = Internal.GetKind_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
         }
@@ -467,6 +508,12 @@ namespace LLDB
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
+                EntryPoint="_ZN4lldb6SBType15IsAnonymousTypeEv")]
+            [return: MarshalAsAttribute(UnmanagedType.I1)]
+            internal static extern bool IsAnonymousType_0(global::System.IntPtr instance);
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
                 EntryPoint="_ZN4lldb6SBType14GetPointerTypeEv")]
             internal static extern void GetPointerType_0(global::System.IntPtr @return, global::System.IntPtr instance);
 
@@ -529,6 +576,11 @@ namespace LLDB
             [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
                 EntryPoint="_ZN4lldb6SBType26GetVirtualBaseClassAtIndexEj")]
             internal static extern void GetVirtualBaseClassAtIndex_0(global::System.IntPtr @return, global::System.IntPtr instance, uint idx);
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
+                EntryPoint="_ZN4lldb6SBType14GetEnumMembersEv")]
+            internal static extern void GetEnumMembers_0(global::System.IntPtr @return, global::System.IntPtr instance);
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
@@ -636,36 +688,41 @@ namespace LLDB
         }
 
         public global::System.IntPtr __Instance { get; protected set; }
+
+        protected int __PointerAdjustment;
         public static readonly System.Collections.Concurrent.ConcurrentDictionary<IntPtr, Type> NativeToManagedMap = new System.Collections.Concurrent.ConcurrentDictionary<IntPtr, Type>();
+        protected void*[] __OriginalVTables;
 
-        private readonly bool __ownsNativeInstance;
+        protected bool __ownsNativeInstance;
 
-        public static Type __CreateInstance(global::System.IntPtr native)
+        public static Type __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
         {
-            return new Type((Type.Internal*) native);
+            return new Type(native.ToPointer(), skipVTables);
         }
 
-        public static Type __CreateInstance(Type.Internal native)
+        public static Type __CreateInstance(Type.Internal native, bool skipVTables = false)
         {
-            return new Type(native);
+            return new Type(native, skipVTables);
         }
 
-        private static Type.Internal* __CopyValue(Type.Internal native)
+        private static void* __CopyValue(Type.Internal native)
         {
-            var ret = (Type.Internal*) Marshal.AllocHGlobal(8);
-            *ret = native;
-            return ret;
+            var ret = Marshal.AllocHGlobal(8);
+            LLDB.Type.Internal.cctor_1(ret, new global::System.IntPtr(&native));
+            return ret.ToPointer();
         }
 
-        private Type(Type.Internal native)
-            : this(__CopyValue(native))
+        private Type(Type.Internal native, bool skipVTables = false)
+            : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
         }
 
-        protected Type(Type.Internal* native, bool isInternalImpl = false)
+        protected Type(void* native, bool skipVTables = false)
         {
+            if (native == null)
+                return;
             __Instance = new global::System.IntPtr(native);
         }
 
@@ -674,7 +731,18 @@ namespace LLDB
             __Instance = Marshal.AllocHGlobal(8);
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
-            Internal.ctor_0(__Instance);
+            Internal.ctor_0((__Instance + __PointerAdjustment));
+        }
+
+        public Type(LLDB.Type rhs)
+        {
+            __Instance = Marshal.AllocHGlobal(8);
+            __ownsNativeInstance = true;
+            NativeToManagedMap[__Instance] = this;
+            if (ReferenceEquals(rhs, null))
+                throw new global::System.ArgumentNullException("rhs", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = rhs.__Instance;
+            Internal.cctor_1((__Instance + __PointerAdjustment), arg0);
         }
 
         public void Dispose()
@@ -684,132 +752,127 @@ namespace LLDB
 
         protected virtual void Dispose(bool disposing)
         {
-            DestroyNativeInstance(false);
-        }
-
-        public virtual void DestroyNativeInstance()
-        {
-            DestroyNativeInstance(true);
-        }
-
-        private void DestroyNativeInstance(bool force)
-        {
             LLDB.Type __dummy;
             NativeToManagedMap.TryRemove(__Instance, out __dummy);
-            if (__ownsNativeInstance || force)
-                Internal.dtor_0(__Instance);
+            Internal.dtor_0((__Instance + __PointerAdjustment));
             if (__ownsNativeInstance)
                 Marshal.FreeHGlobal(__Instance);
         }
 
         public bool IsValid()
         {
-            var __ret = Internal.IsValid_0(__Instance);
+            var __ret = Internal.IsValid_0((__Instance + __PointerAdjustment));
             return __ret;
         }
 
         public bool IsPointerType()
         {
-            var __ret = Internal.IsPointerType_0(__Instance);
+            var __ret = Internal.IsPointerType_0((__Instance + __PointerAdjustment));
             return __ret;
         }
 
         public bool IsReferenceType()
         {
-            var __ret = Internal.IsReferenceType_0(__Instance);
+            var __ret = Internal.IsReferenceType_0((__Instance + __PointerAdjustment));
             return __ret;
         }
 
         public bool IsFunctionType()
         {
-            var __ret = Internal.IsFunctionType_0(__Instance);
+            var __ret = Internal.IsFunctionType_0((__Instance + __PointerAdjustment));
             return __ret;
         }
 
         public bool IsPolymorphicClass()
         {
-            var __ret = Internal.IsPolymorphicClass_0(__Instance);
+            var __ret = Internal.IsPolymorphicClass_0((__Instance + __PointerAdjustment));
             return __ret;
         }
 
         public bool IsArrayType()
         {
-            var __ret = Internal.IsArrayType_0(__Instance);
+            var __ret = Internal.IsArrayType_0((__Instance + __PointerAdjustment));
             return __ret;
         }
 
         public bool IsVectorType()
         {
-            var __ret = Internal.IsVectorType_0(__Instance);
+            var __ret = Internal.IsVectorType_0((__Instance + __PointerAdjustment));
             return __ret;
         }
 
         public bool IsTypedefType()
         {
-            var __ret = Internal.IsTypedefType_0(__Instance);
+            var __ret = Internal.IsTypedefType_0((__Instance + __PointerAdjustment));
+            return __ret;
+        }
+
+        public bool IsAnonymousType()
+        {
+            var __ret = Internal.IsAnonymousType_0((__Instance + __PointerAdjustment));
             return __ret;
         }
 
         public LLDB.Type GetPointerType()
         {
             var __ret = new LLDB.Type.Internal();
-            Internal.GetPointerType_0(new IntPtr(&__ret), __Instance);
+            Internal.GetPointerType_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
             return LLDB.Type.__CreateInstance(__ret);
         }
 
         public LLDB.Type GetPointeeType()
         {
             var __ret = new LLDB.Type.Internal();
-            Internal.GetPointeeType_0(new IntPtr(&__ret), __Instance);
+            Internal.GetPointeeType_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
             return LLDB.Type.__CreateInstance(__ret);
         }
 
         public LLDB.Type GetReferenceType()
         {
             var __ret = new LLDB.Type.Internal();
-            Internal.GetReferenceType_0(new IntPtr(&__ret), __Instance);
+            Internal.GetReferenceType_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
             return LLDB.Type.__CreateInstance(__ret);
         }
 
         public LLDB.Type GetTypedefedType()
         {
             var __ret = new LLDB.Type.Internal();
-            Internal.GetTypedefedType_0(new IntPtr(&__ret), __Instance);
+            Internal.GetTypedefedType_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
             return LLDB.Type.__CreateInstance(__ret);
         }
 
         public LLDB.Type GetDereferencedType()
         {
             var __ret = new LLDB.Type.Internal();
-            Internal.GetDereferencedType_0(new IntPtr(&__ret), __Instance);
+            Internal.GetDereferencedType_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
             return LLDB.Type.__CreateInstance(__ret);
         }
 
         public LLDB.Type GetUnqualifiedType()
         {
             var __ret = new LLDB.Type.Internal();
-            Internal.GetUnqualifiedType_0(new IntPtr(&__ret), __Instance);
+            Internal.GetUnqualifiedType_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
             return LLDB.Type.__CreateInstance(__ret);
         }
 
         public LLDB.Type GetArrayElementType()
         {
             var __ret = new LLDB.Type.Internal();
-            Internal.GetArrayElementType_0(new IntPtr(&__ret), __Instance);
+            Internal.GetArrayElementType_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
             return LLDB.Type.__CreateInstance(__ret);
         }
 
         public LLDB.Type GetVectorElementType()
         {
             var __ret = new LLDB.Type.Internal();
-            Internal.GetVectorElementType_0(new IntPtr(&__ret), __Instance);
+            Internal.GetVectorElementType_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
             return LLDB.Type.__CreateInstance(__ret);
         }
 
         public LLDB.Type GetCanonicalType()
         {
             var __ret = new LLDB.Type.Internal();
-            Internal.GetCanonicalType_0(new IntPtr(&__ret), __Instance);
+            Internal.GetCanonicalType_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
             return LLDB.Type.__CreateInstance(__ret);
         }
 
@@ -817,82 +880,85 @@ namespace LLDB
         {
             var arg0 = type;
             var __ret = new LLDB.Type.Internal();
-            Internal.GetBasicType_1(new IntPtr(&__ret), __Instance, arg0);
+            Internal.GetBasicType_1(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0);
             return LLDB.Type.__CreateInstance(__ret);
         }
 
         public LLDB.TypeMember GetFieldAtIndex(uint idx)
         {
-            var arg0 = idx;
             var __ret = new LLDB.TypeMember.Internal();
-            Internal.GetFieldAtIndex_0(new IntPtr(&__ret), __Instance, arg0);
+            Internal.GetFieldAtIndex_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), idx);
             return LLDB.TypeMember.__CreateInstance(__ret);
         }
 
         public LLDB.TypeMember GetDirectBaseClassAtIndex(uint idx)
         {
-            var arg0 = idx;
             var __ret = new LLDB.TypeMember.Internal();
-            Internal.GetDirectBaseClassAtIndex_0(new IntPtr(&__ret), __Instance, arg0);
+            Internal.GetDirectBaseClassAtIndex_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), idx);
             return LLDB.TypeMember.__CreateInstance(__ret);
         }
 
         public LLDB.TypeMember GetVirtualBaseClassAtIndex(uint idx)
         {
-            var arg0 = idx;
             var __ret = new LLDB.TypeMember.Internal();
-            Internal.GetVirtualBaseClassAtIndex_0(new IntPtr(&__ret), __Instance, arg0);
+            Internal.GetVirtualBaseClassAtIndex_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), idx);
             return LLDB.TypeMember.__CreateInstance(__ret);
+        }
+
+        public LLDB.TypeEnumMemberList GetEnumMembers()
+        {
+            var __ret = new LLDB.TypeEnumMemberList.Internal();
+            Internal.GetEnumMembers_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
+            return LLDB.TypeEnumMemberList.__CreateInstance(__ret);
         }
 
         public LLDB.Type GetTemplateArgumentType(uint idx)
         {
-            var arg0 = idx;
             var __ret = new LLDB.Type.Internal();
-            Internal.GetTemplateArgumentType_0(new IntPtr(&__ret), __Instance, arg0);
+            Internal.GetTemplateArgumentType_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), idx);
             return LLDB.Type.__CreateInstance(__ret);
         }
 
         public LLDB.TemplateArgumentKind GetTemplateArgumentKind(uint idx)
         {
-            var arg0 = idx;
-            var __ret = Internal.GetTemplateArgumentKind_0(__Instance, arg0);
+            var __ret = Internal.GetTemplateArgumentKind_0((__Instance + __PointerAdjustment), idx);
             return __ret;
         }
 
         public LLDB.Type GetFunctionReturnType()
         {
             var __ret = new LLDB.Type.Internal();
-            Internal.GetFunctionReturnType_0(new IntPtr(&__ret), __Instance);
+            Internal.GetFunctionReturnType_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
             return LLDB.Type.__CreateInstance(__ret);
         }
 
         public LLDB.TypeList GetFunctionArgumentTypes()
         {
             var __ret = new LLDB.TypeList.Internal();
-            Internal.GetFunctionArgumentTypes_0(new IntPtr(&__ret), __Instance);
+            Internal.GetFunctionArgumentTypes_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
             return LLDB.TypeList.__CreateInstance(__ret);
         }
 
         public LLDB.TypeMemberFunction GetMemberFunctionAtIndex(uint idx)
         {
-            var arg0 = idx;
             var __ret = new LLDB.TypeMemberFunction.Internal();
-            Internal.GetMemberFunctionAtIndex_0(new IntPtr(&__ret), __Instance, arg0);
+            Internal.GetMemberFunctionAtIndex_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), idx);
             return LLDB.TypeMemberFunction.__CreateInstance(__ret);
         }
 
         public bool IsTypeComplete()
         {
-            var __ret = Internal.IsTypeComplete_0(__Instance);
+            var __ret = Internal.IsTypeComplete_0((__Instance + __PointerAdjustment));
             return __ret;
         }
 
         public bool GetDescription(LLDB.Stream description, LLDB.DescriptionLevel description_level)
         {
-            var arg0 = ReferenceEquals(description, null) ? global::System.IntPtr.Zero : description.__Instance;
+            if (ReferenceEquals(description, null))
+                throw new global::System.ArgumentNullException("description", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = description.__Instance;
             var arg1 = description_level;
-            var __ret = Internal.GetDescription_0(__Instance, arg0, arg1);
+            var __ret = Internal.GetDescription_0((__Instance + __PointerAdjustment), arg0, arg1);
             return __ret;
         }
 
@@ -913,10 +979,21 @@ namespace LLDB
             return this == obj as Type;
         }
 
+        public override int GetHashCode()
+        {
+            if (__Instance == global::System.IntPtr.Zero)
+                return global::System.IntPtr.Zero.GetHashCode();
+            return (*(Internal*) __Instance).GetHashCode();
+        }
+
         public static bool operator !=(LLDB.Type __op, LLDB.Type rhs)
         {
-            var arg0 = ReferenceEquals(__op, null) ? global::System.IntPtr.Zero : __op.__Instance;
-            var arg1 = ReferenceEquals(rhs, null) ? global::System.IntPtr.Zero : rhs.__Instance;
+            bool __opNull = ReferenceEquals(__op, null);
+            bool rhsNull = ReferenceEquals(rhs, null);
+            if (__opNull || rhsNull)
+                return !(__opNull && rhsNull);
+            var arg0 = __op.__Instance;
+            var arg1 = rhs.__Instance;
             var __ret = Internal.OperatorExclaimEqual_0(arg0, arg1);
             return __ret;
         }
@@ -925,7 +1002,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetByteSize_0(__Instance);
+                var __ret = Internal.GetByteSize_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
         }
@@ -934,7 +1011,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetBasicType_0(__Instance);
+                var __ret = Internal.GetBasicType_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
         }
@@ -943,7 +1020,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetNumberOfFields_0(__Instance);
+                var __ret = Internal.GetNumberOfFields_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
         }
@@ -952,7 +1029,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetNumberOfDirectBaseClasses_0(__Instance);
+                var __ret = Internal.GetNumberOfDirectBaseClasses_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
         }
@@ -961,7 +1038,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetNumberOfVirtualBaseClasses_0(__Instance);
+                var __ret = Internal.GetNumberOfVirtualBaseClasses_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
         }
@@ -970,7 +1047,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetNumberOfTemplateArguments_0(__Instance);
+                var __ret = Internal.GetNumberOfTemplateArguments_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
         }
@@ -979,7 +1056,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetNumberOfMemberFunctions_0(__Instance);
+                var __ret = Internal.GetNumberOfMemberFunctions_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
         }
@@ -988,7 +1065,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetName_0(__Instance);
+                var __ret = Internal.GetName_0((__Instance + __PointerAdjustment));
                 return Marshal.PtrToStringAnsi(__ret);
             }
         }
@@ -997,7 +1074,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetDisplayTypeName_0(__Instance);
+                var __ret = Internal.GetDisplayTypeName_0((__Instance + __PointerAdjustment));
                 return Marshal.PtrToStringAnsi(__ret);
             }
         }
@@ -1006,7 +1083,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetTypeClass_0(__Instance);
+                var __ret = Internal.GetTypeClass_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
         }
@@ -1015,7 +1092,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetTypeFlags_0(__Instance);
+                var __ret = Internal.GetTypeFlags_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
         }
@@ -1064,36 +1141,41 @@ namespace LLDB
         }
 
         public global::System.IntPtr __Instance { get; protected set; }
+
+        protected int __PointerAdjustment;
         public static readonly System.Collections.Concurrent.ConcurrentDictionary<IntPtr, TypeList> NativeToManagedMap = new System.Collections.Concurrent.ConcurrentDictionary<IntPtr, TypeList>();
+        protected void*[] __OriginalVTables;
 
-        private readonly bool __ownsNativeInstance;
+        protected bool __ownsNativeInstance;
 
-        public static TypeList __CreateInstance(global::System.IntPtr native)
+        public static TypeList __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
         {
-            return new TypeList((TypeList.Internal*) native);
+            return new TypeList(native.ToPointer(), skipVTables);
         }
 
-        public static TypeList __CreateInstance(TypeList.Internal native)
+        public static TypeList __CreateInstance(TypeList.Internal native, bool skipVTables = false)
         {
-            return new TypeList(native);
+            return new TypeList(native, skipVTables);
         }
 
-        private static TypeList.Internal* __CopyValue(TypeList.Internal native)
+        private static void* __CopyValue(TypeList.Internal native)
         {
-            var ret = (TypeList.Internal*) Marshal.AllocHGlobal(4);
-            *ret = native;
-            return ret;
+            var ret = Marshal.AllocHGlobal(4);
+            LLDB.TypeList.Internal.cctor_1(ret, new global::System.IntPtr(&native));
+            return ret.ToPointer();
         }
 
-        private TypeList(TypeList.Internal native)
-            : this(__CopyValue(native))
+        private TypeList(TypeList.Internal native, bool skipVTables = false)
+            : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
         }
 
-        protected TypeList(TypeList.Internal* native, bool isInternalImpl = false)
+        protected TypeList(void* native, bool skipVTables = false)
         {
+            if (native == null)
+                return;
             __Instance = new global::System.IntPtr(native);
         }
 
@@ -1102,7 +1184,18 @@ namespace LLDB
             __Instance = Marshal.AllocHGlobal(4);
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
-            Internal.ctor_0(__Instance);
+            Internal.ctor_0((__Instance + __PointerAdjustment));
+        }
+
+        public TypeList(LLDB.TypeList rhs)
+        {
+            __Instance = Marshal.AllocHGlobal(4);
+            __ownsNativeInstance = true;
+            NativeToManagedMap[__Instance] = this;
+            if (ReferenceEquals(rhs, null))
+                throw new global::System.ArgumentNullException("rhs", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = rhs.__Instance;
+            Internal.cctor_1((__Instance + __PointerAdjustment), arg0);
         }
 
         public void Dispose()
@@ -1112,41 +1205,29 @@ namespace LLDB
 
         protected virtual void Dispose(bool disposing)
         {
-            DestroyNativeInstance(false);
-        }
-
-        public virtual void DestroyNativeInstance()
-        {
-            DestroyNativeInstance(true);
-        }
-
-        private void DestroyNativeInstance(bool force)
-        {
             LLDB.TypeList __dummy;
             NativeToManagedMap.TryRemove(__Instance, out __dummy);
-            if (__ownsNativeInstance || force)
-                Internal.dtor_0(__Instance);
+            Internal.dtor_0((__Instance + __PointerAdjustment));
             if (__ownsNativeInstance)
                 Marshal.FreeHGlobal(__Instance);
         }
 
         public bool IsValid()
         {
-            var __ret = Internal.IsValid_0(__Instance);
+            var __ret = Internal.IsValid_0((__Instance + __PointerAdjustment));
             return __ret;
         }
 
         public void Append(LLDB.Type type)
         {
             var arg0 = ReferenceEquals(type, null) ? new LLDB.Type.Internal() : *(LLDB.Type.Internal*) (type.__Instance);
-            Internal.Append_0(__Instance, arg0);
+            Internal.Append_0((__Instance + __PointerAdjustment), arg0);
         }
 
         public LLDB.Type GetTypeAtIndex(uint index)
         {
-            var arg0 = index;
             var __ret = new LLDB.Type.Internal();
-            Internal.GetTypeAtIndex_0(new IntPtr(&__ret), __Instance, arg0);
+            Internal.GetTypeAtIndex_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), index);
             return LLDB.Type.__CreateInstance(__ret);
         }
 
@@ -1154,7 +1235,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetSize_0(__Instance);
+                var __ret = Internal.GetSize_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
         }

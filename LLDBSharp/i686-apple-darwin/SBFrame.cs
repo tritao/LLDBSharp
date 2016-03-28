@@ -104,6 +104,11 @@ namespace LLDB
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
+                EntryPoint="_ZN4lldb7SBFrame18EvaluateExpressionEPKcRKNS_19SBExpressionOptionsE")]
+            internal static extern void EvaluateExpression_3(global::System.IntPtr @return, global::System.IntPtr instance, global::System.IntPtr expr, global::System.IntPtr options);
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
                 EntryPoint="_ZNK4lldb7SBFrame13GetFrameBlockEv")]
             internal static extern void GetFrameBlock_0(global::System.IntPtr @return, global::System.IntPtr instance);
 
@@ -229,39 +234,49 @@ namespace LLDB
             [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
                 EntryPoint="_ZN4lldb7SBFrame15GetFunctionNameEv")]
             internal static extern global::System.IntPtr GetFunctionName_0(global::System.IntPtr instance);
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
+                EntryPoint="_ZN4lldb7SBFrame22GetDisplayFunctionNameEv")]
+            internal static extern global::System.IntPtr GetDisplayFunctionName_0(global::System.IntPtr instance);
         }
 
         public global::System.IntPtr __Instance { get; protected set; }
+
+        protected int __PointerAdjustment;
         public static readonly System.Collections.Concurrent.ConcurrentDictionary<IntPtr, Frame> NativeToManagedMap = new System.Collections.Concurrent.ConcurrentDictionary<IntPtr, Frame>();
+        protected void*[] __OriginalVTables;
 
-        private readonly bool __ownsNativeInstance;
+        protected bool __ownsNativeInstance;
 
-        public static Frame __CreateInstance(global::System.IntPtr native)
+        public static Frame __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
         {
-            return new Frame((Frame.Internal*) native);
+            return new Frame(native.ToPointer(), skipVTables);
         }
 
-        public static Frame __CreateInstance(Frame.Internal native)
+        public static Frame __CreateInstance(Frame.Internal native, bool skipVTables = false)
         {
-            return new Frame(native);
+            return new Frame(native, skipVTables);
         }
 
-        private static Frame.Internal* __CopyValue(Frame.Internal native)
+        private static void* __CopyValue(Frame.Internal native)
         {
-            var ret = (Frame.Internal*) Marshal.AllocHGlobal(8);
-            *ret = native;
-            return ret;
+            var ret = Marshal.AllocHGlobal(8);
+            LLDB.Frame.Internal.cctor_1(ret, new global::System.IntPtr(&native));
+            return ret.ToPointer();
         }
 
-        private Frame(Frame.Internal native)
-            : this(__CopyValue(native))
+        private Frame(Frame.Internal native, bool skipVTables = false)
+            : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
         }
 
-        protected Frame(Frame.Internal* native, bool isInternalImpl = false)
+        protected Frame(void* native, bool skipVTables = false)
         {
+            if (native == null)
+                return;
             __Instance = new global::System.IntPtr(native);
         }
 
@@ -270,7 +285,18 @@ namespace LLDB
             __Instance = Marshal.AllocHGlobal(8);
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
-            Internal.ctor_0(__Instance);
+            Internal.ctor_0((__Instance + __PointerAdjustment));
+        }
+
+        public Frame(LLDB.Frame rhs)
+        {
+            __Instance = Marshal.AllocHGlobal(8);
+            __ownsNativeInstance = true;
+            NativeToManagedMap[__Instance] = this;
+            if (ReferenceEquals(rhs, null))
+                throw new global::System.ArgumentNullException("rhs", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = rhs.__Instance;
+            Internal.cctor_1((__Instance + __PointerAdjustment), arg0);
         }
 
         public void Dispose()
@@ -280,84 +306,73 @@ namespace LLDB
 
         protected virtual void Dispose(bool disposing)
         {
-            DestroyNativeInstance(false);
-        }
-
-        public virtual void DestroyNativeInstance()
-        {
-            DestroyNativeInstance(true);
-        }
-
-        private void DestroyNativeInstance(bool force)
-        {
             LLDB.Frame __dummy;
             NativeToManagedMap.TryRemove(__Instance, out __dummy);
-            if (__ownsNativeInstance || force)
-                Internal.dtor_0(__Instance);
+            Internal.dtor_0((__Instance + __PointerAdjustment));
             if (__ownsNativeInstance)
                 Marshal.FreeHGlobal(__Instance);
         }
 
         public bool IsEqual(LLDB.Frame that)
         {
-            var arg0 = ReferenceEquals(that, null) ? global::System.IntPtr.Zero : that.__Instance;
-            var __ret = Internal.IsEqual_0(__Instance, arg0);
+            if (ReferenceEquals(that, null))
+                throw new global::System.ArgumentNullException("that", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = that.__Instance;
+            var __ret = Internal.IsEqual_0((__Instance + __PointerAdjustment), arg0);
             return __ret;
         }
 
         public bool IsValid()
         {
-            var __ret = Internal.IsValid_0(__Instance);
+            var __ret = Internal.IsValid_0((__Instance + __PointerAdjustment));
             return __ret;
         }
 
         public bool SetPC(ulong new_pc)
         {
-            var arg0 = new_pc;
-            var __ret = Internal.SetPC_0(__Instance, arg0);
+            var __ret = Internal.SetPC_0((__Instance + __PointerAdjustment), new_pc);
             return __ret;
         }
 
         public LLDB.Address GetPCAddress()
         {
             var __ret = new LLDB.Address.Internal();
-            Internal.GetPCAddress_0(new IntPtr(&__ret), __Instance);
+            Internal.GetPCAddress_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
             return LLDB.Address.__CreateInstance(__ret);
         }
 
         public LLDB.SymbolContext GetSymbolContext(uint resolve_scope)
         {
-            var arg0 = resolve_scope;
             var __ret = new LLDB.SymbolContext.Internal();
-            Internal.GetSymbolContext_0(new IntPtr(&__ret), __Instance, arg0);
+            Internal.GetSymbolContext_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), resolve_scope);
             return LLDB.SymbolContext.__CreateInstance(__ret);
         }
 
         public LLDB.Module GetModule()
         {
             var __ret = new LLDB.Module.Internal();
-            Internal.GetModule_0(new IntPtr(&__ret), __Instance);
+            Internal.GetModule_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
             return LLDB.Module.__CreateInstance(__ret);
         }
 
         public LLDB.CompileUnit GetCompileUnit()
         {
             var __ret = new LLDB.CompileUnit.Internal();
-            Internal.GetCompileUnit_0(new IntPtr(&__ret), __Instance);
+            Internal.GetCompileUnit_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
             return LLDB.CompileUnit.__CreateInstance(__ret);
         }
 
         public LLDB.Function GetFunction()
         {
             var __ret = new LLDB.Function.Internal();
-            Internal.GetFunction_0(new IntPtr(&__ret), __Instance);
+            Internal.GetFunction_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
             return LLDB.Function.__CreateInstance(__ret);
         }
 
         public LLDB.Symbol GetSymbol()
         {
             var __ret = new LLDB.Symbol.Internal();
-            Internal.GetSymbol_0(new IntPtr(&__ret), __Instance);
+            Internal.GetSymbol_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
             return LLDB.Symbol.__CreateInstance(__ret);
         }
 
@@ -365,14 +380,12 @@ namespace LLDB
         /// <para>Gets the deepest block that contains the frame PC.</para>
         /// </summary>
         /// <remarks>
-        /// <para>/// Gets the deepest block that contains the frame PC.</para>
-        /// <para>    ///</para>
-        /// <para>    /// See also GetFrameBlock().</para>
+        /// <para>See also GetFrameBlock().</para>
         /// </remarks>
         public LLDB.Block GetBlock()
         {
             var __ret = new LLDB.Block.Internal();
-            Internal.GetBlock_0(new IntPtr(&__ret), __Instance);
+            Internal.GetBlock_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
             return LLDB.Block.__CreateInstance(__ret);
         }
 
@@ -380,31 +393,25 @@ namespace LLDB
         /// <para>Return true if this frame represents an inlined function.</para>
         /// </summary>
         /// <remarks>
-        /// <para>/// Return true if this frame represents an inlined
-        /// function.</para>
-        /// <para>    ///</para>
-        /// <para>    /// See also GetFunctionName().</para>
+        /// <para>See also GetFunctionName().</para>
         /// </remarks>
         public bool IsInlined()
         {
-            var __ret = Internal.IsInlined_0(__Instance);
+            var __ret = Internal.IsInlined_0((__Instance + __PointerAdjustment));
             return __ret;
         }
 
         /// <summary>
-        /// <para>The version that doesn't supply a 'use_dynamic' value will use
-        /// the target's default.</para>
+        /// <para>The version that doesn't supply a 'use_dynamic' value will use the</para>
         /// </summary>
         /// <remarks>
-        /// <para>/// The version that doesn't supply a 'use_dynamic' value will
-        /// use the</para>
-        /// <para>    /// target's default.</para>
+        /// <para>target's default.</para>
         /// </remarks>
         public LLDB.Value EvaluateExpression(string expr)
         {
             var arg0 = Marshal.StringToHGlobalAnsi(expr);
             var __ret = new LLDB.Value.Internal();
-            Internal.EvaluateExpression_0(new IntPtr(&__ret), __Instance, arg0);
+            Internal.EvaluateExpression_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0);
             Marshal.FreeHGlobal(arg0);
             return LLDB.Value.__CreateInstance(__ret);
         }
@@ -414,7 +421,7 @@ namespace LLDB
             var arg0 = Marshal.StringToHGlobalAnsi(expr);
             var arg1 = use_dynamic;
             var __ret = new LLDB.Value.Internal();
-            Internal.EvaluateExpression_1(new IntPtr(&__ret), __Instance, arg0, arg1);
+            Internal.EvaluateExpression_1(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0, arg1);
             Marshal.FreeHGlobal(arg0);
             return LLDB.Value.__CreateInstance(__ret);
         }
@@ -424,81 +431,69 @@ namespace LLDB
             var arg0 = Marshal.StringToHGlobalAnsi(expr);
             var arg1 = use_dynamic;
             var __ret = new LLDB.Value.Internal();
-            Internal.EvaluateExpression_2(new IntPtr(&__ret), __Instance, arg0, arg1, unwind_on_error);
+            Internal.EvaluateExpression_2(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0, arg1, unwind_on_error);
+            Marshal.FreeHGlobal(arg0);
+            return LLDB.Value.__CreateInstance(__ret);
+        }
+
+        public LLDB.Value EvaluateExpression(string expr, LLDB.ExpressionOptions options)
+        {
+            var arg0 = Marshal.StringToHGlobalAnsi(expr);
+            if (ReferenceEquals(options, null))
+                throw new global::System.ArgumentNullException("options", "Cannot be null because it is a C++ reference (&).");
+            var arg1 = options.__Instance;
+            var __ret = new LLDB.Value.Internal();
+            Internal.EvaluateExpression_3(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0, arg1);
             Marshal.FreeHGlobal(arg0);
             return LLDB.Value.__CreateInstance(__ret);
         }
 
         /// <summary>
-        /// <para>Gets the lexical block that defines the stack frame. Another way
-        /// to think of this is it will return the block that contains all of the
-        /// variables for a stack frame. Inlined functions are represented as SBBlock
-        /// objects that have inlined function information: the name of the inlined
-        /// function, where it was called from. The block that is returned will be the
-        /// first block at or above the block for the PC (SBFrame::GetBlock()) that
-        /// defines the scope of the frame. When a function contains no inlined
-        /// functions, this will be the top most lexical block that defines the
-        /// function. When a function has inlined functions and the PC is currently in
-        /// one of those inlined functions, this method will return the inlined block
-        /// that defines this frame. If the PC isn't currently in an inlined function,
-        /// the lexical block that defines the function is returned.</para>
+        /// <para>Gets the lexical block that defines the stack frame. Another way to think</para>
         /// </summary>
         /// <remarks>
-        /// <para>/// Gets the lexical block that defines the stack frame. Another
-        /// way to think</para>
-        /// <para>    /// of this is it will return the block that contains all of
-        /// the variables</para>
-        /// <para>    /// for a stack frame. Inlined functions are represented as
-        /// SBBlock objects</para>
-        /// <para>    /// that have inlined function information: the name of the
-        /// inlined function,</para>
-        /// <para>    /// where it was called from. The block that is returned will
-        /// be the first </para>
-        /// <para>    /// block at or above the block for the PC
-        /// (SBFrame::GetBlock()) that defines</para>
-        /// <para>    /// the scope of the frame. When a function contains no
-        /// inlined functions,</para>
-        /// <para>    /// this will be the top most lexical block that defines the
-        /// function. </para>
-        /// <para>    /// When a function has inlined functions and the PC is
-        /// currently</para>
-        /// <para>    /// in one of those inlined functions, this method will
-        /// return the inlined</para>
-        /// <para>    /// block that defines this frame. If the PC isn't currently
-        /// in an inlined</para>
-        /// <para>    /// function, the lexical block that defines the function is
-        /// returned.</para>
+        /// <para>of this is it will return the block that contains all of the variables</para>
+        /// <para>for a stack frame. Inlined functions are represented as SBBlock objects</para>
+        /// <para>that have inlined function information: the name of the inlined function,</para>
+        /// <para>where it was called from. The block that is returned will be the first </para>
+        /// <para>block at or above the block for the PC (SBFrame::GetBlock()) that defines</para>
+        /// <para>the scope of the frame. When a function contains no inlined functions,</para>
+        /// <para>this will be the top most lexical block that defines the function. </para>
+        /// <para>When a function has inlined functions and the PC is currently</para>
+        /// <para>in one of those inlined functions, this method will return the inlined</para>
+        /// <para>block that defines this frame. If the PC isn't currently in an inlined</para>
+        /// <para>function, the lexical block that defines the function is returned.</para>
         /// </remarks>
         public LLDB.Block GetFrameBlock()
         {
             var __ret = new LLDB.Block.Internal();
-            Internal.GetFrameBlock_0(new IntPtr(&__ret), __Instance);
+            Internal.GetFrameBlock_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
             return LLDB.Block.__CreateInstance(__ret);
         }
 
         public LLDB.LineEntry GetLineEntry()
         {
             var __ret = new LLDB.LineEntry.Internal();
-            Internal.GetLineEntry_0(new IntPtr(&__ret), __Instance);
+            Internal.GetLineEntry_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
             return LLDB.LineEntry.__CreateInstance(__ret);
         }
 
         public LLDB.Thread GetThread()
         {
             var __ret = new LLDB.Thread.Internal();
-            Internal.GetThread_0(new IntPtr(&__ret), __Instance);
+            Internal.GetThread_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
             return LLDB.Thread.__CreateInstance(__ret);
         }
 
         public string Disassemble()
         {
-            var __ret = Internal.Disassemble_0(__Instance);
+            var __ret = Internal.Disassemble_0((__Instance + __PointerAdjustment));
             return Marshal.PtrToStringAnsi(__ret);
         }
 
         public void Clear()
         {
-            Internal.Clear_0(__Instance);
+            Internal.Clear_0((__Instance + __PointerAdjustment));
         }
 
         public static bool operator ==(LLDB.Frame __op, LLDB.Frame rhs)
@@ -518,27 +513,35 @@ namespace LLDB
             return this == obj as Frame;
         }
 
+        public override int GetHashCode()
+        {
+            if (__Instance == global::System.IntPtr.Zero)
+                return global::System.IntPtr.Zero.GetHashCode();
+            return (*(Internal*) __Instance).GetHashCode();
+        }
+
         public static bool operator !=(LLDB.Frame __op, LLDB.Frame rhs)
         {
-            var arg0 = ReferenceEquals(__op, null) ? global::System.IntPtr.Zero : __op.__Instance;
-            var arg1 = ReferenceEquals(rhs, null) ? global::System.IntPtr.Zero : rhs.__Instance;
+            bool __opNull = ReferenceEquals(__op, null);
+            bool rhsNull = ReferenceEquals(rhs, null);
+            if (__opNull || rhsNull)
+                return !(__opNull && rhsNull);
+            var arg0 = __op.__Instance;
+            var arg1 = rhs.__Instance;
             var __ret = Internal.OperatorExclaimEqual_0(arg0, arg1);
             return __ret;
         }
 
         /// <summary>
-        /// <para>The version that doesn't supply a 'use_dynamic' value will use
-        /// the target's default.</para>
+        /// <para>The version that doesn't supply a 'use_dynamic' value will use the</para>
         /// </summary>
         /// <remarks>
-        /// <para>/// The version that doesn't supply a 'use_dynamic' value will
-        /// use the</para>
-        /// <para>    /// target's default.</para>
+        /// <para>target's default.</para>
         /// </remarks>
         public LLDB.ValueList GetVariables(bool arguments, bool locals, bool statics, bool in_scope_only)
         {
             var __ret = new LLDB.ValueList.Internal();
-            Internal.GetVariables_0(new IntPtr(&__ret), __Instance, arguments, locals, statics, in_scope_only);
+            Internal.GetVariables_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arguments, locals, statics, in_scope_only);
             return LLDB.ValueList.__CreateInstance(__ret);
         }
 
@@ -546,22 +549,24 @@ namespace LLDB
         {
             var arg4 = use_dynamic;
             var __ret = new LLDB.ValueList.Internal();
-            Internal.GetVariables_1(new IntPtr(&__ret), __Instance, arguments, locals, statics, in_scope_only, arg4);
+            Internal.GetVariables_1(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arguments, locals, statics, in_scope_only, arg4);
             return LLDB.ValueList.__CreateInstance(__ret);
         }
 
         public LLDB.ValueList GetVariables(LLDB.VariablesOptions options)
         {
-            var arg0 = ReferenceEquals(options, null) ? global::System.IntPtr.Zero : options.__Instance;
+            if (ReferenceEquals(options, null))
+                throw new global::System.ArgumentNullException("options", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = options.__Instance;
             var __ret = new LLDB.ValueList.Internal();
-            Internal.GetVariables_2(new IntPtr(&__ret), __Instance, arg0);
+            Internal.GetVariables_2(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0);
             return LLDB.ValueList.__CreateInstance(__ret);
         }
 
         public LLDB.ValueList GetRegisters()
         {
             var __ret = new LLDB.ValueList.Internal();
-            Internal.GetRegisters_0(new IntPtr(&__ret), __Instance);
+            Internal.GetRegisters_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
             return LLDB.ValueList.__CreateInstance(__ret);
         }
 
@@ -569,25 +574,22 @@ namespace LLDB
         {
             var arg0 = Marshal.StringToHGlobalAnsi(name);
             var __ret = new LLDB.Value.Internal();
-            Internal.FindRegister_0(new IntPtr(&__ret), __Instance, arg0);
+            Internal.FindRegister_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0);
             Marshal.FreeHGlobal(arg0);
             return LLDB.Value.__CreateInstance(__ret);
         }
 
         /// <summary>
-        /// <para>The version that doesn't supply a 'use_dynamic' value will use
-        /// the target's default.</para>
+        /// <para>The version that doesn't supply a 'use_dynamic' value will use the</para>
         /// </summary>
         /// <remarks>
-        /// <para>/// The version that doesn't supply a 'use_dynamic' value will
-        /// use the</para>
-        /// <para>    /// target's default.</para>
+        /// <para>target's default.</para>
         /// </remarks>
         public LLDB.Value FindVariable(string var_name)
         {
             var arg0 = Marshal.StringToHGlobalAnsi(var_name);
             var __ret = new LLDB.Value.Internal();
-            Internal.FindVariable_0(new IntPtr(&__ret), __Instance, arg0);
+            Internal.FindVariable_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0);
             Marshal.FreeHGlobal(arg0);
             return LLDB.Value.__CreateInstance(__ret);
         }
@@ -597,7 +599,7 @@ namespace LLDB
             var arg0 = Marshal.StringToHGlobalAnsi(var_name);
             var arg1 = use_dynamic;
             var __ret = new LLDB.Value.Internal();
-            Internal.FindVariable_1(new IntPtr(&__ret), __Instance, arg0, arg1);
+            Internal.FindVariable_1(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0, arg1);
             Marshal.FreeHGlobal(arg0);
             return LLDB.Value.__CreateInstance(__ret);
         }
@@ -607,52 +609,42 @@ namespace LLDB
             var arg0 = Marshal.StringToHGlobalAnsi(var_expr_cstr);
             var arg1 = use_dynamic;
             var __ret = new LLDB.Value.Internal();
-            Internal.GetValueForVariablePath_0(new IntPtr(&__ret), __Instance, arg0, arg1);
+            Internal.GetValueForVariablePath_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0, arg1);
             Marshal.FreeHGlobal(arg0);
             return LLDB.Value.__CreateInstance(__ret);
         }
 
         /// <summary>
-        /// <para>The version that doesn't supply a 'use_dynamic' value will use
-        /// the target's default.</para>
+        /// <para>The version that doesn't supply a 'use_dynamic' value will use the</para>
         /// </summary>
         /// <remarks>
-        /// <para>/// The version that doesn't supply a 'use_dynamic' value will
-        /// use the</para>
-        /// <para>    /// target's default.</para>
+        /// <para>target's default.</para>
         /// </remarks>
         public LLDB.Value GetValueForVariablePath(string var_path)
         {
             var arg0 = Marshal.StringToHGlobalAnsi(var_path);
             var __ret = new LLDB.Value.Internal();
-            Internal.GetValueForVariablePath_1(new IntPtr(&__ret), __Instance, arg0);
+            Internal.GetValueForVariablePath_1(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0);
             Marshal.FreeHGlobal(arg0);
             return LLDB.Value.__CreateInstance(__ret);
         }
 
         /// <summary>
-        /// <para>Find variables, register sets, registers, or persistent variables
-        /// using the frame as the scope.</para>
+        /// <para>Find variables, register sets, registers, or persistent variables using</para>
         /// </summary>
         /// <remarks>
-        /// <para>/// Find variables, register sets, registers, or persistent
-        /// variables using</para>
-        /// <para>    /// the frame as the scope.</para>
-        /// <para>    ///</para>
-        /// <para>    /// NB. This function does not look up ivars in the function
-        /// object pointer.</para>
-        /// <para>    /// To do that use GetValueForVariablePath.</para>
-        /// <para>    ///</para>
-        /// <para>    /// The version that doesn't supply a 'use_dynamic' value
-        /// will use the</para>
-        /// <para>    /// target's default.</para>
+        /// <para>the frame as the scope.</para>
+        /// <para>NB. This function does not look up ivars in the function object pointer.</para>
+        /// <para>To do that use GetValueForVariablePath.</para>
+        /// <para>The version that doesn't supply a 'use_dynamic' value will use the</para>
+        /// <para>target's default.</para>
         /// </remarks>
         public LLDB.Value FindValue(string name, LLDB.ValueType value_type)
         {
             var arg0 = Marshal.StringToHGlobalAnsi(name);
             var arg1 = value_type;
             var __ret = new LLDB.Value.Internal();
-            Internal.FindValue_0(new IntPtr(&__ret), __Instance, arg0, arg1);
+            Internal.FindValue_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0, arg1);
             Marshal.FreeHGlobal(arg0);
             return LLDB.Value.__CreateInstance(__ret);
         }
@@ -663,15 +655,17 @@ namespace LLDB
             var arg1 = value_type;
             var arg2 = use_dynamic;
             var __ret = new LLDB.Value.Internal();
-            Internal.FindValue_1(new IntPtr(&__ret), __Instance, arg0, arg1, arg2);
+            Internal.FindValue_1(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0, arg1, arg2);
             Marshal.FreeHGlobal(arg0);
             return LLDB.Value.__CreateInstance(__ret);
         }
 
         public bool GetDescription(LLDB.Stream description)
         {
-            var arg0 = ReferenceEquals(description, null) ? global::System.IntPtr.Zero : description.__Instance;
-            var __ret = Internal.GetDescription_0(__Instance, arg0);
+            if (ReferenceEquals(description, null))
+                throw new global::System.ArgumentNullException("description", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = description.__Instance;
+            var __ret = Internal.GetDescription_0((__Instance + __PointerAdjustment), arg0);
             return __ret;
         }
 
@@ -679,7 +673,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetFrameID_0(__Instance);
+                var __ret = Internal.GetFrameID_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
         }
@@ -688,7 +682,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetCFA_0(__Instance);
+                var __ret = Internal.GetCFA_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
         }
@@ -697,7 +691,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetPC_0(__Instance);
+                var __ret = Internal.GetPC_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
         }
@@ -706,7 +700,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetSP_0(__Instance);
+                var __ret = Internal.GetSP_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
         }
@@ -715,7 +709,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetFP_0(__Instance);
+                var __ret = Internal.GetFP_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
         }
@@ -724,7 +718,16 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetFunctionName_0(__Instance);
+                var __ret = Internal.GetFunctionName_0((__Instance + __PointerAdjustment));
+                return Marshal.PtrToStringAnsi(__ret);
+            }
+        }
+
+        public string DisplayFunctionName
+        {
+            get
+            {
+                var __ret = Internal.GetDisplayFunctionName_0((__Instance + __PointerAdjustment));
                 return Marshal.PtrToStringAnsi(__ret);
             }
         }

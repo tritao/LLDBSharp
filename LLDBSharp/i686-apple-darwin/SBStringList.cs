@@ -66,36 +66,41 @@ namespace LLDB
         }
 
         public global::System.IntPtr __Instance { get; protected set; }
+
+        protected int __PointerAdjustment;
         public static readonly System.Collections.Concurrent.ConcurrentDictionary<IntPtr, StringList> NativeToManagedMap = new System.Collections.Concurrent.ConcurrentDictionary<IntPtr, StringList>();
+        protected void*[] __OriginalVTables;
 
-        private readonly bool __ownsNativeInstance;
+        protected bool __ownsNativeInstance;
 
-        public static StringList __CreateInstance(global::System.IntPtr native)
+        public static StringList __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
         {
-            return new StringList((StringList.Internal*) native);
+            return new StringList(native.ToPointer(), skipVTables);
         }
 
-        public static StringList __CreateInstance(StringList.Internal native)
+        public static StringList __CreateInstance(StringList.Internal native, bool skipVTables = false)
         {
-            return new StringList(native);
+            return new StringList(native, skipVTables);
         }
 
-        private static StringList.Internal* __CopyValue(StringList.Internal native)
+        private static void* __CopyValue(StringList.Internal native)
         {
-            var ret = (StringList.Internal*) Marshal.AllocHGlobal(4);
-            *ret = native;
-            return ret;
+            var ret = Marshal.AllocHGlobal(4);
+            LLDB.StringList.Internal.cctor_1(ret, new global::System.IntPtr(&native));
+            return ret.ToPointer();
         }
 
-        private StringList(StringList.Internal native)
-            : this(__CopyValue(native))
+        private StringList(StringList.Internal native, bool skipVTables = false)
+            : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
         }
 
-        protected StringList(StringList.Internal* native, bool isInternalImpl = false)
+        protected StringList(void* native, bool skipVTables = false)
         {
+            if (native == null)
+                return;
             __Instance = new global::System.IntPtr(native);
         }
 
@@ -104,7 +109,18 @@ namespace LLDB
             __Instance = Marshal.AllocHGlobal(4);
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
-            Internal.ctor_0(__Instance);
+            Internal.ctor_0((__Instance + __PointerAdjustment));
+        }
+
+        public StringList(LLDB.StringList rhs)
+        {
+            __Instance = Marshal.AllocHGlobal(4);
+            __ownsNativeInstance = true;
+            NativeToManagedMap[__Instance] = this;
+            if (ReferenceEquals(rhs, null))
+                throw new global::System.ArgumentNullException("rhs", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = rhs.__Instance;
+            Internal.cctor_1((__Instance + __PointerAdjustment), arg0);
         }
 
         public void Dispose()
@@ -114,66 +130,56 @@ namespace LLDB
 
         protected virtual void Dispose(bool disposing)
         {
-            DestroyNativeInstance(false);
-        }
-
-        public virtual void DestroyNativeInstance()
-        {
-            DestroyNativeInstance(true);
-        }
-
-        private void DestroyNativeInstance(bool force)
-        {
             LLDB.StringList __dummy;
             NativeToManagedMap.TryRemove(__Instance, out __dummy);
-            if (__ownsNativeInstance || force)
-                Internal.dtor_0(__Instance);
+            Internal.dtor_0((__Instance + __PointerAdjustment));
             if (__ownsNativeInstance)
                 Marshal.FreeHGlobal(__Instance);
         }
 
         public bool IsValid()
         {
-            var __ret = Internal.IsValid_0(__Instance);
+            var __ret = Internal.IsValid_0((__Instance + __PointerAdjustment));
             return __ret;
         }
 
         public void AppendString(string str)
         {
             var arg0 = Marshal.StringToHGlobalAnsi(str);
-            Internal.AppendString_0(__Instance, arg0);
+            Internal.AppendString_0((__Instance + __PointerAdjustment), arg0);
             Marshal.FreeHGlobal(arg0);
         }
 
         public void AppendList(sbyte** strv, int strc)
         {
             var arg0 = strv;
-            Internal.AppendList_0(__Instance, arg0, strc);
+            Internal.AppendList_0((__Instance + __PointerAdjustment), arg0, strc);
         }
 
         public void AppendList(LLDB.StringList strings)
         {
-            var arg0 = ReferenceEquals(strings, null) ? global::System.IntPtr.Zero : strings.__Instance;
-            Internal.AppendList_1(__Instance, arg0);
+            if (ReferenceEquals(strings, null))
+                throw new global::System.ArgumentNullException("strings", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = strings.__Instance;
+            Internal.AppendList_1((__Instance + __PointerAdjustment), arg0);
         }
 
         public string GetStringAtIndex(uint idx)
         {
-            var arg0 = idx;
-            var __ret = Internal.GetStringAtIndex_0(__Instance, arg0);
+            var __ret = Internal.GetStringAtIndex_0((__Instance + __PointerAdjustment), idx);
             return Marshal.PtrToStringAnsi(__ret);
         }
 
         public void Clear()
         {
-            Internal.Clear_0(__Instance);
+            Internal.Clear_0((__Instance + __PointerAdjustment));
         }
 
         public uint Size
         {
             get
             {
-                var __ret = Internal.GetSize_0(__Instance);
+                var __ret = Internal.GetSize_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
         }

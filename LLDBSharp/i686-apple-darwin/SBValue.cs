@@ -72,6 +72,11 @@ namespace LLDB
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
+                EntryPoint="_ZN4lldb7SBValue10GetSummaryERNS_8SBStreamERNS_20SBTypeSummaryOptionsE")]
+            internal static extern global::System.IntPtr GetSummary_1(global::System.IntPtr instance, global::System.IntPtr stream, global::System.IntPtr options);
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
                 EntryPoint="_ZN4lldb7SBValue15GetDynamicValueENS_16DynamicValueTypeE")]
             internal static extern void GetDynamicValue_0(global::System.IntPtr @return, global::System.IntPtr instance, LLDB.DynamicValueType use_dynamic);
 
@@ -111,6 +116,26 @@ namespace LLDB
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
+                EntryPoint="_ZN4lldb7SBValue13GetTypeFormatEv")]
+            internal static extern void GetTypeFormat_0(global::System.IntPtr @return, global::System.IntPtr instance);
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
+                EntryPoint="_ZN4lldb7SBValue14GetTypeSummaryEv")]
+            internal static extern void GetTypeSummary_0(global::System.IntPtr @return, global::System.IntPtr instance);
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
+                EntryPoint="_ZN4lldb7SBValue13GetTypeFilterEv")]
+            internal static extern void GetTypeFilter_0(global::System.IntPtr @return, global::System.IntPtr instance);
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
+                EntryPoint="_ZN4lldb7SBValue16GetTypeSyntheticEv")]
+            internal static extern void GetTypeSynthetic_0(global::System.IntPtr @return, global::System.IntPtr instance);
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
                 EntryPoint="_ZN4lldb7SBValue15GetChildAtIndexEj")]
             internal static extern void GetChildAtIndex_0(global::System.IntPtr @return, global::System.IntPtr instance, uint idx);
 
@@ -128,6 +153,11 @@ namespace LLDB
             [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
                 EntryPoint="_ZN4lldb7SBValue25CreateValueFromExpressionEPKcS2_")]
             internal static extern void CreateValueFromExpression_0(global::System.IntPtr @return, global::System.IntPtr instance, global::System.IntPtr name, global::System.IntPtr expression);
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
+                EntryPoint="_ZN4lldb7SBValue25CreateValueFromExpressionEPKcS2_RNS_19SBExpressionOptionsE")]
+            internal static extern void CreateValueFromExpression_1(global::System.IntPtr @return, global::System.IntPtr instance, global::System.IntPtr name, global::System.IntPtr expression, global::System.IntPtr options);
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
@@ -206,6 +236,11 @@ namespace LLDB
                 EntryPoint="_ZN4lldb7SBValue21IsRuntimeSupportValueEv")]
             [return: MarshalAsAttribute(UnmanagedType.I1)]
             internal static extern bool IsRuntimeSupportValue_0(global::System.IntPtr instance);
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
+                EntryPoint="_ZN4lldb7SBValue14GetNumChildrenEj")]
+            internal static extern uint GetNumChildren_1(global::System.IntPtr instance, uint max);
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
@@ -390,36 +425,41 @@ namespace LLDB
         }
 
         public global::System.IntPtr __Instance { get; protected set; }
+
+        protected int __PointerAdjustment;
         public static readonly System.Collections.Concurrent.ConcurrentDictionary<IntPtr, Value> NativeToManagedMap = new System.Collections.Concurrent.ConcurrentDictionary<IntPtr, Value>();
+        protected void*[] __OriginalVTables;
 
-        private readonly bool __ownsNativeInstance;
+        protected bool __ownsNativeInstance;
 
-        public static Value __CreateInstance(global::System.IntPtr native)
+        public static Value __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
         {
-            return new Value((Value.Internal*) native);
+            return new Value(native.ToPointer(), skipVTables);
         }
 
-        public static Value __CreateInstance(Value.Internal native)
+        public static Value __CreateInstance(Value.Internal native, bool skipVTables = false)
         {
-            return new Value(native);
+            return new Value(native, skipVTables);
         }
 
-        private static Value.Internal* __CopyValue(Value.Internal native)
+        private static void* __CopyValue(Value.Internal native)
         {
-            var ret = (Value.Internal*) Marshal.AllocHGlobal(8);
-            *ret = native;
-            return ret;
+            var ret = Marshal.AllocHGlobal(8);
+            LLDB.Value.Internal.cctor_1(ret, new global::System.IntPtr(&native));
+            return ret.ToPointer();
         }
 
-        private Value(Value.Internal native)
-            : this(__CopyValue(native))
+        private Value(Value.Internal native, bool skipVTables = false)
+            : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
         }
 
-        protected Value(Value.Internal* native, bool isInternalImpl = false)
+        protected Value(void* native, bool skipVTables = false)
         {
+            if (native == null)
+                return;
             __Instance = new global::System.IntPtr(native);
         }
 
@@ -428,7 +468,18 @@ namespace LLDB
             __Instance = Marshal.AllocHGlobal(8);
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
-            Internal.ctor_0(__Instance);
+            Internal.ctor_0((__Instance + __PointerAdjustment));
+        }
+
+        public Value(LLDB.Value rhs)
+        {
+            __Instance = Marshal.AllocHGlobal(8);
+            __ownsNativeInstance = true;
+            NativeToManagedMap[__Instance] = this;
+            if (ReferenceEquals(rhs, null))
+                throw new global::System.ArgumentNullException("rhs", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = rhs.__Instance;
+            Internal.cctor_1((__Instance + __PointerAdjustment), arg0);
         }
 
         public void Dispose()
@@ -438,116 +489,117 @@ namespace LLDB
 
         protected virtual void Dispose(bool disposing)
         {
-            DestroyNativeInstance(false);
-        }
-
-        public virtual void DestroyNativeInstance()
-        {
-            DestroyNativeInstance(true);
-        }
-
-        private void DestroyNativeInstance(bool force)
-        {
             LLDB.Value __dummy;
             NativeToManagedMap.TryRemove(__Instance, out __dummy);
-            if (__ownsNativeInstance || force)
-                Internal.dtor_0(__Instance);
+            Internal.dtor_0((__Instance + __PointerAdjustment));
             if (__ownsNativeInstance)
                 Marshal.FreeHGlobal(__Instance);
         }
 
         public bool IsValid()
         {
-            var __ret = Internal.IsValid_0(__Instance);
+            var __ret = Internal.IsValid_0((__Instance + __PointerAdjustment));
             return __ret;
         }
 
         public void Clear()
         {
-            Internal.Clear_0(__Instance);
+            Internal.Clear_0((__Instance + __PointerAdjustment));
         }
 
         public LLDB.Error GetError()
         {
             var __ret = new LLDB.Error.Internal();
-            Internal.GetError_0(new IntPtr(&__ret), __Instance);
+            Internal.GetError_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
             return LLDB.Error.__CreateInstance(__ret);
         }
 
         public bool IsInScope()
         {
-            var __ret = Internal.IsInScope_0(__Instance);
+            var __ret = Internal.IsInScope_0((__Instance + __PointerAdjustment));
             return __ret;
         }
 
         public long GetValueAsSigned(LLDB.Error error, long fail_value)
         {
-            var arg0 = ReferenceEquals(error, null) ? global::System.IntPtr.Zero : error.__Instance;
-            var arg1 = fail_value;
-            var __ret = Internal.GetValueAsSigned_0(__Instance, arg0, arg1);
+            if (ReferenceEquals(error, null))
+                throw new global::System.ArgumentNullException("error", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = error.__Instance;
+            var __ret = Internal.GetValueAsSigned_0((__Instance + __PointerAdjustment), arg0, fail_value);
             return __ret;
         }
 
         public ulong GetValueAsUnsigned(LLDB.Error error, ulong fail_value)
         {
-            var arg0 = ReferenceEquals(error, null) ? global::System.IntPtr.Zero : error.__Instance;
-            var arg1 = fail_value;
-            var __ret = Internal.GetValueAsUnsigned_0(__Instance, arg0, arg1);
+            if (ReferenceEquals(error, null))
+                throw new global::System.ArgumentNullException("error", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = error.__Instance;
+            var __ret = Internal.GetValueAsUnsigned_0((__Instance + __PointerAdjustment), arg0, fail_value);
             return __ret;
         }
 
         public long GetValueAsSigned(long fail_value)
         {
-            var arg0 = fail_value;
-            var __ret = Internal.GetValueAsSigned_1(__Instance, arg0);
+            var __ret = Internal.GetValueAsSigned_1((__Instance + __PointerAdjustment), fail_value);
             return __ret;
         }
 
         public ulong GetValueAsUnsigned(ulong fail_value)
         {
-            var arg0 = fail_value;
-            var __ret = Internal.GetValueAsUnsigned_1(__Instance, arg0);
+            var __ret = Internal.GetValueAsUnsigned_1((__Instance + __PointerAdjustment), fail_value);
             return __ret;
+        }
+
+        public string GetSummary(LLDB.Stream stream, LLDB.TypeSummaryOptions options)
+        {
+            if (ReferenceEquals(stream, null))
+                throw new global::System.ArgumentNullException("stream", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = stream.__Instance;
+            if (ReferenceEquals(options, null))
+                throw new global::System.ArgumentNullException("options", "Cannot be null because it is a C++ reference (&).");
+            var arg1 = options.__Instance;
+            var __ret = Internal.GetSummary_1((__Instance + __PointerAdjustment), arg0, arg1);
+            return Marshal.PtrToStringAnsi(__ret);
         }
 
         public LLDB.Value GetDynamicValue(LLDB.DynamicValueType use_dynamic)
         {
             var arg0 = use_dynamic;
             var __ret = new LLDB.Value.Internal();
-            Internal.GetDynamicValue_0(new IntPtr(&__ret), __Instance, arg0);
+            Internal.GetDynamicValue_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0);
             return LLDB.Value.__CreateInstance(__ret);
         }
 
         public LLDB.Value GetStaticValue()
         {
             var __ret = new LLDB.Value.Internal();
-            Internal.GetStaticValue_0(new IntPtr(&__ret), __Instance);
+            Internal.GetStaticValue_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
             return LLDB.Value.__CreateInstance(__ret);
         }
 
         public LLDB.Value GetNonSyntheticValue()
         {
             var __ret = new LLDB.Value.Internal();
-            Internal.GetNonSyntheticValue_0(new IntPtr(&__ret), __Instance);
+            Internal.GetNonSyntheticValue_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
             return LLDB.Value.__CreateInstance(__ret);
         }
 
         public bool IsDynamic()
         {
-            var __ret = Internal.IsDynamic_0(__Instance);
+            var __ret = Internal.IsDynamic_0((__Instance + __PointerAdjustment));
             return __ret;
         }
 
         public bool IsSynthetic()
         {
-            var __ret = Internal.IsSynthetic_0(__Instance);
+            var __ret = Internal.IsSynthetic_0((__Instance + __PointerAdjustment));
             return __ret;
         }
 
         public bool SetValueFromCString(string value_str)
         {
             var arg0 = Marshal.StringToHGlobalAnsi(value_str);
-            var __ret = Internal.SetValueFromCString_0(__Instance, arg0);
+            var __ret = Internal.SetValueFromCString_0((__Instance + __PointerAdjustment), arg0);
             Marshal.FreeHGlobal(arg0);
             return __ret;
         }
@@ -555,27 +607,55 @@ namespace LLDB
         public bool SetValueFromCString(string value_str, LLDB.Error error)
         {
             var arg0 = Marshal.StringToHGlobalAnsi(value_str);
-            var arg1 = ReferenceEquals(error, null) ? global::System.IntPtr.Zero : error.__Instance;
-            var __ret = Internal.SetValueFromCString_1(__Instance, arg0, arg1);
+            if (ReferenceEquals(error, null))
+                throw new global::System.ArgumentNullException("error", "Cannot be null because it is a C++ reference (&).");
+            var arg1 = error.__Instance;
+            var __ret = Internal.SetValueFromCString_1((__Instance + __PointerAdjustment), arg0, arg1);
             Marshal.FreeHGlobal(arg0);
             return __ret;
         }
 
+        public LLDB.TypeFormat GetTypeFormat()
+        {
+            var __ret = new LLDB.TypeFormat.Internal();
+            Internal.GetTypeFormat_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
+            return LLDB.TypeFormat.__CreateInstance(__ret);
+        }
+
+        public LLDB.TypeSummary GetTypeSummary()
+        {
+            var __ret = new LLDB.TypeSummary.Internal();
+            Internal.GetTypeSummary_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
+            return LLDB.TypeSummary.__CreateInstance(__ret);
+        }
+
+        public LLDB.TypeFilter GetTypeFilter()
+        {
+            var __ret = new LLDB.TypeFilter.Internal();
+            Internal.GetTypeFilter_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
+            return LLDB.TypeFilter.__CreateInstance(__ret);
+        }
+
+        public LLDB.TypeSynthetic GetTypeSynthetic()
+        {
+            var __ret = new LLDB.TypeSynthetic.Internal();
+            Internal.GetTypeSynthetic_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
+            return LLDB.TypeSynthetic.__CreateInstance(__ret);
+        }
+
         public LLDB.Value GetChildAtIndex(uint idx)
         {
-            var arg0 = idx;
             var __ret = new LLDB.Value.Internal();
-            Internal.GetChildAtIndex_0(new IntPtr(&__ret), __Instance, arg0);
+            Internal.GetChildAtIndex_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), idx);
             return LLDB.Value.__CreateInstance(__ret);
         }
 
         public LLDB.Value CreateChildAtOffset(string name, uint offset, LLDB.Type type)
         {
             var arg0 = Marshal.StringToHGlobalAnsi(name);
-            var arg1 = offset;
             var arg2 = ReferenceEquals(type, null) ? new LLDB.Type.Internal() : *(LLDB.Type.Internal*) (type.__Instance);
             var __ret = new LLDB.Value.Internal();
-            Internal.CreateChildAtOffset_0(new IntPtr(&__ret), __Instance, arg0, arg1, arg2);
+            Internal.CreateChildAtOffset_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0, offset, arg2);
             Marshal.FreeHGlobal(arg0);
             return LLDB.Value.__CreateInstance(__ret);
         }
@@ -584,7 +664,7 @@ namespace LLDB
         {
             var arg0 = ReferenceEquals(type, null) ? new LLDB.Type.Internal() : *(LLDB.Type.Internal*) (type.__Instance);
             var __ret = new LLDB.Value.Internal();
-            Internal.Cast_0(new IntPtr(&__ret), __Instance, arg0);
+            Internal.Cast_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0);
             return LLDB.Value.__CreateInstance(__ret);
         }
 
@@ -593,7 +673,21 @@ namespace LLDB
             var arg0 = Marshal.StringToHGlobalAnsi(name);
             var arg1 = Marshal.StringToHGlobalAnsi(expression);
             var __ret = new LLDB.Value.Internal();
-            Internal.CreateValueFromExpression_0(new IntPtr(&__ret), __Instance, arg0, arg1);
+            Internal.CreateValueFromExpression_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0, arg1);
+            Marshal.FreeHGlobal(arg0);
+            Marshal.FreeHGlobal(arg1);
+            return LLDB.Value.__CreateInstance(__ret);
+        }
+
+        public LLDB.Value CreateValueFromExpression(string name, string expression, LLDB.ExpressionOptions options)
+        {
+            var arg0 = Marshal.StringToHGlobalAnsi(name);
+            var arg1 = Marshal.StringToHGlobalAnsi(expression);
+            if (ReferenceEquals(options, null))
+                throw new global::System.ArgumentNullException("options", "Cannot be null because it is a C++ reference (&).");
+            var arg2 = options.__Instance;
+            var __ret = new LLDB.Value.Internal();
+            Internal.CreateValueFromExpression_1(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0, arg1, arg2);
             Marshal.FreeHGlobal(arg0);
             Marshal.FreeHGlobal(arg1);
             return LLDB.Value.__CreateInstance(__ret);
@@ -602,10 +696,9 @@ namespace LLDB
         public LLDB.Value CreateValueFromAddress(string name, ulong address, LLDB.Type type)
         {
             var arg0 = Marshal.StringToHGlobalAnsi(name);
-            var arg1 = address;
             var arg2 = ReferenceEquals(type, null) ? new LLDB.Type.Internal() : *(LLDB.Type.Internal*) (type.__Instance);
             var __ret = new LLDB.Value.Internal();
-            Internal.CreateValueFromAddress_0(new IntPtr(&__ret), __Instance, arg0, arg1, arg2);
+            Internal.CreateValueFromAddress_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0, address, arg2);
             Marshal.FreeHGlobal(arg0);
             return LLDB.Value.__CreateInstance(__ret);
         }
@@ -616,7 +709,7 @@ namespace LLDB
             var arg1 = ReferenceEquals(data, null) ? new LLDB.Data.Internal() : *(LLDB.Data.Internal*) (data.__Instance);
             var arg2 = ReferenceEquals(type, null) ? new LLDB.Type.Internal() : *(LLDB.Type.Internal*) (type.__Instance);
             var __ret = new LLDB.Value.Internal();
-            Internal.CreateValueFromData_0(new IntPtr(&__ret), __Instance, arg0, arg1, arg2);
+            Internal.CreateValueFromData_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0, arg1, arg2);
             Marshal.FreeHGlobal(arg0);
             return LLDB.Value.__CreateInstance(__ret);
         }
@@ -625,94 +718,56 @@ namespace LLDB
         /// <para>Get a child value by index from a value.</para>
         /// </summary>
         /// <remarks>
-        /// <para>/// Get a child value by index from a value.</para>
-        /// <para>    ///</para>
-        /// <para>    /// Structs, unions, classes, arrays and pointers have
-        /// child</para>
-        /// <para>    /// values that can be access by index. </para>
-        /// <para>    ///</para>
-        /// <para>    /// Structs and unions access child members using a zero
-        /// based index</para>
-        /// <para>    /// for each child member. For</para>
-        /// <para>    /// </para>
-        /// <para>    /// Classes reserve the first indexes for base classes that
-        /// have </para>
-        /// <para>    /// members (empty base classes are omitted), and all members
-        /// of the</para>
-        /// <para>    /// current class will then follow the base classes. </para>
-        /// <para>    ///</para>
-        /// <para>    /// Pointers differ depending on what they point to. If the
-        /// pointer</para>
-        /// <para>    /// points to a simple type, the child at index zero</para>
-        /// <para>    /// is the only child value available, unless \a
-        /// synthetic_allowed </para>
-        /// <para>    /// is \b true, in which case the pointer will be used as an
-        /// array</para>
-        /// <para>    /// and can create 'synthetic' child values using positive or
-        /// </para>
-        /// <para>    /// negative indexes. If the pointer points to an aggregate
-        /// type </para>
-        /// <para>    /// (an array, class, union, struct), then the pointee is
-        /// </para>
-        /// <para>    /// transparently skipped and any children are going to be
-        /// the indexes</para>
-        /// <para>    /// of the child values within the aggregate type. For
-        /// example if</para>
-        /// <para>    /// we have a 'Point' type and we have a SBValue that
-        /// contains a</para>
-        /// <para>    /// pointer to a 'Point' type, then the child at index zero
-        /// will be</para>
-        /// <para>    /// the 'x' member, and the child at index 1 will be the 'y'
-        /// member</para>
-        /// <para>    /// (the child at index zero won't be a 'Point'
-        /// instance).</para>
-        /// <para>    /// </para>
-        /// <para>    /// Arrays have a preset number of children that can be
-        /// accessed by</para>
-        /// <para>    /// index and will returns invalid child values for indexes
-        /// that are</para>
-        /// <para>    /// out of bounds unless the \a synthetic_allowed is \b true.
-        /// In this</para>
-        /// <para>    /// case the array can create 'synthetic' child values for
-        /// indexes </para>
-        /// <para>    /// that aren't in the array bounds using positive or
-        /// negative </para>
-        /// <para>    /// indexes.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @param[in] idx</para>
-        /// <para>    ///     The index of the child value to get</para>
-        /// <para>    ///</para>
-        /// <para>    /// @param[in] use_dynamic</para>
-        /// <para>    ///     An enumeration that specifies whether to get dynamic
-        /// values,</para>
-        /// <para>    ///     and also if the target can be run to figure out the
-        /// dynamic</para>
-        /// <para>    ///     type of the child value.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @param[in] can_create_synthetic</para>
-        /// <para>    ///     If \b true, then allow child values to be created by
-        /// index</para>
-        /// <para>    ///     for pointers and arrays for indexes that normally
-        /// wouldn't</para>
-        /// <para>    ///     be allowed.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @return</para>
-        /// <para>    ///     A new SBValue object that represents the child member
-        /// value.</para>
+        /// <para>Structs, unions, classes, arrays and pointers have child</para>
+        /// <para>values that can be access by index. </para>
+        /// <para>Structs and unions access child members using a zero based index</para>
+        /// <para>for each child member. For</para>
+        /// <para>Classes reserve the first indexes for base classes that have </para>
+        /// <para>members (empty base classes are omitted), and all members of the</para>
+        /// <para>current class will then follow the base classes. </para>
+        /// <para>Pointers differ depending on what they point to. If the pointer</para>
+        /// <para>points to a simple type, the child at index zero</para>
+        /// <para>is the only child value available, unless </para>
+        /// <para> </para>
+        /// <para>is </para>
+        /// <para>in which case the pointer will be used as an array</para>
+        /// <para>and can create 'synthetic' child values using positive or </para>
+        /// <para>negative indexes. If the pointer points to an aggregate type </para>
+        /// <para>(an array, class, union, struct), then the pointee is </para>
+        /// <para>transparently skipped and any children are going to be the indexes</para>
+        /// <para>of the child values within the aggregate type. For example if</para>
+        /// <para>we have a 'Point' type and we have a SBValue that contains a</para>
+        /// <para>pointer to a 'Point' type, then the child at index zero will be</para>
+        /// <para>the 'x' member, and the child at index 1 will be the 'y' member</para>
+        /// <para>(the child at index zero won't be a 'Point' instance).</para>
+        /// <para>If you actually need an SBValue that represents the type pointed</para>
+        /// <para>to by a SBValue for which GetType().IsPointeeType() returns true,</para>
+        /// <para>regardless of the pointee type, you can do that with SBValue::Dereference.</para>
+        /// <para>Arrays have a preset number of children that can be accessed by</para>
+        /// <para>index and will returns invalid child values for indexes that are</para>
+        /// <para>out of bounds unless the </para>
+        /// <para>is </para>
+        /// <para>In this</para>
+        /// <para>case the array can create 'synthetic' child values for indexes </para>
+        /// <para>that aren't in the array bounds using positive or negative </para>
+        /// <para>indexes.</para>
+        /// <para> </para>
+        /// <para> </para>
+        /// <para> </para>
+        /// <para> </para>
         /// </remarks>
         public LLDB.Value GetChildAtIndex(uint idx, LLDB.DynamicValueType use_dynamic, bool can_create_synthetic)
         {
-            var arg0 = idx;
             var arg1 = use_dynamic;
             var __ret = new LLDB.Value.Internal();
-            Internal.GetChildAtIndex_1(new IntPtr(&__ret), __Instance, arg0, arg1, can_create_synthetic);
+            Internal.GetChildAtIndex_1(new IntPtr(&__ret), (__Instance + __PointerAdjustment), idx, arg1, can_create_synthetic);
             return LLDB.Value.__CreateInstance(__ret);
         }
 
         public uint GetIndexOfChildWithName(string name)
         {
             var arg0 = Marshal.StringToHGlobalAnsi(name);
-            var __ret = Internal.GetIndexOfChildWithName_0(__Instance, arg0);
+            var __ret = Internal.GetIndexOfChildWithName_0((__Instance + __PointerAdjustment), arg0);
             Marshal.FreeHGlobal(arg0);
             return __ret;
         }
@@ -721,7 +776,7 @@ namespace LLDB
         {
             var arg0 = Marshal.StringToHGlobalAnsi(name);
             var __ret = new LLDB.Value.Internal();
-            Internal.GetChildMemberWithName_0(new IntPtr(&__ret), __Instance, arg0);
+            Internal.GetChildMemberWithName_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0);
             Marshal.FreeHGlobal(arg0);
             return LLDB.Value.__CreateInstance(__ret);
         }
@@ -731,7 +786,7 @@ namespace LLDB
             var arg0 = Marshal.StringToHGlobalAnsi(name);
             var arg1 = use_dynamic;
             var __ret = new LLDB.Value.Internal();
-            Internal.GetChildMemberWithName_1(new IntPtr(&__ret), __Instance, arg0, arg1);
+            Internal.GetChildMemberWithName_1(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0, arg1);
             Marshal.FreeHGlobal(arg0);
             return LLDB.Value.__CreateInstance(__ret);
         }
@@ -740,7 +795,7 @@ namespace LLDB
         {
             var arg0 = Marshal.StringToHGlobalAnsi(expr_path);
             var __ret = new LLDB.Value.Internal();
-            Internal.GetValueForExpressionPath_0(new IntPtr(&__ret), __Instance, arg0);
+            Internal.GetValueForExpressionPath_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0);
             Marshal.FreeHGlobal(arg0);
             return LLDB.Value.__CreateInstance(__ret);
         }
@@ -748,14 +803,14 @@ namespace LLDB
         public LLDB.Value AddressOf()
         {
             var __ret = new LLDB.Value.Internal();
-            Internal.AddressOf_0(new IntPtr(&__ret), __Instance);
+            Internal.AddressOf_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
             return LLDB.Value.__CreateInstance(__ret);
         }
 
         public LLDB.Address GetAddress()
         {
             var __ret = new LLDB.Address.Internal();
-            Internal.GetAddress_0(new IntPtr(&__ret), __Instance);
+            Internal.GetAddress_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
             return LLDB.Address.__CreateInstance(__ret);
         }
 
@@ -763,42 +818,17 @@ namespace LLDB
         /// <para>Get an SBData wrapping what this SBValue points to.</para>
         /// </summary>
         /// <remarks>
-        /// <para>/// Get an SBData wrapping what this SBValue points to.</para>
-        /// <para>    ///</para>
-        /// <para>    /// This method will dereference the current SBValue, if
-        /// its</para>
-        /// <para>    /// data type is a T* or T[], and extract item_count
-        /// elements</para>
-        /// <para>    /// of type T from it, copying their contents in an SBData.
-        /// </para>
-        /// <para>    ///</para>
-        /// <para>    /// @param[in] item_idx</para>
-        /// <para>    ///     The index of the first item to retrieve. For an
-        /// array</para>
-        /// <para>    ///     this is equivalent to array[item_idx], for a
-        /// pointer</para>
-        /// <para>    ///     to *(pointer + item_idx). In either case, the
-        /// measurement</para>
-        /// <para>    ///     unit for item_idx is the sizeof(T) rather than the
-        /// byte</para>
-        /// <para>    ///</para>
-        /// <para>    /// @param[in] item_count</para>
-        /// <para>    ///     How many items should be copied into the output. By
-        /// default</para>
-        /// <para>    ///     only one item is copied, but more can be asked
-        /// for.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @return</para>
-        /// <para>    ///     An SBData with the contents of the copied items, on
-        /// success.</para>
-        /// <para>    ///     An empty SBData otherwise.</para>
+        /// <para>This method will dereference the current SBValue, if its</para>
+        /// <para>data type is a T* or T[], and extract item_count elements</para>
+        /// <para>of type T from it, copying their contents in an SBData. </para>
+        /// <para> </para>
+        /// <para> </para>
+        /// <para> </para>
         /// </remarks>
         public LLDB.Data GetPointeeData(uint item_idx, uint item_count)
         {
-            var arg0 = item_idx;
-            var arg1 = item_count;
             var __ret = new LLDB.Data.Internal();
-            Internal.GetPointeeData_0(new IntPtr(&__ret), __Instance, arg0, arg1);
+            Internal.GetPointeeData_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), item_idx, item_count);
             return LLDB.Data.__CreateInstance(__ret);
         }
 
@@ -806,36 +836,33 @@ namespace LLDB
         /// <para>Get an SBData wrapping the contents of this SBValue.</para>
         /// </summary>
         /// <remarks>
-        /// <para>/// Get an SBData wrapping the contents of this SBValue.</para>
-        /// <para>    ///</para>
-        /// <para>    /// This method will read the contents of this object in
-        /// memory</para>
-        /// <para>    /// and copy them into an SBData for future use. </para>
-        /// <para>    ///</para>
-        /// <para>    /// @return</para>
-        /// <para>    ///     An SBData with the contents of this SBValue, on
-        /// success.</para>
-        /// <para>    ///     An empty SBData otherwise.</para>
+        /// <para>This method will read the contents of this object in memory</para>
+        /// <para>and copy them into an SBData for future use. </para>
+        /// <para> </para>
         /// </remarks>
         public LLDB.Data GetData()
         {
             var __ret = new LLDB.Data.Internal();
-            Internal.GetData_0(new IntPtr(&__ret), __Instance);
+            Internal.GetData_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
             return LLDB.Data.__CreateInstance(__ret);
         }
 
         public bool SetData(LLDB.Data data, LLDB.Error error)
         {
-            var arg0 = ReferenceEquals(data, null) ? global::System.IntPtr.Zero : data.__Instance;
-            var arg1 = ReferenceEquals(error, null) ? global::System.IntPtr.Zero : error.__Instance;
-            var __ret = Internal.SetData_0(__Instance, arg0, arg1);
+            if (ReferenceEquals(data, null))
+                throw new global::System.ArgumentNullException("data", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = data.__Instance;
+            if (ReferenceEquals(error, null))
+                throw new global::System.ArgumentNullException("error", "Cannot be null because it is a C++ reference (&).");
+            var arg1 = error.__Instance;
+            var __ret = Internal.SetData_0((__Instance + __PointerAdjustment), arg0, arg1);
             return __ret;
         }
 
         public LLDB.Declaration GetDeclaration()
         {
             var __ret = new LLDB.Declaration.Internal();
-            Internal.GetDeclaration_0(new IntPtr(&__ret), __Instance);
+            Internal.GetDeclaration_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
             return LLDB.Declaration.__CreateInstance(__ret);
         }
 
@@ -843,112 +870,112 @@ namespace LLDB
         /// <para>Find out if a SBValue might have children.</para>
         /// </summary>
         /// <remarks>
-        /// <para>/// Find out if a SBValue might have children.</para>
-        /// <para>    ///</para>
-        /// <para>    /// This call is much more efficient than GetNumChildren() as
-        /// it</para>
-        /// <para>    /// doesn't need to complete the underlying type. This is
-        /// designed</para>
-        /// <para>    /// to be used in a UI environment in order to detect if
-        /// the</para>
-        /// <para>    /// disclosure triangle should be displayed or not.</para>
-        /// <para>    ///</para>
-        /// <para>    /// This function returns true for class, union,
-        /// structure,</para>
-        /// <para>    /// pointers, references, arrays and more. Again, it does so
-        /// without</para>
-        /// <para>    /// doing any expensive type completion.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @return</para>
-        /// <para>    ///     Returns \b true if the SBValue might have children,
-        /// or \b</para>
-        /// <para>    ///     false otherwise.</para>
+        /// <para>This call is much more efficient than GetNumChildren() as it</para>
+        /// <para>doesn't need to complete the underlying type. This is designed</para>
+        /// <para>to be used in a UI environment in order to detect if the</para>
+        /// <para>disclosure triangle should be displayed or not.</para>
+        /// <para>This function returns true for class, union, structure,</para>
+        /// <para>pointers, references, arrays and more. Again, it does so without</para>
+        /// <para>doing any expensive type completion.</para>
+        /// <para> </para>
         /// </remarks>
         public bool MightHaveChildren()
         {
-            var __ret = Internal.MightHaveChildren_0(__Instance);
+            var __ret = Internal.MightHaveChildren_0((__Instance + __PointerAdjustment));
             return __ret;
         }
 
         public bool IsRuntimeSupportValue()
         {
-            var __ret = Internal.IsRuntimeSupportValue_0(__Instance);
+            var __ret = Internal.IsRuntimeSupportValue_0((__Instance + __PointerAdjustment));
+            return __ret;
+        }
+
+        public uint GetNumChildren(uint max)
+        {
+            var __ret = Internal.GetNumChildren_1((__Instance + __PointerAdjustment), max);
             return __ret;
         }
 
         public LLDB.Target GetTarget()
         {
             var __ret = new LLDB.Target.Internal();
-            Internal.GetTarget_0(new IntPtr(&__ret), __Instance);
+            Internal.GetTarget_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
             return LLDB.Target.__CreateInstance(__ret);
         }
 
         public LLDB.Process GetProcess()
         {
             var __ret = new LLDB.Process.Internal();
-            Internal.GetProcess_0(new IntPtr(&__ret), __Instance);
+            Internal.GetProcess_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
             return LLDB.Process.__CreateInstance(__ret);
         }
 
         public LLDB.Thread GetThread()
         {
             var __ret = new LLDB.Thread.Internal();
-            Internal.GetThread_0(new IntPtr(&__ret), __Instance);
+            Internal.GetThread_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
             return LLDB.Thread.__CreateInstance(__ret);
         }
 
         public LLDB.Frame GetFrame()
         {
             var __ret = new LLDB.Frame.Internal();
-            Internal.GetFrame_0(new IntPtr(&__ret), __Instance);
+            Internal.GetFrame_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
             return LLDB.Frame.__CreateInstance(__ret);
         }
 
         public LLDB.Value Dereference()
         {
             var __ret = new LLDB.Value.Internal();
-            Internal.Dereference_0(new IntPtr(&__ret), __Instance);
+            Internal.Dereference_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
             return LLDB.Value.__CreateInstance(__ret);
         }
 
         public bool TypeIsPointerType()
         {
-            var __ret = Internal.TypeIsPointerType_0(__Instance);
+            var __ret = Internal.TypeIsPointerType_0((__Instance + __PointerAdjustment));
             return __ret;
         }
 
         public LLDB.Type GetType()
         {
             var __ret = new LLDB.Type.Internal();
-            Internal.GetType_0(new IntPtr(&__ret), __Instance);
+            Internal.GetType_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
             return LLDB.Type.__CreateInstance(__ret);
         }
 
         public LLDB.Value Persist()
         {
             var __ret = new LLDB.Value.Internal();
-            Internal.Persist_0(new IntPtr(&__ret), __Instance);
+            Internal.Persist_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
             return LLDB.Value.__CreateInstance(__ret);
         }
 
         public bool GetDescription(LLDB.Stream description)
         {
-            var arg0 = ReferenceEquals(description, null) ? global::System.IntPtr.Zero : description.__Instance;
-            var __ret = Internal.GetDescription_0(__Instance, arg0);
+            if (ReferenceEquals(description, null))
+                throw new global::System.ArgumentNullException("description", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = description.__Instance;
+            var __ret = Internal.GetDescription_0((__Instance + __PointerAdjustment), arg0);
             return __ret;
         }
 
         public bool GetExpressionPath(LLDB.Stream description)
         {
-            var arg0 = ReferenceEquals(description, null) ? global::System.IntPtr.Zero : description.__Instance;
-            var __ret = Internal.GetExpressionPath_0(__Instance, arg0);
+            if (ReferenceEquals(description, null))
+                throw new global::System.ArgumentNullException("description", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = description.__Instance;
+            var __ret = Internal.GetExpressionPath_0((__Instance + __PointerAdjustment), arg0);
             return __ret;
         }
 
         public bool GetExpressionPath(LLDB.Stream description, bool qualify_cxx_base_classes)
         {
-            var arg0 = ReferenceEquals(description, null) ? global::System.IntPtr.Zero : description.__Instance;
-            var __ret = Internal.GetExpressionPath_1(__Instance, arg0, qualify_cxx_base_classes);
+            if (ReferenceEquals(description, null))
+                throw new global::System.ArgumentNullException("description", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = description.__Instance;
+            var __ret = Internal.GetExpressionPath_1((__Instance + __PointerAdjustment), arg0, qualify_cxx_base_classes);
             return __ret;
         }
 
@@ -956,50 +983,27 @@ namespace LLDB
         /// <para>Watch this value if it resides in memory.</para>
         /// </summary>
         /// <remarks>
-        /// <para>/// Watch this value if it resides in memory.</para>
-        /// <para>    ///</para>
-        /// <para>    /// Sets a watchpoint on the value.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @param[in] resolve_location</para>
-        /// <para>    ///     Resolve the location of this value once and watch its
-        /// address.</para>
-        /// <para>    ///     This value must currently be set to \b true as
-        /// watching all</para>
-        /// <para>    ///     locations of a variable or a variable path is not yet
-        /// supported,</para>
-        /// <para>    ///     though we plan to support it in the future.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @param[in] read</para>
-        /// <para>    ///     Stop when this value is accessed.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @param[in] write</para>
-        /// <para>    ///     Stop when this value is modified</para>
-        /// <para>    ///</para>
-        /// <para>    /// @param[out] error</para>
-        /// <para>    ///     An error object. Contains the reason if there is some
-        /// failure.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @return</para>
-        /// <para>    ///     An SBWatchpoint object. This object might not be
-        /// valid upon</para>
-        /// <para>    ///     return due to a value not being contained in memory,
-        /// too </para>
-        /// <para>    ///     large, or watchpoint resources are not available or
-        /// all in</para>
-        /// <para>    ///     use.</para>
+        /// <para>Sets a watchpoint on the value.</para>
+        /// <para> </para>
+        /// <para> </para>
+        /// <para> </para>
+        /// <para> </para>
+        /// <para> </para>
         /// </remarks>
         public LLDB.Watchpoint Watch(bool resolve_location, bool read, bool write, LLDB.Error error)
         {
-            var arg3 = ReferenceEquals(error, null) ? global::System.IntPtr.Zero : error.__Instance;
+            if (ReferenceEquals(error, null))
+                throw new global::System.ArgumentNullException("error", "Cannot be null because it is a C++ reference (&).");
+            var arg3 = error.__Instance;
             var __ret = new LLDB.Watchpoint.Internal();
-            Internal.Watch_0(new IntPtr(&__ret), __Instance, resolve_location, read, write, arg3);
+            Internal.Watch_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), resolve_location, read, write, arg3);
             return LLDB.Watchpoint.__CreateInstance(__ret);
         }
 
         public LLDB.Watchpoint Watch(bool resolve_location, bool read, bool write)
         {
             var __ret = new LLDB.Watchpoint.Internal();
-            Internal.Watch_1(new IntPtr(&__ret), __Instance, resolve_location, read, write);
+            Internal.Watch_1(new IntPtr(&__ret), (__Instance + __PointerAdjustment), resolve_location, read, write);
             return LLDB.Watchpoint.__CreateInstance(__ret);
         }
 
@@ -1007,43 +1011,20 @@ namespace LLDB
         /// <para>Watch this value that this value points to in memory</para>
         /// </summary>
         /// <remarks>
-        /// <para>/// Watch this value that this value points to in memory</para>
-        /// <para>    ///</para>
-        /// <para>    /// Sets a watchpoint on the value.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @param[in] resolve_location</para>
-        /// <para>    ///     Resolve the location of this value once and watch its
-        /// address.</para>
-        /// <para>    ///     This value must currently be set to \b true as
-        /// watching all</para>
-        /// <para>    ///     locations of a variable or a variable path is not yet
-        /// supported,</para>
-        /// <para>    ///     though we plan to support it in the future.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @param[in] read</para>
-        /// <para>    ///     Stop when this value is accessed.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @param[in] write</para>
-        /// <para>    ///     Stop when this value is modified</para>
-        /// <para>    ///</para>
-        /// <para>    /// @param[out] error</para>
-        /// <para>    ///     An error object. Contains the reason if there is some
-        /// failure.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @return</para>
-        /// <para>    ///     An SBWatchpoint object. This object might not be
-        /// valid upon</para>
-        /// <para>    ///     return due to a value not being contained in memory,
-        /// too </para>
-        /// <para>    ///     large, or watchpoint resources are not available or
-        /// all in</para>
-        /// <para>    ///     use.</para>
+        /// <para>Sets a watchpoint on the value.</para>
+        /// <para> </para>
+        /// <para> </para>
+        /// <para> </para>
+        /// <para> </para>
+        /// <para> </para>
         /// </remarks>
         public LLDB.Watchpoint WatchPointee(bool resolve_location, bool read, bool write, LLDB.Error error)
         {
-            var arg3 = ReferenceEquals(error, null) ? global::System.IntPtr.Zero : error.__Instance;
+            if (ReferenceEquals(error, null))
+                throw new global::System.ArgumentNullException("error", "Cannot be null because it is a C++ reference (&).");
+            var arg3 = error.__Instance;
             var __ret = new LLDB.Watchpoint.Internal();
-            Internal.WatchPointee_0(new IntPtr(&__ret), __Instance, resolve_location, read, write, arg3);
+            Internal.WatchPointee_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), resolve_location, read, write, arg3);
             return LLDB.Watchpoint.__CreateInstance(__ret);
         }
 
@@ -1051,7 +1032,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetID_0(__Instance);
+                var __ret = Internal.GetID_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
         }
@@ -1060,7 +1041,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetName_0(__Instance);
+                var __ret = Internal.GetName_0((__Instance + __PointerAdjustment));
                 return Marshal.PtrToStringAnsi(__ret);
             }
         }
@@ -1069,7 +1050,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetTypeName_0(__Instance);
+                var __ret = Internal.GetTypeName_0((__Instance + __PointerAdjustment));
                 return Marshal.PtrToStringAnsi(__ret);
             }
         }
@@ -1078,7 +1059,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetDisplayTypeName_0(__Instance);
+                var __ret = Internal.GetDisplayTypeName_0((__Instance + __PointerAdjustment));
                 return Marshal.PtrToStringAnsi(__ret);
             }
         }
@@ -1087,7 +1068,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetByteSize_0(__Instance);
+                var __ret = Internal.GetByteSize_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
         }
@@ -1096,14 +1077,14 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetFormat_0(__Instance);
+                var __ret = Internal.GetFormat_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
 
             set
             {
                 var arg0 = value;
-                Internal.SetFormat_0(__Instance, arg0);
+                Internal.SetFormat_0((__Instance + __PointerAdjustment), arg0);
             }
         }
 
@@ -1111,7 +1092,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetValueAsString_0(__Instance);
+                var __ret = Internal.GetValueAsString_0((__Instance + __PointerAdjustment));
                 return Marshal.PtrToStringAnsi(__ret);
             }
         }
@@ -1120,7 +1101,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetValueType_0(__Instance);
+                var __ret = Internal.GetValueType_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
         }
@@ -1129,7 +1110,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetValueDidChange_0(__Instance);
+                var __ret = Internal.GetValueDidChange_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
         }
@@ -1138,7 +1119,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetSummary_0(__Instance);
+                var __ret = Internal.GetSummary_0((__Instance + __PointerAdjustment));
                 return Marshal.PtrToStringAnsi(__ret);
             }
         }
@@ -1147,7 +1128,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetObjectDescription_0(__Instance);
+                var __ret = Internal.GetObjectDescription_0((__Instance + __PointerAdjustment));
                 return Marshal.PtrToStringAnsi(__ret);
             }
         }
@@ -1156,7 +1137,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetTypeValidatorResult_0(__Instance);
+                var __ret = Internal.GetTypeValidatorResult_0((__Instance + __PointerAdjustment));
                 return Marshal.PtrToStringAnsi(__ret);
             }
         }
@@ -1165,14 +1146,14 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetPreferDynamicValue_0(__Instance);
+                var __ret = Internal.GetPreferDynamicValue_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
 
             set
             {
                 var arg0 = value;
-                Internal.SetPreferDynamicValue_0(__Instance, arg0);
+                Internal.SetPreferDynamicValue_0((__Instance + __PointerAdjustment), arg0);
             }
         }
 
@@ -1180,13 +1161,13 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetPreferSyntheticValue_0(__Instance);
+                var __ret = Internal.GetPreferSyntheticValue_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
 
             set
             {
-                Internal.SetPreferSyntheticValue_0(__Instance, value);
+                Internal.SetPreferSyntheticValue_0((__Instance + __PointerAdjustment), value);
             }
         }
 
@@ -1194,7 +1175,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetLocation_0(__Instance);
+                var __ret = Internal.GetLocation_0((__Instance + __PointerAdjustment));
                 return Marshal.PtrToStringAnsi(__ret);
             }
         }
@@ -1203,7 +1184,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetLoadAddress_0(__Instance);
+                var __ret = Internal.GetLoadAddress_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
         }
@@ -1212,7 +1193,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetNumChildren_0(__Instance);
+                var __ret = Internal.GetNumChildren_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
         }
@@ -1221,7 +1202,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetOpaqueType_0(__Instance);
+                var __ret = Internal.GetOpaqueType_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
         }

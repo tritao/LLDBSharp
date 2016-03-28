@@ -57,6 +57,11 @@ namespace LLDB
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
+                EntryPoint="_ZN4lldb8SBThread31GetStopReasonExtendedBacktracesENS_26InstrumentationRuntimeTypeE")]
+            internal static extern void GetStopReasonExtendedBacktraces_0(global::System.IntPtr @return, global::System.IntPtr instance, LLDB.InstrumentationRuntimeType type);
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
                 EntryPoint="_ZN4lldb8SBThread18GetStopDescriptionEPcm")]
             internal static extern uint GetStopDescription_0(global::System.IntPtr instance, sbyte* dst, uint dst_len);
 
@@ -85,6 +90,11 @@ namespace LLDB
             [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
                 EntryPoint="_ZN4lldb8SBThread8StepIntoEPKcNS_7RunModeE")]
             internal static extern void StepInto_1(global::System.IntPtr instance, global::System.IntPtr target_name, LLDB.RunMode stop_other_threads);
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
+                EntryPoint="_ZN4lldb8SBThread8StepIntoEPKcjRNS_7SBErrorENS_7RunModeE")]
+            internal static extern void StepInto_2(global::System.IntPtr instance, global::System.IntPtr target_name, uint end_line, global::System.IntPtr error, LLDB.RunMode stop_other_threads);
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
@@ -283,36 +293,41 @@ namespace LLDB
         }
 
         public global::System.IntPtr __Instance { get; protected set; }
+
+        protected int __PointerAdjustment;
         public static readonly System.Collections.Concurrent.ConcurrentDictionary<IntPtr, Thread> NativeToManagedMap = new System.Collections.Concurrent.ConcurrentDictionary<IntPtr, Thread>();
+        protected void*[] __OriginalVTables;
 
-        private readonly bool __ownsNativeInstance;
+        protected bool __ownsNativeInstance;
 
-        public static Thread __CreateInstance(global::System.IntPtr native)
+        public static Thread __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
         {
-            return new Thread((Thread.Internal*) native);
+            return new Thread(native.ToPointer(), skipVTables);
         }
 
-        public static Thread __CreateInstance(Thread.Internal native)
+        public static Thread __CreateInstance(Thread.Internal native, bool skipVTables = false)
         {
-            return new Thread(native);
+            return new Thread(native, skipVTables);
         }
 
-        private static Thread.Internal* __CopyValue(Thread.Internal native)
+        private static void* __CopyValue(Thread.Internal native)
         {
-            var ret = (Thread.Internal*) Marshal.AllocHGlobal(8);
-            *ret = native;
-            return ret;
+            var ret = Marshal.AllocHGlobal(8);
+            LLDB.Thread.Internal.cctor_1(ret, new global::System.IntPtr(&native));
+            return ret.ToPointer();
         }
 
-        private Thread(Thread.Internal native)
-            : this(__CopyValue(native))
+        private Thread(Thread.Internal native, bool skipVTables = false)
+            : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
         }
 
-        protected Thread(Thread.Internal* native, bool isInternalImpl = false)
+        protected Thread(void* native, bool skipVTables = false)
         {
+            if (native == null)
+                return;
             __Instance = new global::System.IntPtr(native);
         }
 
@@ -321,7 +336,18 @@ namespace LLDB
             __Instance = Marshal.AllocHGlobal(8);
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
-            Internal.ctor_0(__Instance);
+            Internal.ctor_0((__Instance + __PointerAdjustment));
+        }
+
+        public Thread(LLDB.Thread thread)
+        {
+            __Instance = Marshal.AllocHGlobal(8);
+            __ownsNativeInstance = true;
+            NativeToManagedMap[__Instance] = this;
+            if (ReferenceEquals(thread, null))
+                throw new global::System.ArgumentNullException("thread", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = thread.__Instance;
+            Internal.cctor_1((__Instance + __PointerAdjustment), arg0);
         }
 
         public void Dispose()
@@ -331,20 +357,9 @@ namespace LLDB
 
         protected virtual void Dispose(bool disposing)
         {
-            DestroyNativeInstance(false);
-        }
-
-        public virtual void DestroyNativeInstance()
-        {
-            DestroyNativeInstance(true);
-        }
-
-        private void DestroyNativeInstance(bool force)
-        {
             LLDB.Thread __dummy;
             NativeToManagedMap.TryRemove(__Instance, out __dummy);
-            if (__ownsNativeInstance || force)
-                Internal.dtor_0(__Instance);
+            Internal.dtor_0((__Instance + __PointerAdjustment));
             if (__ownsNativeInstance)
                 Marshal.FreeHGlobal(__Instance);
         }
@@ -352,80 +367,83 @@ namespace LLDB
         public LLDB.Queue GetQueue()
         {
             var __ret = new LLDB.Queue.Internal();
-            Internal.GetQueue_0(new IntPtr(&__ret), __Instance);
+            Internal.GetQueue_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
             return LLDB.Queue.__CreateInstance(__ret);
         }
 
         public bool IsValid()
         {
-            var __ret = Internal.IsValid_0(__Instance);
+            var __ret = Internal.IsValid_0((__Instance + __PointerAdjustment));
             return __ret;
         }
 
         public void Clear()
         {
-            Internal.Clear_0(__Instance);
+            Internal.Clear_0((__Instance + __PointerAdjustment));
         }
 
         /// <summary>
         /// <para>Get information associated with a stop reason.</para>
         /// </summary>
         /// <remarks>
-        /// <para>/// Get information associated with a stop reason.</para>
-        /// <para>    ///</para>
-        /// <para>    /// Breakpoint stop reasons will have data that consists of
-        /// pairs of </para>
-        /// <para>    /// breakpoint IDs followed by the breakpoint location IDs
-        /// (they always come</para>
-        /// <para>    /// in pairs).</para>
-        /// <para>    ///</para>
-        /// <para>    /// Stop Reason              Count Data Type</para>
-        /// <para>    /// ======================== =====
-        /// =========================================</para>
-        /// <para>    /// eStopReasonNone          0</para>
-        /// <para>    /// eStopReasonTrace         0</para>
-        /// <para>    /// eStopReasonBreakpoint    N     duple: {breakpoint id,
-        /// location id}</para>
-        /// <para>    /// eStopReasonWatchpoint    1     watchpoint id</para>
-        /// <para>    /// eStopReasonSignal        1     unix signal number</para>
-        /// <para>    /// eStopReasonException     N     exception data</para>
-        /// <para>    /// eStopReasonExec          0</para>
-        /// <para>    /// eStopReasonPlanComplete  0</para>
+        /// <para>Breakpoint stop reasons will have data that consists of pairs of </para>
+        /// <para>breakpoint IDs followed by the breakpoint location IDs (they always come</para>
+        /// <para>in pairs).</para>
+        /// <para>Stop Reason              Count Data Type</para>
+        /// <para>======================== ===== =========================================</para>
+        /// <para>eStopReasonNone          0</para>
+        /// <para>eStopReasonTrace         0</para>
+        /// <para>eStopReasonBreakpoint    N     duple: {breakpoint id, location id}</para>
+        /// <para>eStopReasonWatchpoint    1     watchpoint id</para>
+        /// <para>eStopReasonSignal        1     unix signal number</para>
+        /// <para>eStopReasonException     N     exception data</para>
+        /// <para>eStopReasonExec          0</para>
+        /// <para>eStopReasonPlanComplete  0</para>
         /// </remarks>
         public ulong GetStopReasonDataAtIndex(uint idx)
         {
-            var arg0 = idx;
-            var __ret = Internal.GetStopReasonDataAtIndex_0(__Instance, arg0);
+            var __ret = Internal.GetStopReasonDataAtIndex_0((__Instance + __PointerAdjustment), idx);
             return __ret;
         }
 
         public bool GetStopReasonExtendedInfoAsJSON(LLDB.Stream stream)
         {
-            var arg0 = ReferenceEquals(stream, null) ? global::System.IntPtr.Zero : stream.__Instance;
-            var __ret = Internal.GetStopReasonExtendedInfoAsJSON_0(__Instance, arg0);
+            if (ReferenceEquals(stream, null))
+                throw new global::System.ArgumentNullException("stream", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = stream.__Instance;
+            var __ret = Internal.GetStopReasonExtendedInfoAsJSON_0((__Instance + __PointerAdjustment), arg0);
             return __ret;
+        }
+
+        public LLDB.ThreadCollection GetStopReasonExtendedBacktraces(LLDB.InstrumentationRuntimeType type)
+        {
+            var arg0 = type;
+            var __ret = new LLDB.ThreadCollection.Internal();
+            Internal.GetStopReasonExtendedBacktraces_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0);
+            return LLDB.ThreadCollection.__CreateInstance(__ret);
         }
 
         public uint GetStopDescription(sbyte* dst, uint dst_len)
         {
             var arg0 = dst;
-            var arg1 = dst_len;
-            var __ret = Internal.GetStopDescription_0(__Instance, arg0, arg1);
+            var __ret = Internal.GetStopDescription_0((__Instance + __PointerAdjustment), arg0, dst_len);
             return __ret;
         }
 
         public LLDB.Value GetStopReturnValue()
         {
             var __ret = new LLDB.Value.Internal();
-            Internal.GetStopReturnValue_0(new IntPtr(&__ret), __Instance);
+            Internal.GetStopReturnValue_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
             return LLDB.Value.__CreateInstance(__ret);
         }
 
         public bool GetInfoItemByPathAsString(string path, LLDB.Stream strm)
         {
             var arg0 = Marshal.StringToHGlobalAnsi(path);
-            var arg1 = ReferenceEquals(strm, null) ? global::System.IntPtr.Zero : strm.__Instance;
-            var __ret = Internal.GetInfoItemByPathAsString_0(__Instance, arg0, arg1);
+            if (ReferenceEquals(strm, null))
+                throw new global::System.ArgumentNullException("strm", "Cannot be null because it is a C++ reference (&).");
+            var arg1 = strm.__Instance;
+            var __ret = Internal.GetInfoItemByPathAsString_0((__Instance + __PointerAdjustment), arg0, arg1);
             Marshal.FreeHGlobal(arg0);
             return __ret;
         }
@@ -433,46 +451,62 @@ namespace LLDB
         public void StepOver(LLDB.RunMode stop_other_threads)
         {
             var arg0 = stop_other_threads;
-            Internal.StepOver_0(__Instance, arg0);
+            Internal.StepOver_0((__Instance + __PointerAdjustment), arg0);
         }
 
         public void StepInto(LLDB.RunMode stop_other_threads)
         {
             var arg0 = stop_other_threads;
-            Internal.StepInto_0(__Instance, arg0);
+            Internal.StepInto_0((__Instance + __PointerAdjustment), arg0);
         }
 
         public void StepInto(string target_name, LLDB.RunMode stop_other_threads)
         {
             var arg0 = Marshal.StringToHGlobalAnsi(target_name);
             var arg1 = stop_other_threads;
-            Internal.StepInto_1(__Instance, arg0, arg1);
+            Internal.StepInto_1((__Instance + __PointerAdjustment), arg0, arg1);
+            Marshal.FreeHGlobal(arg0);
+        }
+
+        public void StepInto(string target_name, uint end_line, LLDB.Error error, LLDB.RunMode stop_other_threads)
+        {
+            var arg0 = Marshal.StringToHGlobalAnsi(target_name);
+            if (ReferenceEquals(error, null))
+                throw new global::System.ArgumentNullException("error", "Cannot be null because it is a C++ reference (&).");
+            var arg2 = error.__Instance;
+            var arg3 = stop_other_threads;
+            Internal.StepInto_2((__Instance + __PointerAdjustment), arg0, end_line, arg2, arg3);
             Marshal.FreeHGlobal(arg0);
         }
 
         public void StepOut()
         {
-            Internal.StepOut_0(__Instance);
+            Internal.StepOut_0((__Instance + __PointerAdjustment));
         }
 
         public void StepOutOfFrame(LLDB.Frame frame)
         {
-            var arg0 = ReferenceEquals(frame, null) ? global::System.IntPtr.Zero : frame.__Instance;
-            Internal.StepOutOfFrame_0(__Instance, arg0);
+            if (ReferenceEquals(frame, null))
+                throw new global::System.ArgumentNullException("frame", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = frame.__Instance;
+            Internal.StepOutOfFrame_0((__Instance + __PointerAdjustment), arg0);
         }
 
         public void StepInstruction(bool step_over)
         {
-            Internal.StepInstruction_0(__Instance, step_over);
+            Internal.StepInstruction_0((__Instance + __PointerAdjustment), step_over);
         }
 
         public LLDB.Error StepOverUntil(LLDB.Frame frame, LLDB.FileSpec file_spec, uint line)
         {
-            var arg0 = ReferenceEquals(frame, null) ? global::System.IntPtr.Zero : frame.__Instance;
-            var arg1 = ReferenceEquals(file_spec, null) ? global::System.IntPtr.Zero : file_spec.__Instance;
-            var arg2 = line;
+            if (ReferenceEquals(frame, null))
+                throw new global::System.ArgumentNullException("frame", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = frame.__Instance;
+            if (ReferenceEquals(file_spec, null))
+                throw new global::System.ArgumentNullException("file_spec", "Cannot be null because it is a C++ reference (&).");
+            var arg1 = file_spec.__Instance;
             var __ret = new LLDB.Error.Internal();
-            Internal.StepOverUntil_0(new IntPtr(&__ret), __Instance, arg0, arg1, arg2);
+            Internal.StepOverUntil_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0, arg1, line);
             return LLDB.Error.__CreateInstance(__ret);
         }
 
@@ -480,130 +514,108 @@ namespace LLDB
         {
             var arg0 = Marshal.StringToHGlobalAnsi(script_class_name);
             var __ret = new LLDB.Error.Internal();
-            Internal.StepUsingScriptedThreadPlan_0(new IntPtr(&__ret), __Instance, arg0);
+            Internal.StepUsingScriptedThreadPlan_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0);
             Marshal.FreeHGlobal(arg0);
             return LLDB.Error.__CreateInstance(__ret);
         }
 
         public LLDB.Error JumpToLine(LLDB.FileSpec file_spec, uint line)
         {
-            var arg0 = ReferenceEquals(file_spec, null) ? global::System.IntPtr.Zero : file_spec.__Instance;
-            var arg1 = line;
+            if (ReferenceEquals(file_spec, null))
+                throw new global::System.ArgumentNullException("file_spec", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = file_spec.__Instance;
             var __ret = new LLDB.Error.Internal();
-            Internal.JumpToLine_0(new IntPtr(&__ret), __Instance, arg0, arg1);
+            Internal.JumpToLine_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0, line);
             return LLDB.Error.__CreateInstance(__ret);
         }
 
         public void RunToAddress(ulong addr)
         {
-            var arg0 = addr;
-            Internal.RunToAddress_0(__Instance, arg0);
+            Internal.RunToAddress_0((__Instance + __PointerAdjustment), addr);
         }
 
         public LLDB.Error ReturnFromFrame(LLDB.Frame frame, LLDB.Value return_value)
         {
-            var arg0 = ReferenceEquals(frame, null) ? global::System.IntPtr.Zero : frame.__Instance;
-            var arg1 = ReferenceEquals(return_value, null) ? global::System.IntPtr.Zero : return_value.__Instance;
+            if (ReferenceEquals(frame, null))
+                throw new global::System.ArgumentNullException("frame", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = frame.__Instance;
+            if (ReferenceEquals(return_value, null))
+                throw new global::System.ArgumentNullException("return_value", "Cannot be null because it is a C++ reference (&).");
+            var arg1 = return_value.__Instance;
             var __ret = new LLDB.Error.Internal();
-            Internal.ReturnFromFrame_0(new IntPtr(&__ret), __Instance, arg0, arg1);
+            Internal.ReturnFromFrame_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0, arg1);
             return LLDB.Error.__CreateInstance(__ret);
         }
 
         /// <summary>
-        /// <para>LLDB currently supports process centric debugging which means
-        /// when any thread in a process stops, all other threads are stopped. The
-        /// Suspend() call here tells our process to suspend a thread and not let it
-        /// run when the other threads in a process are allowed to run. So when
-        /// SBProcess::Continue() is called, any threads that aren't suspended will be
-        /// allowed to run. If any of the SBThread functions for stepping are called
-        /// (StepOver, StepInto, StepOut, StepInstruction, RunToAddress), the thread
-        /// will not be allowed to run and these functions will simply return.</para>
+        /// <para>LLDB currently supports process centric debugging which means when any</para>
         /// </summary>
         /// <remarks>
-        /// <para>/// LLDB currently supports process centric debugging which means
-        /// when any</para>
-        /// <para>    /// thread in a process stops, all other threads are stopped.
-        /// The Suspend()</para>
-        /// <para>    /// call here tells our process to suspend a thread and not
-        /// let it run when</para>
-        /// <para>    /// the other threads in a process are allowed to run. So
-        /// when </para>
-        /// <para>    /// SBProcess::Continue() is called, any threads that aren't
-        /// suspended will</para>
-        /// <para>    /// be allowed to run. If any of the SBThread functions for
-        /// stepping are </para>
-        /// <para>    /// called (StepOver, StepInto, StepOut, StepInstruction,
-        /// RunToAddress), the</para>
-        /// <para>    /// thread will not be allowed to run and these functions
-        /// will simply return.</para>
-        /// <para>    ///</para>
-        /// <para>    /// Eventually we plan to add support for thread centric
-        /// debugging where</para>
-        /// <para>    /// each thread is controlled individually and each thread
-        /// would broadcast</para>
-        /// <para>    /// its state, but we haven't implemented this yet.</para>
-        /// <para>    /// </para>
-        /// <para>    /// Likewise the SBThread::Resume() call will again allow the
-        /// thread to run</para>
-        /// <para>    /// when the process is continued.</para>
-        /// <para>    ///</para>
-        /// <para>    /// Suspend() and Resume() functions are not currently
-        /// reference counted, if</para>
-        /// <para>    /// anyone has the need for them to be reference counted,
-        /// please let us</para>
-        /// <para>    /// know.</para>
+        /// <para>thread in a process stops, all other threads are stopped. The Suspend()</para>
+        /// <para>call here tells our process to suspend a thread and not let it run when</para>
+        /// <para>the other threads in a process are allowed to run. So when </para>
+        /// <para>SBProcess::Continue() is called, any threads that aren't suspended will</para>
+        /// <para>be allowed to run. If any of the SBThread functions for stepping are </para>
+        /// <para>called (StepOver, StepInto, StepOut, StepInstruction, RunToAddress), the</para>
+        /// <para>thread will not be allowed to run and these functions will simply return.</para>
+        /// <para>Eventually we plan to add support for thread centric debugging where</para>
+        /// <para>each thread is controlled individually and each thread would broadcast</para>
+        /// <para>its state, but we haven't implemented this yet.</para>
+        /// <para>Likewise the SBThread::Resume() call will again allow the thread to run</para>
+        /// <para>when the process is continued.</para>
+        /// <para>Suspend() and Resume() functions are not currently reference counted, if</para>
+        /// <para>anyone has the need for them to be reference counted, please let us</para>
+        /// <para>know.</para>
         /// </remarks>
         public bool Suspend()
         {
-            var __ret = Internal.Suspend_0(__Instance);
+            var __ret = Internal.Suspend_0((__Instance + __PointerAdjustment));
             return __ret;
         }
 
         public bool Resume()
         {
-            var __ret = Internal.Resume_0(__Instance);
+            var __ret = Internal.Resume_0((__Instance + __PointerAdjustment));
             return __ret;
         }
 
         public bool IsSuspended()
         {
-            var __ret = Internal.IsSuspended_0(__Instance);
+            var __ret = Internal.IsSuspended_0((__Instance + __PointerAdjustment));
             return __ret;
         }
 
         public bool IsStopped()
         {
-            var __ret = Internal.IsStopped_0(__Instance);
+            var __ret = Internal.IsStopped_0((__Instance + __PointerAdjustment));
             return __ret;
         }
 
         public LLDB.Frame GetFrameAtIndex(uint idx)
         {
-            var arg0 = idx;
             var __ret = new LLDB.Frame.Internal();
-            Internal.GetFrameAtIndex_0(new IntPtr(&__ret), __Instance, arg0);
+            Internal.GetFrameAtIndex_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), idx);
             return LLDB.Frame.__CreateInstance(__ret);
         }
 
         public LLDB.Frame GetSelectedFrame()
         {
             var __ret = new LLDB.Frame.Internal();
-            Internal.GetSelectedFrame_0(new IntPtr(&__ret), __Instance);
+            Internal.GetSelectedFrame_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
             return LLDB.Frame.__CreateInstance(__ret);
         }
 
         public LLDB.Frame SetSelectedFrame(uint frame_idx)
         {
-            var arg0 = frame_idx;
             var __ret = new LLDB.Frame.Internal();
-            Internal.SetSelectedFrame_0(new IntPtr(&__ret), __Instance, arg0);
+            Internal.SetSelectedFrame_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), frame_idx);
             return LLDB.Frame.__CreateInstance(__ret);
         }
 
         public LLDB.Process GetProcess()
         {
             var __ret = new LLDB.Process.Internal();
-            Internal.GetProcess_0(new IntPtr(&__ret), __Instance);
+            Internal.GetProcess_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
             return LLDB.Process.__CreateInstance(__ret);
         }
 
@@ -624,25 +636,40 @@ namespace LLDB
             return this == obj as Thread;
         }
 
+        public override int GetHashCode()
+        {
+            if (__Instance == global::System.IntPtr.Zero)
+                return global::System.IntPtr.Zero.GetHashCode();
+            return (*(Internal*) __Instance).GetHashCode();
+        }
+
         public static bool operator !=(LLDB.Thread __op, LLDB.Thread rhs)
         {
-            var arg0 = ReferenceEquals(__op, null) ? global::System.IntPtr.Zero : __op.__Instance;
-            var arg1 = ReferenceEquals(rhs, null) ? global::System.IntPtr.Zero : rhs.__Instance;
+            bool __opNull = ReferenceEquals(__op, null);
+            bool rhsNull = ReferenceEquals(rhs, null);
+            if (__opNull || rhsNull)
+                return !(__opNull && rhsNull);
+            var arg0 = __op.__Instance;
+            var arg1 = rhs.__Instance;
             var __ret = Internal.OperatorExclaimEqual_0(arg0, arg1);
             return __ret;
         }
 
         public bool GetDescription(LLDB.Stream description)
         {
-            var arg0 = ReferenceEquals(description, null) ? global::System.IntPtr.Zero : description.__Instance;
-            var __ret = Internal.GetDescription_0(__Instance, arg0);
+            if (ReferenceEquals(description, null))
+                throw new global::System.ArgumentNullException("description", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = description.__Instance;
+            var __ret = Internal.GetDescription_0((__Instance + __PointerAdjustment), arg0);
             return __ret;
         }
 
         public bool GetStatus(LLDB.Stream status)
         {
-            var arg0 = ReferenceEquals(status, null) ? global::System.IntPtr.Zero : status.__Instance;
-            var __ret = Internal.GetStatus_0(__Instance, arg0);
+            if (ReferenceEquals(status, null))
+                throw new global::System.ArgumentNullException("status", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = status.__Instance;
+            var __ret = Internal.GetStatus_0((__Instance + __PointerAdjustment), arg0);
             return __ret;
         }
 
@@ -650,27 +677,31 @@ namespace LLDB
         {
             var arg0 = Marshal.StringToHGlobalAnsi(type);
             var __ret = new LLDB.Thread.Internal();
-            Internal.GetExtendedBacktraceThread_0(new IntPtr(&__ret), __Instance, arg0);
+            Internal.GetExtendedBacktraceThread_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0);
             Marshal.FreeHGlobal(arg0);
             return LLDB.Thread.__CreateInstance(__ret);
         }
 
         public bool SafeToCallFunctions()
         {
-            var __ret = Internal.SafeToCallFunctions_0(__Instance);
+            var __ret = Internal.SafeToCallFunctions_0((__Instance + __PointerAdjustment));
             return __ret;
         }
 
         public static bool EventIsThreadEvent(LLDB.Event @event)
         {
-            var arg0 = ReferenceEquals(@event, null) ? global::System.IntPtr.Zero : @event.__Instance;
+            if (ReferenceEquals(@event, null))
+                throw new global::System.ArgumentNullException("@event", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = @event.__Instance;
             var __ret = Internal.EventIsThreadEvent_0(arg0);
             return __ret;
         }
 
         public static LLDB.Frame GetStackFrameFromEvent(LLDB.Event @event)
         {
-            var arg0 = ReferenceEquals(@event, null) ? global::System.IntPtr.Zero : @event.__Instance;
+            if (ReferenceEquals(@event, null))
+                throw new global::System.ArgumentNullException("@event", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = @event.__Instance;
             var __ret = new LLDB.Frame.Internal();
             Internal.GetStackFrameFromEvent_0(new IntPtr(&__ret), arg0);
             return LLDB.Frame.__CreateInstance(__ret);
@@ -678,7 +709,9 @@ namespace LLDB
 
         public static LLDB.Thread GetThreadFromEvent(LLDB.Event @event)
         {
-            var arg0 = ReferenceEquals(@event, null) ? global::System.IntPtr.Zero : @event.__Instance;
+            if (ReferenceEquals(@event, null))
+                throw new global::System.ArgumentNullException("@event", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = @event.__Instance;
             var __ret = new LLDB.Thread.Internal();
             Internal.GetThreadFromEvent_0(new IntPtr(&__ret), arg0);
             return LLDB.Thread.__CreateInstance(__ret);
@@ -697,7 +730,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetStopReason_0(__Instance);
+                var __ret = Internal.GetStopReason_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
         }
@@ -706,7 +739,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetStopReasonDataCount_0(__Instance);
+                var __ret = Internal.GetStopReasonDataCount_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
         }
@@ -715,7 +748,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetThreadID_0(__Instance);
+                var __ret = Internal.GetThreadID_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
         }
@@ -724,7 +757,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetIndexID_0(__Instance);
+                var __ret = Internal.GetIndexID_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
         }
@@ -733,7 +766,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetName_0(__Instance);
+                var __ret = Internal.GetName_0((__Instance + __PointerAdjustment));
                 return Marshal.PtrToStringAnsi(__ret);
             }
         }
@@ -742,7 +775,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetQueueName_0(__Instance);
+                var __ret = Internal.GetQueueName_0((__Instance + __PointerAdjustment));
                 return Marshal.PtrToStringAnsi(__ret);
             }
         }
@@ -751,7 +784,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetQueueID_0(__Instance);
+                var __ret = Internal.GetQueueID_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
         }
@@ -760,7 +793,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetNumFrames_0(__Instance);
+                var __ret = Internal.GetNumFrames_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
         }
@@ -769,7 +802,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetExtendedBacktraceOriginatingIndexID_0(__Instance);
+                var __ret = Internal.GetExtendedBacktraceOriginatingIndexID_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
         }

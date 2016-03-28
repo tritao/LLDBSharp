@@ -67,36 +67,41 @@ namespace LLDB
         }
 
         public global::System.IntPtr __Instance { get; protected set; }
+
+        protected int __PointerAdjustment;
         public static readonly System.Collections.Concurrent.ConcurrentDictionary<IntPtr, FileSpecList> NativeToManagedMap = new System.Collections.Concurrent.ConcurrentDictionary<IntPtr, FileSpecList>();
+        protected void*[] __OriginalVTables;
 
-        private readonly bool __ownsNativeInstance;
+        protected bool __ownsNativeInstance;
 
-        public static FileSpecList __CreateInstance(global::System.IntPtr native)
+        public static FileSpecList __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
         {
-            return new FileSpecList((FileSpecList.Internal*) native);
+            return new FileSpecList(native.ToPointer(), skipVTables);
         }
 
-        public static FileSpecList __CreateInstance(FileSpecList.Internal native)
+        public static FileSpecList __CreateInstance(FileSpecList.Internal native, bool skipVTables = false)
         {
-            return new FileSpecList(native);
+            return new FileSpecList(native, skipVTables);
         }
 
-        private static FileSpecList.Internal* __CopyValue(FileSpecList.Internal native)
+        private static void* __CopyValue(FileSpecList.Internal native)
         {
-            var ret = (FileSpecList.Internal*) Marshal.AllocHGlobal(4);
-            *ret = native;
-            return ret;
+            var ret = Marshal.AllocHGlobal(4);
+            LLDB.FileSpecList.Internal.cctor_1(ret, new global::System.IntPtr(&native));
+            return ret.ToPointer();
         }
 
-        private FileSpecList(FileSpecList.Internal native)
-            : this(__CopyValue(native))
+        private FileSpecList(FileSpecList.Internal native, bool skipVTables = false)
+            : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
         }
 
-        protected FileSpecList(FileSpecList.Internal* native, bool isInternalImpl = false)
+        protected FileSpecList(void* native, bool skipVTables = false)
         {
+            if (native == null)
+                return;
             __Instance = new global::System.IntPtr(native);
         }
 
@@ -105,7 +110,18 @@ namespace LLDB
             __Instance = Marshal.AllocHGlobal(4);
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
-            Internal.ctor_0(__Instance);
+            Internal.ctor_0((__Instance + __PointerAdjustment));
+        }
+
+        public FileSpecList(LLDB.FileSpecList rhs)
+        {
+            __Instance = Marshal.AllocHGlobal(4);
+            __ownsNativeInstance = true;
+            NativeToManagedMap[__Instance] = this;
+            if (ReferenceEquals(rhs, null))
+                throw new global::System.ArgumentNullException("rhs", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = rhs.__Instance;
+            Internal.cctor_1((__Instance + __PointerAdjustment), arg0);
         }
 
         public void Dispose()
@@ -115,62 +131,57 @@ namespace LLDB
 
         protected virtual void Dispose(bool disposing)
         {
-            DestroyNativeInstance(false);
-        }
-
-        public virtual void DestroyNativeInstance()
-        {
-            DestroyNativeInstance(true);
-        }
-
-        private void DestroyNativeInstance(bool force)
-        {
             LLDB.FileSpecList __dummy;
             NativeToManagedMap.TryRemove(__Instance, out __dummy);
-            if (__ownsNativeInstance || force)
-                Internal.dtor_0(__Instance);
+            Internal.dtor_0((__Instance + __PointerAdjustment));
             if (__ownsNativeInstance)
                 Marshal.FreeHGlobal(__Instance);
         }
 
         public bool GetDescription(LLDB.Stream description)
         {
-            var arg0 = ReferenceEquals(description, null) ? global::System.IntPtr.Zero : description.__Instance;
-            var __ret = Internal.GetDescription_0(__Instance, arg0);
+            if (ReferenceEquals(description, null))
+                throw new global::System.ArgumentNullException("description", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = description.__Instance;
+            var __ret = Internal.GetDescription_0((__Instance + __PointerAdjustment), arg0);
             return __ret;
         }
 
         public void Append(LLDB.FileSpec sb_file)
         {
-            var arg0 = ReferenceEquals(sb_file, null) ? global::System.IntPtr.Zero : sb_file.__Instance;
-            Internal.Append_0(__Instance, arg0);
+            if (ReferenceEquals(sb_file, null))
+                throw new global::System.ArgumentNullException("sb_file", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = sb_file.__Instance;
+            Internal.Append_0((__Instance + __PointerAdjustment), arg0);
         }
 
         public bool AppendIfUnique(LLDB.FileSpec sb_file)
         {
-            var arg0 = ReferenceEquals(sb_file, null) ? global::System.IntPtr.Zero : sb_file.__Instance;
-            var __ret = Internal.AppendIfUnique_0(__Instance, arg0);
+            if (ReferenceEquals(sb_file, null))
+                throw new global::System.ArgumentNullException("sb_file", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = sb_file.__Instance;
+            var __ret = Internal.AppendIfUnique_0((__Instance + __PointerAdjustment), arg0);
             return __ret;
         }
 
         public void Clear()
         {
-            Internal.Clear_0(__Instance);
+            Internal.Clear_0((__Instance + __PointerAdjustment));
         }
 
         public uint FindFileIndex(uint idx, LLDB.FileSpec sb_file, bool full)
         {
-            var arg0 = idx;
-            var arg1 = ReferenceEquals(sb_file, null) ? global::System.IntPtr.Zero : sb_file.__Instance;
-            var __ret = Internal.FindFileIndex_0(__Instance, arg0, arg1, full);
+            if (ReferenceEquals(sb_file, null))
+                throw new global::System.ArgumentNullException("sb_file", "Cannot be null because it is a C++ reference (&).");
+            var arg1 = sb_file.__Instance;
+            var __ret = Internal.FindFileIndex_0((__Instance + __PointerAdjustment), idx, arg1, full);
             return __ret;
         }
 
         public LLDB.FileSpec GetFileSpecAtIndex(uint idx)
         {
-            var arg0 = idx;
             var __ret = new LLDB.FileSpec.Internal();
-            Internal.GetFileSpecAtIndex_0(new IntPtr(&__ret), __Instance, arg0);
+            Internal.GetFileSpecAtIndex_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), idx);
             return LLDB.FileSpec.__CreateInstance(__ret);
         }
 
@@ -178,7 +189,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetSize_0(__Instance);
+                var __ret = Internal.GetSize_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
         }

@@ -77,18 +77,18 @@ namespace LLDB
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
+                EntryPoint="_ZN4lldb8SBTarget8LoadCoreEPKc")]
+            internal static extern void LoadCore_0(global::System.IntPtr @return, global::System.IntPtr instance, global::System.IntPtr core_file);
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
                 EntryPoint="_ZN4lldb8SBTarget12LaunchSimpleEPPKcS3_S2_")]
-            internal static extern void LaunchSimple_0(global::System.IntPtr @return, global::System.IntPtr instance, global::System.IntPtr* argv, sbyte** envp, global::System.IntPtr working_directory);
+            internal static extern void LaunchSimple_0(global::System.IntPtr @return, global::System.IntPtr instance, sbyte** argv, sbyte** envp, global::System.IntPtr working_directory);
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
                 EntryPoint="_ZN4lldb8SBTarget6LaunchERNS_12SBLaunchInfoERNS_7SBErrorE")]
             internal static extern void Launch_1(global::System.IntPtr @return, global::System.IntPtr instance, global::System.IntPtr launch_info, global::System.IntPtr error);
-
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="_ZN4lldb8SBTarget8LoadCoreEPKc")]
-            internal static extern void LoadCore_0(global::System.IntPtr @return, global::System.IntPtr instance, global::System.IntPtr core_file);
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
@@ -135,6 +135,11 @@ namespace LLDB
             [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
                 EntryPoint="_ZN4lldb8SBTarget9AddModuleEPKcS2_S2_S2_")]
             internal static extern void AddModule_2(global::System.IntPtr @return, global::System.IntPtr instance, global::System.IntPtr path, global::System.IntPtr triple, global::System.IntPtr uuid_cstr, global::System.IntPtr symfile);
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
+                EntryPoint="_ZN4lldb8SBTarget9AddModuleERKNS_12SBModuleSpecE")]
+            internal static extern void AddModule_3(global::System.IntPtr @return, global::System.IntPtr instance, global::System.IntPtr module_spec);
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
@@ -244,6 +249,11 @@ namespace LLDB
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
+                EntryPoint="_ZN4lldb8SBTarget26BreakpointCreateByLocationERKNS_10SBFileSpecEjy")]
+            internal static extern void BreakpointCreateByLocation_2(global::System.IntPtr @return, global::System.IntPtr instance, global::System.IntPtr file_spec, uint line, ulong offset);
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
                 EntryPoint="_ZN4lldb8SBTarget22BreakpointCreateByNameEPKcS2_")]
             internal static extern void BreakpointCreateByName_0(global::System.IntPtr @return, global::System.IntPtr instance, global::System.IntPtr symbol_name, global::System.IntPtr module_name);
 
@@ -259,6 +269,11 @@ namespace LLDB
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
+                EntryPoint="_ZN4lldb8SBTarget22BreakpointCreateByNameEPKcjNS_12LanguageTypeERKNS_14SBFileSpecListES6_")]
+            internal static extern void BreakpointCreateByName_3(global::System.IntPtr @return, global::System.IntPtr instance, global::System.IntPtr symbol_name, uint name_type_mask, LLDB.LanguageType symbol_language, global::System.IntPtr module_list, global::System.IntPtr comp_unit_list);
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
                 EntryPoint="_ZN4lldb8SBTarget23BreakpointCreateByRegexEPKcS2_")]
             internal static extern void BreakpointCreateByRegex_0(global::System.IntPtr @return, global::System.IntPtr instance, global::System.IntPtr symbol_name_regex, global::System.IntPtr module_name);
 
@@ -266,6 +281,11 @@ namespace LLDB
             [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
                 EntryPoint="_ZN4lldb8SBTarget23BreakpointCreateByRegexEPKcRKNS_14SBFileSpecListES5_")]
             internal static extern void BreakpointCreateByRegex_1(global::System.IntPtr @return, global::System.IntPtr instance, global::System.IntPtr symbol_name_regex, global::System.IntPtr module_list, global::System.IntPtr comp_unit_list);
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
+                EntryPoint="_ZN4lldb8SBTarget23BreakpointCreateByRegexEPKcNS_12LanguageTypeERKNS_14SBFileSpecListES6_")]
+            internal static extern void BreakpointCreateByRegex_2(global::System.IntPtr @return, global::System.IntPtr instance, global::System.IntPtr symbol_name_regex, LLDB.LanguageType symbol_language, global::System.IntPtr module_list, global::System.IntPtr comp_unit_list);
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
@@ -286,6 +306,11 @@ namespace LLDB
             [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
                 EntryPoint="_ZN4lldb8SBTarget25BreakpointCreateByAddressEy")]
             internal static extern void BreakpointCreateByAddress_0(global::System.IntPtr @return, global::System.IntPtr instance, ulong address);
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
+                EntryPoint="_ZN4lldb8SBTarget27BreakpointCreateBySBAddressERNS_9SBAddressE")]
+            internal static extern void BreakpointCreateBySBAddress_0(global::System.IntPtr @return, global::System.IntPtr instance, global::System.IntPtr address);
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
@@ -455,6 +480,16 @@ namespace LLDB
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
+                EntryPoint="_ZN4lldb8SBTarget18EvaluateExpressionEPKc")]
+            internal static extern void EvaluateExpression_0(global::System.IntPtr @return, global::System.IntPtr instance, global::System.IntPtr expr);
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
+                EntryPoint="_ZN4lldb8SBTarget18EvaluateExpressionEPKcRKNS_19SBExpressionOptionsE")]
+            internal static extern void EvaluateExpression_1(global::System.IntPtr @return, global::System.IntPtr instance, global::System.IntPtr expr, global::System.IntPtr options);
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
                 EntryPoint="_ZNK4lldb8SBTarget13GetLaunchInfoEv")]
             internal static extern void GetLaunchInfo_0(global::System.IntPtr @return, global::System.IntPtr instance);
 
@@ -525,36 +560,41 @@ namespace LLDB
         }
 
         public global::System.IntPtr __Instance { get; protected set; }
+
+        protected int __PointerAdjustment;
         public static readonly System.Collections.Concurrent.ConcurrentDictionary<IntPtr, Target> NativeToManagedMap = new System.Collections.Concurrent.ConcurrentDictionary<IntPtr, Target>();
+        protected void*[] __OriginalVTables;
 
-        private readonly bool __ownsNativeInstance;
+        protected bool __ownsNativeInstance;
 
-        public static Target __CreateInstance(global::System.IntPtr native)
+        public static Target __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
         {
-            return new Target((Target.Internal*) native);
+            return new Target(native.ToPointer(), skipVTables);
         }
 
-        public static Target __CreateInstance(Target.Internal native)
+        public static Target __CreateInstance(Target.Internal native, bool skipVTables = false)
         {
-            return new Target(native);
+            return new Target(native, skipVTables);
         }
 
-        private static Target.Internal* __CopyValue(Target.Internal native)
+        private static void* __CopyValue(Target.Internal native)
         {
-            var ret = (Target.Internal*) Marshal.AllocHGlobal(8);
-            *ret = native;
-            return ret;
+            var ret = Marshal.AllocHGlobal(8);
+            LLDB.Target.Internal.cctor_1(ret, new global::System.IntPtr(&native));
+            return ret.ToPointer();
         }
 
-        private Target(Target.Internal native)
-            : this(__CopyValue(native))
+        private Target(Target.Internal native, bool skipVTables = false)
+            : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
         }
 
-        protected Target(Target.Internal* native, bool isInternalImpl = false)
+        protected Target(void* native, bool skipVTables = false)
         {
+            if (native == null)
+                return;
             __Instance = new global::System.IntPtr(native);
         }
 
@@ -563,7 +603,18 @@ namespace LLDB
             __Instance = Marshal.AllocHGlobal(8);
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
-            Internal.ctor_0(__Instance);
+            Internal.ctor_0((__Instance + __PointerAdjustment));
+        }
+
+        public Target(LLDB.Target rhs)
+        {
+            __Instance = Marshal.AllocHGlobal(8);
+            __ownsNativeInstance = true;
+            NativeToManagedMap[__Instance] = this;
+            if (ReferenceEquals(rhs, null))
+                throw new global::System.ArgumentNullException("rhs", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = rhs.__Instance;
+            Internal.cctor_1((__Instance + __PointerAdjustment), arg0);
         }
 
         public void Dispose()
@@ -573,34 +624,23 @@ namespace LLDB
 
         protected virtual void Dispose(bool disposing)
         {
-            DestroyNativeInstance(false);
-        }
-
-        public virtual void DestroyNativeInstance()
-        {
-            DestroyNativeInstance(true);
-        }
-
-        private void DestroyNativeInstance(bool force)
-        {
             LLDB.Target __dummy;
             NativeToManagedMap.TryRemove(__Instance, out __dummy);
-            if (__ownsNativeInstance || force)
-                Internal.dtor_0(__Instance);
+            Internal.dtor_0((__Instance + __PointerAdjustment));
             if (__ownsNativeInstance)
                 Marshal.FreeHGlobal(__Instance);
         }
 
         public bool IsValid()
         {
-            var __ret = Internal.IsValid_0(__Instance);
+            var __ret = Internal.IsValid_0((__Instance + __PointerAdjustment));
             return __ret;
         }
 
         public LLDB.Process GetProcess()
         {
             var __ret = new LLDB.Process.Internal();
-            Internal.GetProcess_0(new IntPtr(&__ret), __Instance);
+            Internal.GetProcess_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
             return LLDB.Process.__CreateInstance(__ret);
         }
 
@@ -608,19 +648,14 @@ namespace LLDB
         /// <para>Return the platform object associated with the target.</para>
         /// </summary>
         /// <remarks>
-        /// <para>/// Return the platform object associated with the target.</para>
-        /// <para>    ///</para>
-        /// <para>    /// After return, the platform object should be checked
-        /// for</para>
-        /// <para>    /// validity.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @return</para>
-        /// <para>    ///     A platform object.</para>
+        /// <para>After return, the platform object should be checked for</para>
+        /// <para>validity.</para>
+        /// <para> </para>
         /// </remarks>
         public LLDB.Platform GetPlatform()
         {
             var __ret = new LLDB.Platform.Internal();
-            Internal.GetPlatform_0(new IntPtr(&__ret), __Instance);
+            Internal.GetPlatform_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
             return LLDB.Platform.__CreateInstance(__ret);
         }
 
@@ -628,29 +663,18 @@ namespace LLDB
         /// <para>Install any binaries that need to be installed.</para>
         /// </summary>
         /// <remarks>
-        /// <para>/// Install any binaries that need to be installed.</para>
-        /// <para>    ///</para>
-        /// <para>    /// This function does nothing when debugging on the host
-        /// system.</para>
-        /// <para>    /// When connected to remote platforms, the target's main
-        /// executable</para>
-        /// <para>    /// and any modules that have their remote install path set
-        /// will be</para>
-        /// <para>    /// installed on the remote platform. If the main executable
-        /// doesn't</para>
-        /// <para>    /// have an install location set, it will be installed in the
-        /// remote</para>
-        /// <para>    /// platform's working directory.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @return</para>
-        /// <para>    ///     An error describing anything that went wrong
-        /// during</para>
-        /// <para>    ///     installation.</para>
+        /// <para>This function does nothing when debugging on the host system.</para>
+        /// <para>When connected to remote platforms, the target's main executable</para>
+        /// <para>and any modules that have their remote install path set will be</para>
+        /// <para>installed on the remote platform. If the main executable doesn't</para>
+        /// <para>have an install location set, it will be installed in the remote</para>
+        /// <para>platform's working directory.</para>
+        /// <para> </para>
         /// </remarks>
         public LLDB.Error Install()
         {
             var __ret = new LLDB.Error.Internal();
-            Internal.Install_0(new IntPtr(&__ret), __Instance);
+            Internal.Install_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
             return LLDB.Error.__CreateInstance(__ret);
         }
 
@@ -658,95 +682,52 @@ namespace LLDB
         /// <para>Launch a new process.</para>
         /// </summary>
         /// <remarks>
-        /// <para>/// Launch a new process.</para>
-        /// <para>    ///</para>
-        /// <para>    /// Launch a new process by spawning a new process using
-        /// the</para>
-        /// <para>    /// target object's executable module's file as the file to
-        /// launch.</para>
-        /// <para>    /// Arguments are given in \a argv, and the environment
-        /// variables</para>
-        /// <para>    /// are in \a envp. Standard input and output files can
-        /// be</para>
-        /// <para>    /// optionally re-directed to \a stdin_path, \a stdout_path,
-        /// and</para>
-        /// <para>    /// \a stderr_path.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @param[in] listener</para>
-        /// <para>    ///     An optional listener that will receive all process
-        /// events.</para>
-        /// <para>    ///     If \a listener is valid then \a listener will listen
-        /// to all</para>
-        /// <para>    ///     process events. If not valid, then this target's
-        /// debugger</para>
-        /// <para>    ///     (SBTarget::GetDebugger()) will listen to all process
-        /// events. </para>
-        /// <para>    ///</para>
-        /// <para>    /// @param[in] argv</para>
-        /// <para>    ///     The argument array.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @param[in] envp</para>
-        /// <para>    ///     The environment array.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @param[in] launch_flags</para>
-        /// <para>    ///     Flags to modify the launch (@see
-        /// lldb::LaunchFlags)</para>
-        /// <para>    ///</para>
-        /// <para>    /// @param[in] stdin_path</para>
-        /// <para>    ///     The path to use when re-directing the STDIN of the
-        /// new</para>
-        /// <para>    ///     process. If all stdXX_path arguments are NULL, a
-        /// pseudo</para>
-        /// <para>    ///     terminal will be used.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @param[in] stdout_path</para>
-        /// <para>    ///     The path to use when re-directing the STDOUT of the
-        /// new</para>
-        /// <para>    ///     process. If all stdXX_path arguments are NULL, a
-        /// pseudo</para>
-        /// <para>    ///     terminal will be used.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @param[in] stderr_path</para>
-        /// <para>    ///     The path to use when re-directing the STDERR of the
-        /// new</para>
-        /// <para>    ///     process. If all stdXX_path arguments are NULL, a
-        /// pseudo</para>
-        /// <para>    ///     terminal will be used.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @param[in] working_directory</para>
-        /// <para>    ///     The working directory to have the child process run
-        /// in</para>
-        /// <para>    ///</para>
-        /// <para>    /// @param[in] launch_flags</para>
-        /// <para>    ///     Some launch options specified by logical OR'ing
-        /// </para>
-        /// <para>    ///     lldb::LaunchFlags enumeration values together.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @param[in] stop_at_entry</para>
-        /// <para>    ///     If false do not stop the inferior at the entry
-        /// point.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @param[out] error</para>
-        /// <para>    ///     An error object. Contains the reason if there is some
-        /// failure.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @return</para>
-        /// <para>    ///      A process object for the newly created
-        /// process.</para>
+        /// <para>Launch a new process by spawning a new process using the</para>
+        /// <para>target object's executable module's file as the file to launch.</para>
+        /// <para>Arguments are given in </para>
+        /// <para>and the environment variables</para>
+        /// <para>are in </para>
+        /// <para>Standard input and output files can be</para>
+        /// <para>optionally re-directed to </para>
+        /// <para> </para>
+        /// <para>and</para>
+        /// <para> </para>
+        /// <para> </para>
+        /// <para> </para>
+        /// <para> </para>
+        /// <para> </para>
+        /// <para> </para>
+        /// <para> </para>
+        /// <para> </para>
+        /// <para> </para>
+        /// <para> </para>
+        /// <para> </para>
+        /// <para> </para>
+        /// <para> </para>
         /// </remarks>
-        public LLDB.Process Launch(LLDB.Listener listener, sbyte** argv, sbyte** envp, string stdin_path, string stdout_path, string stderr_path, string working_directory, uint launch_flags, bool stop_at_entry, LLDB.Error error)
+        public LLDB.Process Launch(LLDB.Listener listener, sbyte** argv, sbyte** envp, string stdin_path, string stdout_path, string stderr_path, string working_directory, uint launch_flags, bool stop_at_entry, out LLDB.Error error)
         {
-            var arg0 = ReferenceEquals(listener, null) ? global::System.IntPtr.Zero : listener.__Instance;
+            if (ReferenceEquals(listener, null))
+                throw new global::System.ArgumentNullException("listener", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = listener.__Instance;
             var arg1 = argv;
             var arg2 = envp;
             var arg3 = Marshal.StringToHGlobalAnsi(stdin_path);
             var arg4 = Marshal.StringToHGlobalAnsi(stdout_path);
             var arg5 = Marshal.StringToHGlobalAnsi(stderr_path);
             var arg6 = Marshal.StringToHGlobalAnsi(working_directory);
-            var arg7 = launch_flags;
-            var arg9 = ReferenceEquals(error, null) ? global::System.IntPtr.Zero : error.__Instance;
+            error = new LLDB.Error();
+            if (ReferenceEquals(error, null))
+                throw new global::System.ArgumentNullException("error", "Cannot be null because it is a C++ reference (&).");
+            var arg9 = error.__Instance;
             var __ret = new LLDB.Process.Internal();
-            Internal.Launch_0(new IntPtr(&__ret), __Instance, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, stop_at_entry, arg9);
+            Internal.Launch_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0, arg1, arg2, arg3, arg4, arg5, arg6, launch_flags, stop_at_entry, arg9);
+            LLDB.Error __result0;
+            if (arg9 == IntPtr.Zero) __result0 = null;
+            else if (LLDB.Error.NativeToManagedMap.ContainsKey(arg9))
+                __result0 = (LLDB.Error) LLDB.Error.NativeToManagedMap[arg9];
+            else __result0 = LLDB.Error.__CreateInstance(arg9);
+            error = __result0;
             Marshal.FreeHGlobal(arg3);
             Marshal.FreeHGlobal(arg4);
             Marshal.FreeHGlobal(arg5);
@@ -754,74 +735,66 @@ namespace LLDB
             return LLDB.Process.__CreateInstance(__ret);
         }
 
+        public LLDB.Process LoadCore(string core_file)
+        {
+            var arg0 = Marshal.StringToHGlobalAnsi(core_file);
+            var __ret = new LLDB.Process.Internal();
+            Internal.LoadCore_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0);
+            Marshal.FreeHGlobal(arg0);
+            return LLDB.Process.__CreateInstance(__ret);
+        }
+
         /// <summary>
         /// <para>Launch a new process with sensible defaults.</para>
         /// </summary>
         /// <remarks>
-        /// <para>/// Launch a new process with sensible defaults.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @param[in] argv</para>
-        /// <para>    ///     The argument array.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @param[in] envp</para>
-        /// <para>    ///     The environment array.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @param[in] working_directory</para>
-        /// <para>    ///     The working directory to have the child process run
-        /// in</para>
-        /// <para>    ///</para>
-        /// <para>    /// Default: listener</para>
-        /// <para>    ///     Set to the target's debugger
-        /// (SBTarget::GetDebugger())</para>
-        /// <para>    ///</para>
-        /// <para>    /// Default: launch_flags</para>
-        /// <para>    ///     Empty launch flags</para>
-        /// <para>    ///</para>
-        /// <para>    /// Default: stdin_path</para>
-        /// <para>    /// Default: stdout_path</para>
-        /// <para>    /// Default: stderr_path</para>
-        /// <para>    ///     A pseudo terminal will be used.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @return</para>
-        /// <para>    ///      A process object for the newly created
-        /// process.</para>
+        /// <para> </para>
+        /// <para> </para>
+        /// <para> </para>
+        /// <para>Default: listener</para>
+        /// <para>     Set to the target's debugger (SBTarget::GetDebugger())</para>
+        /// <para>Default: launch_flags</para>
+        /// <para>     Empty launch flags</para>
+        /// <para>Default: stdin_path</para>
+        /// <para>Default: stdout_path</para>
+        /// <para>Default: stderr_path</para>
+        /// <para>     A pseudo terminal will be used.</para>
+        /// <para> </para>
         /// </remarks>
-        public LLDB.Process LaunchSimple(out string argv, sbyte** envp, string working_directory)
+        public LLDB.Process LaunchSimple(sbyte** argv, sbyte** envp, string working_directory)
         {
-            var arg0 = IntPtr.Zero;
+            var arg0 = argv;
             var arg1 = envp;
             var arg2 = Marshal.StringToHGlobalAnsi(working_directory);
             var __ret = new LLDB.Process.Internal();
-            Internal.LaunchSimple_0(new IntPtr(&__ret), __Instance, &arg0, arg1, arg2);
-            argv = Marshal.PtrToStringAnsi(arg0);
+            Internal.LaunchSimple_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0, arg1, arg2);
             Marshal.FreeHGlobal(arg2);
             return LLDB.Process.__CreateInstance(__ret);
         }
 
         public LLDB.Process Launch(LLDB.LaunchInfo launch_info, LLDB.Error error)
         {
-            var arg0 = ReferenceEquals(launch_info, null) ? global::System.IntPtr.Zero : launch_info.__Instance;
-            var arg1 = ReferenceEquals(error, null) ? global::System.IntPtr.Zero : error.__Instance;
+            if (ReferenceEquals(launch_info, null))
+                throw new global::System.ArgumentNullException("launch_info", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = launch_info.__Instance;
+            if (ReferenceEquals(error, null))
+                throw new global::System.ArgumentNullException("error", "Cannot be null because it is a C++ reference (&).");
+            var arg1 = error.__Instance;
             var __ret = new LLDB.Process.Internal();
-            Internal.Launch_1(new IntPtr(&__ret), __Instance, arg0, arg1);
-            return LLDB.Process.__CreateInstance(__ret);
-        }
-
-        public LLDB.Process LoadCore(string core_file)
-        {
-            var arg0 = Marshal.StringToHGlobalAnsi(core_file);
-            var __ret = new LLDB.Process.Internal();
-            Internal.LoadCore_0(new IntPtr(&__ret), __Instance, arg0);
-            Marshal.FreeHGlobal(arg0);
+            Internal.Launch_1(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0, arg1);
             return LLDB.Process.__CreateInstance(__ret);
         }
 
         public LLDB.Process Attach(LLDB.AttachInfo attach_info, LLDB.Error error)
         {
-            var arg0 = ReferenceEquals(attach_info, null) ? global::System.IntPtr.Zero : attach_info.__Instance;
-            var arg1 = ReferenceEquals(error, null) ? global::System.IntPtr.Zero : error.__Instance;
+            if (ReferenceEquals(attach_info, null))
+                throw new global::System.ArgumentNullException("attach_info", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = attach_info.__Instance;
+            if (ReferenceEquals(error, null))
+                throw new global::System.ArgumentNullException("error", "Cannot be null because it is a C++ reference (&).");
+            var arg1 = error.__Instance;
             var __ret = new LLDB.Process.Internal();
-            Internal.Attach_0(new IntPtr(&__ret), __Instance, arg0, arg1);
+            Internal.Attach_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0, arg1);
             return LLDB.Process.__CreateInstance(__ret);
         }
 
@@ -829,45 +802,34 @@ namespace LLDB
         /// <para>Attach to process with pid.</para>
         /// </summary>
         /// <remarks>
-        /// <para>/// Attach to process with pid.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @param[in] listener</para>
-        /// <para>    ///     An optional listener that will receive all process
-        /// events.</para>
-        /// <para>    ///     If \a listener is valid then \a listener will listen
-        /// to all</para>
-        /// <para>    ///     process events. If not valid, then this target's
-        /// debugger</para>
-        /// <para>    ///     (SBTarget::GetDebugger()) will listen to all process
-        /// events.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @param[in] pid</para>
-        /// <para>    ///     The process ID to attach to.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @param[out] error</para>
-        /// <para>    ///     An error explaining what went wrong if attach
-        /// fails.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @return</para>
-        /// <para>    ///      A process object for the attached process.</para>
+        /// <para> </para>
+        /// <para> </para>
+        /// <para> </para>
+        /// <para> </para>
         /// </remarks>
         public LLDB.Process AttachToProcessWithID(LLDB.Listener listener, ulong pid, LLDB.Error error)
         {
-            var arg0 = ReferenceEquals(listener, null) ? global::System.IntPtr.Zero : listener.__Instance;
-            var arg1 = pid;
-            var arg2 = ReferenceEquals(error, null) ? global::System.IntPtr.Zero : error.__Instance;
+            if (ReferenceEquals(listener, null))
+                throw new global::System.ArgumentNullException("listener", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = listener.__Instance;
+            if (ReferenceEquals(error, null))
+                throw new global::System.ArgumentNullException("error", "Cannot be null because it is a C++ reference (&).");
+            var arg2 = error.__Instance;
             var __ret = new LLDB.Process.Internal();
-            Internal.AttachToProcessWithID_0(new IntPtr(&__ret), __Instance, arg0, arg1, arg2);
+            Internal.AttachToProcessWithID_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0, pid, arg2);
             return LLDB.Process.__CreateInstance(__ret);
         }
 
         public LLDB.Process AttachToProcessWithID(LLDB.Listener listener, int pid, LLDB.Error error)
         {
-            var arg0 = ReferenceEquals(listener, null) ? global::System.IntPtr.Zero : listener.__Instance;
-            var arg1 = pid;
-            var arg2 = ReferenceEquals(error, null) ? global::System.IntPtr.Zero : error.__Instance;
+            if (ReferenceEquals(listener, null))
+                throw new global::System.ArgumentNullException("listener", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = listener.__Instance;
+            if (ReferenceEquals(error, null))
+                throw new global::System.ArgumentNullException("error", "Cannot be null because it is a C++ reference (&).");
+            var arg2 = error.__Instance;
             var __ret = new LLDB.Process.Internal();
-            Internal.AttachToProcessWithID_1(new IntPtr(&__ret), __Instance, arg0, arg1, arg2);
+            Internal.AttachToProcessWithID_1(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0, pid, arg2);
             return LLDB.Process.__CreateInstance(__ret);
         }
 
@@ -875,39 +837,23 @@ namespace LLDB
         /// <para>Attach to process with name.</para>
         /// </summary>
         /// <remarks>
-        /// <para>/// Attach to process with name.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @param[in] listener</para>
-        /// <para>    ///     An optional listener that will receive all process
-        /// events.</para>
-        /// <para>    ///     If \a listener is valid then \a listener will listen
-        /// to all</para>
-        /// <para>    ///     process events. If not valid, then this target's
-        /// debugger</para>
-        /// <para>    ///     (SBTarget::GetDebugger()) will listen to all process
-        /// events.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @param[in] name</para>
-        /// <para>    ///     Basename of process to attach to.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @param[in] wait_for</para>
-        /// <para>    ///     If true wait for a new instance of 'name' to be
-        /// launched.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @param[out] error</para>
-        /// <para>    ///     An error explaining what went wrong if attach
-        /// fails.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @return</para>
-        /// <para>    ///      A process object for the attached process.</para>
+        /// <para> </para>
+        /// <para> </para>
+        /// <para> </para>
+        /// <para> </para>
+        /// <para> </para>
         /// </remarks>
         public LLDB.Process AttachToProcessWithName(LLDB.Listener listener, string name, bool wait_for, LLDB.Error error)
         {
-            var arg0 = ReferenceEquals(listener, null) ? global::System.IntPtr.Zero : listener.__Instance;
+            if (ReferenceEquals(listener, null))
+                throw new global::System.ArgumentNullException("listener", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = listener.__Instance;
             var arg1 = Marshal.StringToHGlobalAnsi(name);
-            var arg3 = ReferenceEquals(error, null) ? global::System.IntPtr.Zero : error.__Instance;
+            if (ReferenceEquals(error, null))
+                throw new global::System.ArgumentNullException("error", "Cannot be null because it is a C++ reference (&).");
+            var arg3 = error.__Instance;
             var __ret = new LLDB.Process.Internal();
-            Internal.AttachToProcessWithName_0(new IntPtr(&__ret), __Instance, arg0, arg1, wait_for, arg3);
+            Internal.AttachToProcessWithName_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0, arg1, wait_for, arg3);
             Marshal.FreeHGlobal(arg1);
             return LLDB.Process.__CreateInstance(__ret);
         }
@@ -916,40 +862,24 @@ namespace LLDB
         /// <para>Connect to a remote debug server with url.</para>
         /// </summary>
         /// <remarks>
-        /// <para>/// Connect to a remote debug server with url.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @param[in] listener</para>
-        /// <para>    ///     An optional listener that will receive all process
-        /// events.</para>
-        /// <para>    ///     If \a listener is valid then \a listener will listen
-        /// to all</para>
-        /// <para>    ///     process events. If not valid, then this target's
-        /// debugger</para>
-        /// <para>    ///     (SBTarget::GetDebugger()) will listen to all process
-        /// events.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @param[in] url</para>
-        /// <para>    ///     The url to connect to, e.g.,
-        /// 'connect://localhost:12345'.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @param[in] plugin_name</para>
-        /// <para>    ///     The plugin name to be used; can be NULL.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @param[out] error</para>
-        /// <para>    ///     An error explaining what went wrong if the connect
-        /// fails.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @return</para>
-        /// <para>    ///      A process object for the connected process.</para>
+        /// <para> </para>
+        /// <para> </para>
+        /// <para> </para>
+        /// <para> </para>
+        /// <para> </para>
         /// </remarks>
         public LLDB.Process ConnectRemote(LLDB.Listener listener, string url, string plugin_name, LLDB.Error error)
         {
-            var arg0 = ReferenceEquals(listener, null) ? global::System.IntPtr.Zero : listener.__Instance;
+            if (ReferenceEquals(listener, null))
+                throw new global::System.ArgumentNullException("listener", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = listener.__Instance;
             var arg1 = Marshal.StringToHGlobalAnsi(url);
             var arg2 = Marshal.StringToHGlobalAnsi(plugin_name);
-            var arg3 = ReferenceEquals(error, null) ? global::System.IntPtr.Zero : error.__Instance;
+            if (ReferenceEquals(error, null))
+                throw new global::System.ArgumentNullException("error", "Cannot be null because it is a C++ reference (&).");
+            var arg3 = error.__Instance;
             var __ret = new LLDB.Process.Internal();
-            Internal.ConnectRemote_0(new IntPtr(&__ret), __Instance, arg0, arg1, arg2, arg3);
+            Internal.ConnectRemote_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0, arg1, arg2, arg3);
             Marshal.FreeHGlobal(arg1);
             Marshal.FreeHGlobal(arg2);
             return LLDB.Process.__CreateInstance(__ret);
@@ -958,14 +888,16 @@ namespace LLDB
         public LLDB.FileSpec GetExecutable()
         {
             var __ret = new LLDB.FileSpec.Internal();
-            Internal.GetExecutable_0(new IntPtr(&__ret), __Instance);
+            Internal.GetExecutable_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
             return LLDB.FileSpec.__CreateInstance(__ret);
         }
 
         public bool AddModule(LLDB.Module module)
         {
-            var arg0 = ReferenceEquals(module, null) ? global::System.IntPtr.Zero : module.__Instance;
-            var __ret = Internal.AddModule_0(__Instance, arg0);
+            if (ReferenceEquals(module, null))
+                throw new global::System.ArgumentNullException("module", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = module.__Instance;
+            var __ret = Internal.AddModule_0((__Instance + __PointerAdjustment), arg0);
             return __ret;
         }
 
@@ -975,7 +907,7 @@ namespace LLDB
             var arg1 = Marshal.StringToHGlobalAnsi(triple);
             var arg2 = Marshal.StringToHGlobalAnsi(uuid);
             var __ret = new LLDB.Module.Internal();
-            Internal.AddModule_1(new IntPtr(&__ret), __Instance, arg0, arg1, arg2);
+            Internal.AddModule_1(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0, arg1, arg2);
             Marshal.FreeHGlobal(arg0);
             Marshal.FreeHGlobal(arg1);
             Marshal.FreeHGlobal(arg2);
@@ -989,7 +921,7 @@ namespace LLDB
             var arg2 = Marshal.StringToHGlobalAnsi(uuid_cstr);
             var arg3 = Marshal.StringToHGlobalAnsi(symfile);
             var __ret = new LLDB.Module.Internal();
-            Internal.AddModule_2(new IntPtr(&__ret), __Instance, arg0, arg1, arg2, arg3);
+            Internal.AddModule_2(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0, arg1, arg2, arg3);
             Marshal.FreeHGlobal(arg0);
             Marshal.FreeHGlobal(arg1);
             Marshal.FreeHGlobal(arg2);
@@ -997,33 +929,44 @@ namespace LLDB
             return LLDB.Module.__CreateInstance(__ret);
         }
 
+        public LLDB.Module AddModule(LLDB.ModuleSpec module_spec)
+        {
+            if (ReferenceEquals(module_spec, null))
+                throw new global::System.ArgumentNullException("module_spec", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = module_spec.__Instance;
+            var __ret = new LLDB.Module.Internal();
+            Internal.AddModule_3(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0);
+            return LLDB.Module.__CreateInstance(__ret);
+        }
+
         public LLDB.Module GetModuleAtIndex(uint idx)
         {
-            var arg0 = idx;
             var __ret = new LLDB.Module.Internal();
-            Internal.GetModuleAtIndex_0(new IntPtr(&__ret), __Instance, arg0);
+            Internal.GetModuleAtIndex_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), idx);
             return LLDB.Module.__CreateInstance(__ret);
         }
 
         public bool RemoveModule(LLDB.Module module)
         {
             var arg0 = ReferenceEquals(module, null) ? new LLDB.Module.Internal() : *(LLDB.Module.Internal*) (module.__Instance);
-            var __ret = Internal.RemoveModule_0(__Instance, arg0);
+            var __ret = Internal.RemoveModule_0((__Instance + __PointerAdjustment), arg0);
             return __ret;
         }
 
         public LLDB.Debugger GetDebugger()
         {
             var __ret = new LLDB.Debugger.Internal();
-            Internal.GetDebugger_0(new IntPtr(&__ret), __Instance);
+            Internal.GetDebugger_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
             return LLDB.Debugger.__CreateInstance(__ret);
         }
 
         public LLDB.Module FindModule(LLDB.FileSpec file_spec)
         {
-            var arg0 = ReferenceEquals(file_spec, null) ? global::System.IntPtr.Zero : file_spec.__Instance;
+            if (ReferenceEquals(file_spec, null))
+                throw new global::System.ArgumentNullException("file_spec", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = file_spec.__Instance;
             var __ret = new LLDB.Module.Internal();
-            Internal.FindModule_0(new IntPtr(&__ret), __Instance, arg0);
+            Internal.FindModule_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0);
             return LLDB.Module.__CreateInstance(__ret);
         }
 
@@ -1031,27 +974,15 @@ namespace LLDB
         /// <para>Set the base load address for a module section.</para>
         /// </summary>
         /// <remarks>
-        /// <para>/// Set the base load address for a module section.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @param[in] section</para>
-        /// <para>    ///     The section whose base load address will be set
-        /// within this</para>
-        /// <para>    ///     target.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @param[in] section_base_addr</para>
-        /// <para>    ///     The base address for the section.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @return</para>
-        /// <para>    ///      An error to indicate success, fail, and any reason
-        /// for </para>
-        /// <para>    ///     failure.</para>
+        /// <para> </para>
+        /// <para> </para>
+        /// <para> </para>
         /// </remarks>
         public LLDB.Error SetSectionLoadAddress(LLDB.Section section, ulong section_base_addr)
         {
             var arg0 = ReferenceEquals(section, null) ? new LLDB.Section.Internal() : *(LLDB.Section.Internal*) (section.__Instance);
-            var arg1 = section_base_addr;
             var __ret = new LLDB.Error.Internal();
-            Internal.SetSectionLoadAddress_0(new IntPtr(&__ret), __Instance, arg0, arg1);
+            Internal.SetSectionLoadAddress_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0, section_base_addr);
             return LLDB.Error.__CreateInstance(__ret);
         }
 
@@ -1059,87 +990,50 @@ namespace LLDB
         /// <para>Clear the base load address for a module section.</para>
         /// </summary>
         /// <remarks>
-        /// <para>/// Clear the base load address for a module section.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @param[in] section</para>
-        /// <para>    ///     The section whose base load address will be cleared
-        /// within</para>
-        /// <para>    ///     this target.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @return</para>
-        /// <para>    ///      An error to indicate success, fail, and any reason
-        /// for </para>
-        /// <para>    ///     failure.</para>
+        /// <para> </para>
+        /// <para> </para>
         /// </remarks>
         public LLDB.Error ClearSectionLoadAddress(LLDB.Section section)
         {
             var arg0 = ReferenceEquals(section, null) ? new LLDB.Section.Internal() : *(LLDB.Section.Internal*) (section.__Instance);
             var __ret = new LLDB.Error.Internal();
-            Internal.ClearSectionLoadAddress_0(new IntPtr(&__ret), __Instance, arg0);
+            Internal.ClearSectionLoadAddress_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0);
             return LLDB.Error.__CreateInstance(__ret);
         }
 
         /// <summary>
-        /// <para>Slide all file addresses for all module sections so that module
-        /// appears to loaded at these slide addresses.</para>
+        /// <para>Slide all file addresses for all module sections so that </para>
         /// </summary>
         /// <remarks>
-        /// <para>/// Slide all file addresses for all module sections so that \a
-        /// module</para>
-        /// <para>    /// appears to loaded at these slide addresses.</para>
-        /// <para>    /// </para>
-        /// <para>    /// When you need all sections within a module to be loaded
-        /// at a </para>
-        /// <para>    /// rigid slide from the addresses found in the module object
-        /// file,</para>
-        /// <para>    /// this function will allow you to easily and quickly slide
-        /// all</para>
-        /// <para>    /// module sections.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @param[in] module</para>
-        /// <para>    ///     The module to load.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @param[in] sections_offset</para>
-        /// <para>    ///     An offset that will be applied to all section file
-        /// addresses</para>
-        /// <para>    ///     (the virtual addresses found in the object file
-        /// itself).</para>
-        /// <para>    ///</para>
-        /// <para>    /// @return</para>
-        /// <para>    ///     An error to indicate success, fail, and any reason
-        /// for </para>
-        /// <para>    ///     failure.</para>
+        /// <para>appears to loaded at these slide addresses.</para>
+        /// <para>When you need all sections within a module to be loaded at a </para>
+        /// <para>rigid slide from the addresses found in the module object file,</para>
+        /// <para>this function will allow you to easily and quickly slide all</para>
+        /// <para>module sections.</para>
+        /// <para> </para>
+        /// <para> </para>
+        /// <para> </para>
         /// </remarks>
         public LLDB.Error SetModuleLoadAddress(LLDB.Module module, long sections_offset)
         {
             var arg0 = ReferenceEquals(module, null) ? new LLDB.Module.Internal() : *(LLDB.Module.Internal*) (module.__Instance);
-            var arg1 = sections_offset;
             var __ret = new LLDB.Error.Internal();
-            Internal.SetModuleLoadAddress_0(new IntPtr(&__ret), __Instance, arg0, arg1);
+            Internal.SetModuleLoadAddress_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0, sections_offset);
             return LLDB.Error.__CreateInstance(__ret);
         }
 
         /// <summary>
-        /// <para>Clear the section base load addresses for all sections in a
-        /// module.</para>
+        /// <para>Clear the section base load addresses for all sections in a module.</para>
         /// </summary>
         /// <remarks>
-        /// <para>/// Clear the section base load addresses for all sections in a
-        /// module.</para>
-        /// <para>    /// </para>
-        /// <para>    /// @param[in] module</para>
-        /// <para>    ///     The module to unload.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @return</para>
-        /// <para>    ///     An error to indicate success, fail, and any reason
-        /// for </para>
-        /// <para>    ///     failure.</para>
+        /// <para> </para>
+        /// <para> </para>
         /// </remarks>
         public LLDB.Error ClearModuleLoadAddress(LLDB.Module module)
         {
             var arg0 = ReferenceEquals(module, null) ? new LLDB.Module.Internal() : *(LLDB.Module.Internal*) (module.__Instance);
             var __ret = new LLDB.Error.Internal();
-            Internal.ClearModuleLoadAddress_0(new IntPtr(&__ret), __Instance, arg0);
+            Internal.ClearModuleLoadAddress_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0);
             return LLDB.Error.__CreateInstance(__ret);
         }
 
@@ -1147,32 +1041,15 @@ namespace LLDB
         /// <para>Find functions by name.</para>
         /// </summary>
         /// <remarks>
-        /// <para>/// Find functions by name.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @param[in] name</para>
-        /// <para>    ///     The name of the function we are looking for.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @param[in] name_type_mask</para>
-        /// <para>    ///     A logical OR of one or more FunctionNameType enum
-        /// bits that</para>
-        /// <para>    ///     indicate what kind of names should be used when doing
-        /// the</para>
-        /// <para>    ///     lookup. Bits include fully qualified names, base
-        /// names,</para>
-        /// <para>    ///     C++ methods, or ObjC selectors. </para>
-        /// <para>    ///     See FunctionNameType for more details.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @return</para>
-        /// <para>    ///     A lldb::SBSymbolContextList that gets filled in with
-        /// all of </para>
-        /// <para>    ///     the symbol contexts for all the matches.</para>
+        /// <para> </para>
+        /// <para> </para>
+        /// <para> </para>
         /// </remarks>
         public LLDB.SymbolContextList FindFunctions(string name, uint name_type_mask)
         {
             var arg0 = Marshal.StringToHGlobalAnsi(name);
-            var arg1 = name_type_mask;
             var __ret = new LLDB.SymbolContextList.Internal();
-            Internal.FindFunctions_0(new IntPtr(&__ret), __Instance, arg0, arg1);
+            Internal.FindFunctions_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0, name_type_mask);
             Marshal.FreeHGlobal(arg0);
             return LLDB.SymbolContextList.__CreateInstance(__ret);
         }
@@ -1181,26 +1058,15 @@ namespace LLDB
         /// <para>Find global and static variables by name.</para>
         /// </summary>
         /// <remarks>
-        /// <para>/// Find global and static variables by name.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @param[in] name</para>
-        /// <para>    ///     The name of the global or static variable we are
-        /// looking</para>
-        /// <para>    ///     for.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @param[in] max_matches</para>
-        /// <para>    ///     Allow the number of matches to be limited to \a
-        /// max_matches.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @return</para>
-        /// <para>    ///     A list of matched variables in an SBValueList.</para>
+        /// <para> </para>
+        /// <para> </para>
+        /// <para> </para>
         /// </remarks>
         public LLDB.ValueList FindGlobalVariables(string name, uint max_matches)
         {
             var arg0 = Marshal.StringToHGlobalAnsi(name);
-            var arg1 = max_matches;
             var __ret = new LLDB.ValueList.Internal();
-            Internal.FindGlobalVariables_0(new IntPtr(&__ret), __Instance, arg0, arg1);
+            Internal.FindGlobalVariables_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0, max_matches);
             Marshal.FreeHGlobal(arg0);
             return LLDB.ValueList.__CreateInstance(__ret);
         }
@@ -1209,22 +1075,14 @@ namespace LLDB
         /// <para>Find the first global (or static) variable by name.</para>
         /// </summary>
         /// <remarks>
-        /// <para>/// Find the first global (or static) variable by name.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @param[in] name</para>
-        /// <para>    ///     The name of the global or static variable we are
-        /// looking</para>
-        /// <para>    ///     for.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @return</para>
-        /// <para>    ///     An SBValue that gets filled in with the found
-        /// variable (if any).</para>
+        /// <para> </para>
+        /// <para> </para>
         /// </remarks>
         public LLDB.Value FindFirstGlobalVariable(string name)
         {
             var arg0 = Marshal.StringToHGlobalAnsi(name);
             var __ret = new LLDB.Value.Internal();
-            Internal.FindFirstGlobalVariable_0(new IntPtr(&__ret), __Instance, arg0);
+            Internal.FindFirstGlobalVariable_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0);
             Marshal.FreeHGlobal(arg0);
             return LLDB.Value.__CreateInstance(__ret);
         }
@@ -1233,29 +1091,16 @@ namespace LLDB
         /// <para>Find global and static variables by pattern.</para>
         /// </summary>
         /// <remarks>
-        /// <para>/// Find global and static variables by pattern.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @param[in] name</para>
-        /// <para>    ///     The pattern to search for global or static
-        /// variables</para>
-        /// <para>    ///</para>
-        /// <para>    /// @param[in] max_matches</para>
-        /// <para>    ///     Allow the number of matches to be limited to \a
-        /// max_matches.</para>
-        /// <para>    /// </para>
-        /// <para>    /// @param[in] matchtype</para>
-        /// <para>    ///     The match type to use.    </para>
-        /// <para>    ///</para>
-        /// <para>    /// @return</para>
-        /// <para>    ///     A list of matched variables in an SBValueList.</para>
+        /// <para> </para>
+        /// <para> </para>
+        /// <para> </para>
         /// </remarks>
         public LLDB.ValueList FindGlobalVariables(string name, uint max_matches, LLDB.MatchType matchtype)
         {
             var arg0 = Marshal.StringToHGlobalAnsi(name);
-            var arg1 = max_matches;
             var arg2 = matchtype;
             var __ret = new LLDB.ValueList.Internal();
-            Internal.FindGlobalVariables_1(new IntPtr(&__ret), __Instance, arg0, arg1, arg2);
+            Internal.FindGlobalVariables_1(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0, max_matches, arg2);
             Marshal.FreeHGlobal(arg0);
             return LLDB.ValueList.__CreateInstance(__ret);
         }
@@ -1264,205 +1109,129 @@ namespace LLDB
         /// <para>Find global functions by their name with pattern matching.</para>
         /// </summary>
         /// <remarks>
-        /// <para>/// Find global functions by their name with pattern
-        /// matching.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @param[in] name</para>
-        /// <para>    ///     The pattern to search for global or static
-        /// variables</para>
-        /// <para>    ///</para>
-        /// <para>    /// @param[in] max_matches</para>
-        /// <para>    ///     Allow the number of matches to be limited to \a
-        /// max_matches.</para>
-        /// <para>    /// </para>
-        /// <para>    /// @param[in] matchtype</para>
-        /// <para>    ///     The match type to use.    </para>
-        /// <para>    ///</para>
-        /// <para>    /// @return</para>
-        /// <para>    ///     A list of matched variables in an SBValueList.</para>
+        /// <para> </para>
+        /// <para> </para>
+        /// <para> </para>
         /// </remarks>
         public LLDB.SymbolContextList FindGlobalFunctions(string name, uint max_matches, LLDB.MatchType matchtype)
         {
             var arg0 = Marshal.StringToHGlobalAnsi(name);
-            var arg1 = max_matches;
             var arg2 = matchtype;
             var __ret = new LLDB.SymbolContextList.Internal();
-            Internal.FindGlobalFunctions_0(new IntPtr(&__ret), __Instance, arg0, arg1, arg2);
+            Internal.FindGlobalFunctions_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0, max_matches, arg2);
             Marshal.FreeHGlobal(arg0);
             return LLDB.SymbolContextList.__CreateInstance(__ret);
         }
 
         public void Clear()
         {
-            Internal.Clear_0(__Instance);
+            Internal.Clear_0((__Instance + __PointerAdjustment));
         }
 
         /// <summary>
-        /// <para>Resolve a current file address into a section offset
-        /// address.</para>
+        /// <para>Resolve a current file address into a section offset address.</para>
         /// </summary>
         /// <remarks>
-        /// <para>/// Resolve a current file address into a section offset
-        /// address.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @param[in] file_addr</para>
-        /// <para>    ///</para>
-        /// <para>    /// @return</para>
-        /// <para>    ///     An SBAddress which will be valid if...</para>
+        /// <para> </para>
+        /// <para> </para>
         /// </remarks>
         public LLDB.Address ResolveFileAddress(ulong file_addr)
         {
-            var arg0 = file_addr;
             var __ret = new LLDB.Address.Internal();
-            Internal.ResolveFileAddress_0(new IntPtr(&__ret), __Instance, arg0);
+            Internal.ResolveFileAddress_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), file_addr);
             return LLDB.Address.__CreateInstance(__ret);
         }
 
         /// <summary>
-        /// <para>Resolve a current load address into a section offset
-        /// address.</para>
+        /// <para>Resolve a current load address into a section offset address.</para>
         /// </summary>
         /// <remarks>
-        /// <para>/// Resolve a current load address into a section offset
-        /// address.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @param[in] vm_addr</para>
-        /// <para>    ///     A virtual address from the current process state that
-        /// is to</para>
-        /// <para>    ///     be translated into a section offset address.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @return</para>
-        /// <para>    ///     An SBAddress which will be valid if \a vm_addr
-        /// was</para>
-        /// <para>    ///     successfully resolved into a section offset address,
-        /// or an</para>
-        /// <para>    ///     invalid SBAddress if \a vm_addr doesn't resolve to a
-        /// section</para>
-        /// <para>    ///     in a module.</para>
+        /// <para> </para>
+        /// <para> </para>
         /// </remarks>
         public LLDB.Address ResolveLoadAddress(ulong vm_addr)
         {
-            var arg0 = vm_addr;
             var __ret = new LLDB.Address.Internal();
-            Internal.ResolveLoadAddress_0(new IntPtr(&__ret), __Instance, arg0);
+            Internal.ResolveLoadAddress_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), vm_addr);
             return LLDB.Address.__CreateInstance(__ret);
         }
 
         /// <summary>
-        /// <para>Resolve a current load address into a section offset address
-        /// using the process stop ID to identify a time in the past.</para>
+        /// <para>Resolve a current load address into a section offset address</para>
         /// </summary>
         /// <remarks>
-        /// <para>/// Resolve a current load address into a section offset
-        /// address</para>
-        /// <para>    /// using the process stop ID to identify a time in the
-        /// past.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @param[in] stop_id</para>
-        /// <para>    ///     Each time a process stops, the process stop ID
-        /// integer gets</para>
-        /// <para>    ///     incremented. These stop IDs are used to identify past
-        /// times</para>
-        /// <para>    ///     and can be used in history objects as a cheap way to
-        /// store</para>
-        /// <para>    ///     the time at which the sample was taken.
-        /// Specifying</para>
-        /// <para>    ///     UINT32_MAX will always resolve the address using
-        /// the</para>
-        /// <para>    ///     currently loaded sections.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @param[in] vm_addr</para>
-        /// <para>    ///     A virtual address from the current process state that
-        /// is to</para>
-        /// <para>    ///     be translated into a section offset address.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @return</para>
-        /// <para>    ///     An SBAddress which will be valid if \a vm_addr
-        /// was</para>
-        /// <para>    ///     successfully resolved into a section offset address,
-        /// or an</para>
-        /// <para>    ///     invalid SBAddress if \a vm_addr doesn't resolve to a
-        /// section</para>
-        /// <para>    ///     in a module.</para>
+        /// <para>using the process stop ID to identify a time in the past.</para>
+        /// <para> </para>
+        /// <para> </para>
+        /// <para> </para>
         /// </remarks>
         public LLDB.Address ResolvePastLoadAddress(uint stop_id, ulong vm_addr)
         {
-            var arg0 = stop_id;
-            var arg1 = vm_addr;
             var __ret = new LLDB.Address.Internal();
-            Internal.ResolvePastLoadAddress_0(new IntPtr(&__ret), __Instance, arg0, arg1);
+            Internal.ResolvePastLoadAddress_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), stop_id, vm_addr);
             return LLDB.Address.__CreateInstance(__ret);
         }
 
         public LLDB.SymbolContext ResolveSymbolContextForAddress(LLDB.Address addr, uint resolve_scope)
         {
-            var arg0 = ReferenceEquals(addr, null) ? global::System.IntPtr.Zero : addr.__Instance;
-            var arg1 = resolve_scope;
+            if (ReferenceEquals(addr, null))
+                throw new global::System.ArgumentNullException("addr", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = addr.__Instance;
             var __ret = new LLDB.SymbolContext.Internal();
-            Internal.ResolveSymbolContextForAddress_0(new IntPtr(&__ret), __Instance, arg0, arg1);
+            Internal.ResolveSymbolContextForAddress_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0, resolve_scope);
             return LLDB.SymbolContext.__CreateInstance(__ret);
         }
 
         /// <summary>
-        /// <para>Read target memory. If a target process is running then memory is
-        /// read from here. Otherwise the memory is read from the object files. For a
-        /// target whose bytes are sized as a multiple of host bytes, the data read
-        /// back will preserve the target's byte order.</para>
+        /// <para>Read target memory. If a target process is running then memory  </para>
         /// </summary>
         /// <remarks>
-        /// <para>/// Read target memory. If a target process is running then
-        /// memory  </para>
-        /// <para>    /// is read from here. Otherwise the memory is read from the
-        /// object</para>
-        /// <para>    /// files. For a target whose bytes are sized as a multiple
-        /// of host</para>
-        /// <para>    /// bytes, the data read back will preserve the target's byte
-        /// order.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @param[in] addr</para>
-        /// <para>    ///     A target address to read from. </para>
-        /// <para>    ///</para>
-        /// <para>    /// @param[out] buf</para>
-        /// <para>    ///     The buffer to read memory into. </para>
-        /// <para>    ///</para>
-        /// <para>    /// @param[in] size</para>
-        /// <para>    ///     The maximum number of host bytes to read in the
-        /// buffer passed</para>
-        /// <para>    ///     into this call</para>
-        /// <para>    ///</para>
-        /// <para>    /// @param[out] error</para>
-        /// <para>    ///     Error information is written here if the memory read
-        /// fails.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @return</para>
-        /// <para>    ///     The amount of data read in host bytes.</para>
+        /// <para>is read from here. Otherwise the memory is read from the object</para>
+        /// <para>files. For a target whose bytes are sized as a multiple of host</para>
+        /// <para>bytes, the data read back will preserve the target's byte order.</para>
+        /// <para> </para>
+        /// <para> </para>
+        /// <para> </para>
+        /// <para> </para>
+        /// <para> </para>
         /// </remarks>
         public uint ReadMemory(LLDB.Address addr, global::System.IntPtr buf, uint size, LLDB.Error error)
         {
             var arg0 = ReferenceEquals(addr, null) ? new LLDB.Address.Internal() : *(LLDB.Address.Internal*) (addr.__Instance);
             var arg1 = buf;
-            var arg2 = size;
-            var arg3 = ReferenceEquals(error, null) ? global::System.IntPtr.Zero : error.__Instance;
-            var __ret = Internal.ReadMemory_0(__Instance, arg0, arg1, arg2, arg3);
+            if (ReferenceEquals(error, null))
+                throw new global::System.ArgumentNullException("error", "Cannot be null because it is a C++ reference (&).");
+            var arg3 = error.__Instance;
+            var __ret = Internal.ReadMemory_0((__Instance + __PointerAdjustment), arg0, arg1, size, arg3);
             return __ret;
         }
 
         public LLDB.Breakpoint BreakpointCreateByLocation(string file, uint line)
         {
             var arg0 = Marshal.StringToHGlobalAnsi(file);
-            var arg1 = line;
             var __ret = new LLDB.Breakpoint.Internal();
-            Internal.BreakpointCreateByLocation_0(new IntPtr(&__ret), __Instance, arg0, arg1);
+            Internal.BreakpointCreateByLocation_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0, line);
             Marshal.FreeHGlobal(arg0);
             return LLDB.Breakpoint.__CreateInstance(__ret);
         }
 
         public LLDB.Breakpoint BreakpointCreateByLocation(LLDB.FileSpec file_spec, uint line)
         {
-            var arg0 = ReferenceEquals(file_spec, null) ? global::System.IntPtr.Zero : file_spec.__Instance;
-            var arg1 = line;
+            if (ReferenceEquals(file_spec, null))
+                throw new global::System.ArgumentNullException("file_spec", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = file_spec.__Instance;
             var __ret = new LLDB.Breakpoint.Internal();
-            Internal.BreakpointCreateByLocation_1(new IntPtr(&__ret), __Instance, arg0, arg1);
+            Internal.BreakpointCreateByLocation_1(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0, line);
+            return LLDB.Breakpoint.__CreateInstance(__ret);
+        }
+
+        public LLDB.Breakpoint BreakpointCreateByLocation(LLDB.FileSpec file_spec, uint line, ulong offset)
+        {
+            if (ReferenceEquals(file_spec, null))
+                throw new global::System.ArgumentNullException("file_spec", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = file_spec.__Instance;
+            var __ret = new LLDB.Breakpoint.Internal();
+            Internal.BreakpointCreateByLocation_2(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0, line, offset);
             return LLDB.Breakpoint.__CreateInstance(__ret);
         }
 
@@ -1471,7 +1240,7 @@ namespace LLDB
             var arg0 = Marshal.StringToHGlobalAnsi(symbol_name);
             var arg1 = Marshal.StringToHGlobalAnsi(module_name);
             var __ret = new LLDB.Breakpoint.Internal();
-            Internal.BreakpointCreateByName_0(new IntPtr(&__ret), __Instance, arg0, arg1);
+            Internal.BreakpointCreateByName_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0, arg1);
             Marshal.FreeHGlobal(arg0);
             Marshal.FreeHGlobal(arg1);
             return LLDB.Breakpoint.__CreateInstance(__ret);
@@ -1480,10 +1249,14 @@ namespace LLDB
         public LLDB.Breakpoint BreakpointCreateByName(string symbol_name, LLDB.FileSpecList module_list, LLDB.FileSpecList comp_unit_list)
         {
             var arg0 = Marshal.StringToHGlobalAnsi(symbol_name);
-            var arg1 = ReferenceEquals(module_list, null) ? global::System.IntPtr.Zero : module_list.__Instance;
-            var arg2 = ReferenceEquals(comp_unit_list, null) ? global::System.IntPtr.Zero : comp_unit_list.__Instance;
+            if (ReferenceEquals(module_list, null))
+                throw new global::System.ArgumentNullException("module_list", "Cannot be null because it is a C++ reference (&).");
+            var arg1 = module_list.__Instance;
+            if (ReferenceEquals(comp_unit_list, null))
+                throw new global::System.ArgumentNullException("comp_unit_list", "Cannot be null because it is a C++ reference (&).");
+            var arg2 = comp_unit_list.__Instance;
             var __ret = new LLDB.Breakpoint.Internal();
-            Internal.BreakpointCreateByName_1(new IntPtr(&__ret), __Instance, arg0, arg1, arg2);
+            Internal.BreakpointCreateByName_1(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0, arg1, arg2);
             Marshal.FreeHGlobal(arg0);
             return LLDB.Breakpoint.__CreateInstance(__ret);
         }
@@ -1491,11 +1264,30 @@ namespace LLDB
         public LLDB.Breakpoint BreakpointCreateByName(string symbol_name, uint name_type_mask, LLDB.FileSpecList module_list, LLDB.FileSpecList comp_unit_list)
         {
             var arg0 = Marshal.StringToHGlobalAnsi(symbol_name);
-            var arg1 = name_type_mask;
-            var arg2 = ReferenceEquals(module_list, null) ? global::System.IntPtr.Zero : module_list.__Instance;
-            var arg3 = ReferenceEquals(comp_unit_list, null) ? global::System.IntPtr.Zero : comp_unit_list.__Instance;
+            if (ReferenceEquals(module_list, null))
+                throw new global::System.ArgumentNullException("module_list", "Cannot be null because it is a C++ reference (&).");
+            var arg2 = module_list.__Instance;
+            if (ReferenceEquals(comp_unit_list, null))
+                throw new global::System.ArgumentNullException("comp_unit_list", "Cannot be null because it is a C++ reference (&).");
+            var arg3 = comp_unit_list.__Instance;
             var __ret = new LLDB.Breakpoint.Internal();
-            Internal.BreakpointCreateByName_2(new IntPtr(&__ret), __Instance, arg0, arg1, arg2, arg3);
+            Internal.BreakpointCreateByName_2(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0, name_type_mask, arg2, arg3);
+            Marshal.FreeHGlobal(arg0);
+            return LLDB.Breakpoint.__CreateInstance(__ret);
+        }
+
+        public LLDB.Breakpoint BreakpointCreateByName(string symbol_name, uint name_type_mask, LLDB.LanguageType symbol_language, LLDB.FileSpecList module_list, LLDB.FileSpecList comp_unit_list)
+        {
+            var arg0 = Marshal.StringToHGlobalAnsi(symbol_name);
+            var arg2 = symbol_language;
+            if (ReferenceEquals(module_list, null))
+                throw new global::System.ArgumentNullException("module_list", "Cannot be null because it is a C++ reference (&).");
+            var arg3 = module_list.__Instance;
+            if (ReferenceEquals(comp_unit_list, null))
+                throw new global::System.ArgumentNullException("comp_unit_list", "Cannot be null because it is a C++ reference (&).");
+            var arg4 = comp_unit_list.__Instance;
+            var __ret = new LLDB.Breakpoint.Internal();
+            Internal.BreakpointCreateByName_3(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0, name_type_mask, arg2, arg3, arg4);
             Marshal.FreeHGlobal(arg0);
             return LLDB.Breakpoint.__CreateInstance(__ret);
         }
@@ -1505,7 +1297,7 @@ namespace LLDB
             var arg0 = Marshal.StringToHGlobalAnsi(symbol_name_regex);
             var arg1 = Marshal.StringToHGlobalAnsi(module_name);
             var __ret = new LLDB.Breakpoint.Internal();
-            Internal.BreakpointCreateByRegex_0(new IntPtr(&__ret), __Instance, arg0, arg1);
+            Internal.BreakpointCreateByRegex_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0, arg1);
             Marshal.FreeHGlobal(arg0);
             Marshal.FreeHGlobal(arg1);
             return LLDB.Breakpoint.__CreateInstance(__ret);
@@ -1514,10 +1306,30 @@ namespace LLDB
         public LLDB.Breakpoint BreakpointCreateByRegex(string symbol_name_regex, LLDB.FileSpecList module_list, LLDB.FileSpecList comp_unit_list)
         {
             var arg0 = Marshal.StringToHGlobalAnsi(symbol_name_regex);
-            var arg1 = ReferenceEquals(module_list, null) ? global::System.IntPtr.Zero : module_list.__Instance;
-            var arg2 = ReferenceEquals(comp_unit_list, null) ? global::System.IntPtr.Zero : comp_unit_list.__Instance;
+            if (ReferenceEquals(module_list, null))
+                throw new global::System.ArgumentNullException("module_list", "Cannot be null because it is a C++ reference (&).");
+            var arg1 = module_list.__Instance;
+            if (ReferenceEquals(comp_unit_list, null))
+                throw new global::System.ArgumentNullException("comp_unit_list", "Cannot be null because it is a C++ reference (&).");
+            var arg2 = comp_unit_list.__Instance;
             var __ret = new LLDB.Breakpoint.Internal();
-            Internal.BreakpointCreateByRegex_1(new IntPtr(&__ret), __Instance, arg0, arg1, arg2);
+            Internal.BreakpointCreateByRegex_1(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0, arg1, arg2);
+            Marshal.FreeHGlobal(arg0);
+            return LLDB.Breakpoint.__CreateInstance(__ret);
+        }
+
+        public LLDB.Breakpoint BreakpointCreateByRegex(string symbol_name_regex, LLDB.LanguageType symbol_language, LLDB.FileSpecList module_list, LLDB.FileSpecList comp_unit_list)
+        {
+            var arg0 = Marshal.StringToHGlobalAnsi(symbol_name_regex);
+            var arg1 = symbol_language;
+            if (ReferenceEquals(module_list, null))
+                throw new global::System.ArgumentNullException("module_list", "Cannot be null because it is a C++ reference (&).");
+            var arg2 = module_list.__Instance;
+            if (ReferenceEquals(comp_unit_list, null))
+                throw new global::System.ArgumentNullException("comp_unit_list", "Cannot be null because it is a C++ reference (&).");
+            var arg3 = comp_unit_list.__Instance;
+            var __ret = new LLDB.Breakpoint.Internal();
+            Internal.BreakpointCreateByRegex_2(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0, arg1, arg2, arg3);
             Marshal.FreeHGlobal(arg0);
             return LLDB.Breakpoint.__CreateInstance(__ret);
         }
@@ -1525,10 +1337,12 @@ namespace LLDB
         public LLDB.Breakpoint BreakpointCreateBySourceRegex(string source_regex, LLDB.FileSpec source_file, string module_name)
         {
             var arg0 = Marshal.StringToHGlobalAnsi(source_regex);
-            var arg1 = ReferenceEquals(source_file, null) ? global::System.IntPtr.Zero : source_file.__Instance;
+            if (ReferenceEquals(source_file, null))
+                throw new global::System.ArgumentNullException("source_file", "Cannot be null because it is a C++ reference (&).");
+            var arg1 = source_file.__Instance;
             var arg2 = Marshal.StringToHGlobalAnsi(module_name);
             var __ret = new LLDB.Breakpoint.Internal();
-            Internal.BreakpointCreateBySourceRegex_0(new IntPtr(&__ret), __Instance, arg0, arg1, arg2);
+            Internal.BreakpointCreateBySourceRegex_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0, arg1, arg2);
             Marshal.FreeHGlobal(arg0);
             Marshal.FreeHGlobal(arg2);
             return LLDB.Breakpoint.__CreateInstance(__ret);
@@ -1537,10 +1351,14 @@ namespace LLDB
         public LLDB.Breakpoint BreakpointCreateBySourceRegex(string source_regex, LLDB.FileSpecList module_list, LLDB.FileSpecList source_file)
         {
             var arg0 = Marshal.StringToHGlobalAnsi(source_regex);
-            var arg1 = ReferenceEquals(module_list, null) ? global::System.IntPtr.Zero : module_list.__Instance;
-            var arg2 = ReferenceEquals(source_file, null) ? global::System.IntPtr.Zero : source_file.__Instance;
+            if (ReferenceEquals(module_list, null))
+                throw new global::System.ArgumentNullException("module_list", "Cannot be null because it is a C++ reference (&).");
+            var arg1 = module_list.__Instance;
+            if (ReferenceEquals(source_file, null))
+                throw new global::System.ArgumentNullException("source_file", "Cannot be null because it is a C++ reference (&).");
+            var arg2 = source_file.__Instance;
             var __ret = new LLDB.Breakpoint.Internal();
-            Internal.BreakpointCreateBySourceRegex_1(new IntPtr(&__ret), __Instance, arg0, arg1, arg2);
+            Internal.BreakpointCreateBySourceRegex_1(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0, arg1, arg2);
             Marshal.FreeHGlobal(arg0);
             return LLDB.Breakpoint.__CreateInstance(__ret);
         }
@@ -1549,114 +1367,117 @@ namespace LLDB
         {
             var arg0 = language;
             var __ret = new LLDB.Breakpoint.Internal();
-            Internal.BreakpointCreateForException_0(new IntPtr(&__ret), __Instance, arg0, catch_bp, throw_bp);
+            Internal.BreakpointCreateForException_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0, catch_bp, throw_bp);
             return LLDB.Breakpoint.__CreateInstance(__ret);
         }
 
         public LLDB.Breakpoint BreakpointCreateByAddress(ulong address)
         {
-            var arg0 = address;
             var __ret = new LLDB.Breakpoint.Internal();
-            Internal.BreakpointCreateByAddress_0(new IntPtr(&__ret), __Instance, arg0);
+            Internal.BreakpointCreateByAddress_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), address);
+            return LLDB.Breakpoint.__CreateInstance(__ret);
+        }
+
+        public LLDB.Breakpoint BreakpointCreateBySBAddress(LLDB.Address address)
+        {
+            if (ReferenceEquals(address, null))
+                throw new global::System.ArgumentNullException("address", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = address.__Instance;
+            var __ret = new LLDB.Breakpoint.Internal();
+            Internal.BreakpointCreateBySBAddress_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0);
             return LLDB.Breakpoint.__CreateInstance(__ret);
         }
 
         public LLDB.Breakpoint GetBreakpointAtIndex(uint idx)
         {
-            var arg0 = idx;
             var __ret = new LLDB.Breakpoint.Internal();
-            Internal.GetBreakpointAtIndex_0(new IntPtr(&__ret), __Instance, arg0);
+            Internal.GetBreakpointAtIndex_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), idx);
             return LLDB.Breakpoint.__CreateInstance(__ret);
         }
 
         public bool BreakpointDelete(int break_id)
         {
-            var arg0 = break_id;
-            var __ret = Internal.BreakpointDelete_0(__Instance, arg0);
+            var __ret = Internal.BreakpointDelete_0((__Instance + __PointerAdjustment), break_id);
             return __ret;
         }
 
         public LLDB.Breakpoint FindBreakpointByID(int break_id)
         {
-            var arg0 = break_id;
             var __ret = new LLDB.Breakpoint.Internal();
-            Internal.FindBreakpointByID_0(new IntPtr(&__ret), __Instance, arg0);
+            Internal.FindBreakpointByID_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), break_id);
             return LLDB.Breakpoint.__CreateInstance(__ret);
         }
 
         public bool EnableAllBreakpoints()
         {
-            var __ret = Internal.EnableAllBreakpoints_0(__Instance);
+            var __ret = Internal.EnableAllBreakpoints_0((__Instance + __PointerAdjustment));
             return __ret;
         }
 
         public bool DisableAllBreakpoints()
         {
-            var __ret = Internal.DisableAllBreakpoints_0(__Instance);
+            var __ret = Internal.DisableAllBreakpoints_0((__Instance + __PointerAdjustment));
             return __ret;
         }
 
         public bool DeleteAllBreakpoints()
         {
-            var __ret = Internal.DeleteAllBreakpoints_0(__Instance);
+            var __ret = Internal.DeleteAllBreakpoints_0((__Instance + __PointerAdjustment));
             return __ret;
         }
 
         public LLDB.Watchpoint GetWatchpointAtIndex(uint idx)
         {
-            var arg0 = idx;
             var __ret = new LLDB.Watchpoint.Internal();
-            Internal.GetWatchpointAtIndex_0(new IntPtr(&__ret), __Instance, arg0);
+            Internal.GetWatchpointAtIndex_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), idx);
             return LLDB.Watchpoint.__CreateInstance(__ret);
         }
 
         public bool DeleteWatchpoint(int watch_id)
         {
-            var arg0 = watch_id;
-            var __ret = Internal.DeleteWatchpoint_0(__Instance, arg0);
+            var __ret = Internal.DeleteWatchpoint_0((__Instance + __PointerAdjustment), watch_id);
             return __ret;
         }
 
         public LLDB.Watchpoint FindWatchpointByID(int watch_id)
         {
-            var arg0 = watch_id;
             var __ret = new LLDB.Watchpoint.Internal();
-            Internal.FindWatchpointByID_0(new IntPtr(&__ret), __Instance, arg0);
+            Internal.FindWatchpointByID_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), watch_id);
             return LLDB.Watchpoint.__CreateInstance(__ret);
         }
 
         public LLDB.Watchpoint WatchAddress(ulong addr, uint size, bool read, bool write, LLDB.Error error)
         {
-            var arg0 = addr;
-            var arg1 = size;
-            var arg4 = ReferenceEquals(error, null) ? global::System.IntPtr.Zero : error.__Instance;
+            if (ReferenceEquals(error, null))
+                throw new global::System.ArgumentNullException("error", "Cannot be null because it is a C++ reference (&).");
+            var arg4 = error.__Instance;
             var __ret = new LLDB.Watchpoint.Internal();
-            Internal.WatchAddress_0(new IntPtr(&__ret), __Instance, arg0, arg1, read, write, arg4);
+            Internal.WatchAddress_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), addr, size, read, write, arg4);
             return LLDB.Watchpoint.__CreateInstance(__ret);
         }
 
         public bool EnableAllWatchpoints()
         {
-            var __ret = Internal.EnableAllWatchpoints_0(__Instance);
+            var __ret = Internal.EnableAllWatchpoints_0((__Instance + __PointerAdjustment));
             return __ret;
         }
 
         public bool DisableAllWatchpoints()
         {
-            var __ret = Internal.DisableAllWatchpoints_0(__Instance);
+            var __ret = Internal.DisableAllWatchpoints_0((__Instance + __PointerAdjustment));
             return __ret;
         }
 
         public bool DeleteAllWatchpoints()
         {
-            var __ret = Internal.DeleteAllWatchpoints_0(__Instance);
+            var __ret = Internal.DeleteAllWatchpoints_0((__Instance + __PointerAdjustment));
             return __ret;
         }
 
         public LLDB.Broadcaster GetBroadcaster()
         {
             var __ret = new LLDB.Broadcaster.Internal();
-            Internal.GetBroadcaster_0(new IntPtr(&__ret), __Instance);
+            Internal.GetBroadcaster_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
             return LLDB.Broadcaster.__CreateInstance(__ret);
         }
 
@@ -1664,7 +1485,7 @@ namespace LLDB
         {
             var arg0 = Marshal.StringToHGlobalAnsi(type);
             var __ret = new LLDB.Type.Internal();
-            Internal.FindFirstType_0(new IntPtr(&__ret), __Instance, arg0);
+            Internal.FindFirstType_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0);
             Marshal.FreeHGlobal(arg0);
             return LLDB.Type.__CreateInstance(__ret);
         }
@@ -1673,7 +1494,7 @@ namespace LLDB
         {
             var arg0 = Marshal.StringToHGlobalAnsi(type);
             var __ret = new LLDB.TypeList.Internal();
-            Internal.FindTypes_0(new IntPtr(&__ret), __Instance, arg0);
+            Internal.FindTypes_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0);
             Marshal.FreeHGlobal(arg0);
             return LLDB.TypeList.__CreateInstance(__ret);
         }
@@ -1682,7 +1503,7 @@ namespace LLDB
         {
             var arg0 = type;
             var __ret = new LLDB.Type.Internal();
-            Internal.GetBasicType_0(new IntPtr(&__ret), __Instance, arg0);
+            Internal.GetBasicType_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0);
             return LLDB.Type.__CreateInstance(__ret);
         }
 
@@ -1692,7 +1513,7 @@ namespace LLDB
             var arg1 = ReferenceEquals(addr, null) ? new LLDB.Address.Internal() : *(LLDB.Address.Internal*) (addr.__Instance);
             var arg2 = ReferenceEquals(type, null) ? new LLDB.Type.Internal() : *(LLDB.Type.Internal*) (type.__Instance);
             var __ret = new LLDB.Value.Internal();
-            Internal.CreateValueFromAddress_0(new IntPtr(&__ret), __Instance, arg0, arg1, arg2);
+            Internal.CreateValueFromAddress_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0, arg1, arg2);
             Marshal.FreeHGlobal(arg0);
             return LLDB.Value.__CreateInstance(__ret);
         }
@@ -1703,7 +1524,7 @@ namespace LLDB
             var arg1 = ReferenceEquals(data, null) ? new LLDB.Data.Internal() : *(LLDB.Data.Internal*) (data.__Instance);
             var arg2 = ReferenceEquals(type, null) ? new LLDB.Type.Internal() : *(LLDB.Type.Internal*) (type.__Instance);
             var __ret = new LLDB.Value.Internal();
-            Internal.CreateValueFromData_0(new IntPtr(&__ret), __Instance, arg0, arg1, arg2);
+            Internal.CreateValueFromData_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0, arg1, arg2);
             Marshal.FreeHGlobal(arg0);
             return LLDB.Value.__CreateInstance(__ret);
         }
@@ -1713,7 +1534,7 @@ namespace LLDB
             var arg0 = Marshal.StringToHGlobalAnsi(name);
             var arg1 = Marshal.StringToHGlobalAnsi(expr);
             var __ret = new LLDB.Value.Internal();
-            Internal.CreateValueFromExpression_0(new IntPtr(&__ret), __Instance, arg0, arg1);
+            Internal.CreateValueFromExpression_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0, arg1);
             Marshal.FreeHGlobal(arg0);
             Marshal.FreeHGlobal(arg1);
             return LLDB.Value.__CreateInstance(__ret);
@@ -1722,26 +1543,24 @@ namespace LLDB
         public LLDB.SourceManager GetSourceManager()
         {
             var __ret = new LLDB.SourceManager.Internal();
-            Internal.GetSourceManager_0(new IntPtr(&__ret), __Instance);
+            Internal.GetSourceManager_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
             return LLDB.SourceManager.__CreateInstance(__ret);
         }
 
         public LLDB.InstructionList ReadInstructions(LLDB.Address base_addr, uint count)
         {
             var arg0 = ReferenceEquals(base_addr, null) ? new LLDB.Address.Internal() : *(LLDB.Address.Internal*) (base_addr.__Instance);
-            var arg1 = count;
             var __ret = new LLDB.InstructionList.Internal();
-            Internal.ReadInstructions_0(new IntPtr(&__ret), __Instance, arg0, arg1);
+            Internal.ReadInstructions_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0, count);
             return LLDB.InstructionList.__CreateInstance(__ret);
         }
 
         public LLDB.InstructionList ReadInstructions(LLDB.Address base_addr, uint count, string flavor_string)
         {
             var arg0 = ReferenceEquals(base_addr, null) ? new LLDB.Address.Internal() : *(LLDB.Address.Internal*) (base_addr.__Instance);
-            var arg1 = count;
             var arg2 = Marshal.StringToHGlobalAnsi(flavor_string);
             var __ret = new LLDB.InstructionList.Internal();
-            Internal.ReadInstructions_1(new IntPtr(&__ret), __Instance, arg0, arg1, arg2);
+            Internal.ReadInstructions_1(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0, count, arg2);
             Marshal.FreeHGlobal(arg2);
             return LLDB.InstructionList.__CreateInstance(__ret);
         }
@@ -1750,9 +1569,8 @@ namespace LLDB
         {
             var arg0 = ReferenceEquals(base_addr, null) ? new LLDB.Address.Internal() : *(LLDB.Address.Internal*) (base_addr.__Instance);
             var arg1 = buf;
-            var arg2 = size;
             var __ret = new LLDB.InstructionList.Internal();
-            Internal.GetInstructions_0(new IntPtr(&__ret), __Instance, arg0, arg1, arg2);
+            Internal.GetInstructions_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0, arg1, size);
             return LLDB.InstructionList.__CreateInstance(__ret);
         }
 
@@ -1761,31 +1579,26 @@ namespace LLDB
             var arg0 = ReferenceEquals(base_addr, null) ? new LLDB.Address.Internal() : *(LLDB.Address.Internal*) (base_addr.__Instance);
             var arg1 = Marshal.StringToHGlobalAnsi(flavor_string);
             var arg2 = buf;
-            var arg3 = size;
             var __ret = new LLDB.InstructionList.Internal();
-            Internal.GetInstructionsWithFlavor_0(new IntPtr(&__ret), __Instance, arg0, arg1, arg2, arg3);
+            Internal.GetInstructionsWithFlavor_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0, arg1, arg2, size);
             Marshal.FreeHGlobal(arg1);
             return LLDB.InstructionList.__CreateInstance(__ret);
         }
 
         public LLDB.InstructionList GetInstructions(ulong base_addr, global::System.IntPtr buf, uint size)
         {
-            var arg0 = base_addr;
             var arg1 = buf;
-            var arg2 = size;
             var __ret = new LLDB.InstructionList.Internal();
-            Internal.GetInstructions_1(new IntPtr(&__ret), __Instance, arg0, arg1, arg2);
+            Internal.GetInstructions_1(new IntPtr(&__ret), (__Instance + __PointerAdjustment), base_addr, arg1, size);
             return LLDB.InstructionList.__CreateInstance(__ret);
         }
 
         public LLDB.InstructionList GetInstructionsWithFlavor(ulong base_addr, string flavor_string, global::System.IntPtr buf, uint size)
         {
-            var arg0 = base_addr;
             var arg1 = Marshal.StringToHGlobalAnsi(flavor_string);
             var arg2 = buf;
-            var arg3 = size;
             var __ret = new LLDB.InstructionList.Internal();
-            Internal.GetInstructionsWithFlavor_1(new IntPtr(&__ret), __Instance, arg0, arg1, arg2, arg3);
+            Internal.GetInstructionsWithFlavor_1(new IntPtr(&__ret), (__Instance + __PointerAdjustment), base_addr, arg1, arg2, size);
             Marshal.FreeHGlobal(arg1);
             return LLDB.InstructionList.__CreateInstance(__ret);
         }
@@ -1795,7 +1608,7 @@ namespace LLDB
             var arg0 = Marshal.StringToHGlobalAnsi(name);
             var arg1 = type;
             var __ret = new LLDB.SymbolContextList.Internal();
-            Internal.FindSymbols_0(new IntPtr(&__ret), __Instance, arg0, arg1);
+            Internal.FindSymbols_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0, arg1);
             Marshal.FreeHGlobal(arg0);
             return LLDB.SymbolContextList.__CreateInstance(__ret);
         }
@@ -1817,39 +1630,77 @@ namespace LLDB
             return this == obj as Target;
         }
 
+        public override int GetHashCode()
+        {
+            if (__Instance == global::System.IntPtr.Zero)
+                return global::System.IntPtr.Zero.GetHashCode();
+            return (*(Internal*) __Instance).GetHashCode();
+        }
+
         public static bool operator !=(LLDB.Target __op, LLDB.Target rhs)
         {
-            var arg0 = ReferenceEquals(__op, null) ? global::System.IntPtr.Zero : __op.__Instance;
-            var arg1 = ReferenceEquals(rhs, null) ? global::System.IntPtr.Zero : rhs.__Instance;
+            bool __opNull = ReferenceEquals(__op, null);
+            bool rhsNull = ReferenceEquals(rhs, null);
+            if (__opNull || rhsNull)
+                return !(__opNull && rhsNull);
+            var arg0 = __op.__Instance;
+            var arg1 = rhs.__Instance;
             var __ret = Internal.OperatorExclaimEqual_0(arg0, arg1);
             return __ret;
         }
 
         public bool GetDescription(LLDB.Stream description, LLDB.DescriptionLevel description_level)
         {
-            var arg0 = ReferenceEquals(description, null) ? global::System.IntPtr.Zero : description.__Instance;
+            if (ReferenceEquals(description, null))
+                throw new global::System.ArgumentNullException("description", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = description.__Instance;
             var arg1 = description_level;
-            var __ret = Internal.GetDescription_0(__Instance, arg0, arg1);
+            var __ret = Internal.GetDescription_0((__Instance + __PointerAdjustment), arg0, arg1);
             return __ret;
+        }
+
+        public LLDB.Value EvaluateExpression(string expr)
+        {
+            var arg0 = Marshal.StringToHGlobalAnsi(expr);
+            var __ret = new LLDB.Value.Internal();
+            Internal.EvaluateExpression_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0);
+            Marshal.FreeHGlobal(arg0);
+            return LLDB.Value.__CreateInstance(__ret);
+        }
+
+        public LLDB.Value EvaluateExpression(string expr, LLDB.ExpressionOptions options)
+        {
+            var arg0 = Marshal.StringToHGlobalAnsi(expr);
+            if (ReferenceEquals(options, null))
+                throw new global::System.ArgumentNullException("options", "Cannot be null because it is a C++ reference (&).");
+            var arg1 = options.__Instance;
+            var __ret = new LLDB.Value.Internal();
+            Internal.EvaluateExpression_1(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0, arg1);
+            Marshal.FreeHGlobal(arg0);
+            return LLDB.Value.__CreateInstance(__ret);
         }
 
         public LLDB.LaunchInfo GetLaunchInfo()
         {
             var __ret = new LLDB.LaunchInfo.Internal();
-            Internal.GetLaunchInfo_0(new IntPtr(&__ret), __Instance);
+            Internal.GetLaunchInfo_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
             return LLDB.LaunchInfo.__CreateInstance(__ret);
         }
 
         public static bool EventIsTargetEvent(LLDB.Event @event)
         {
-            var arg0 = ReferenceEquals(@event, null) ? global::System.IntPtr.Zero : @event.__Instance;
+            if (ReferenceEquals(@event, null))
+                throw new global::System.ArgumentNullException("@event", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = @event.__Instance;
             var __ret = Internal.EventIsTargetEvent_0(arg0);
             return __ret;
         }
 
         public static LLDB.Target GetTargetFromEvent(LLDB.Event @event)
         {
-            var arg0 = ReferenceEquals(@event, null) ? global::System.IntPtr.Zero : @event.__Instance;
+            if (ReferenceEquals(@event, null))
+                throw new global::System.ArgumentNullException("@event", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = @event.__Instance;
             var __ret = new LLDB.Target.Internal();
             Internal.GetTargetFromEvent_0(new IntPtr(&__ret), arg0);
             return LLDB.Target.__CreateInstance(__ret);
@@ -1857,17 +1708,20 @@ namespace LLDB
 
         public static uint GetNumModulesFromEvent(LLDB.Event @event)
         {
-            var arg0 = ReferenceEquals(@event, null) ? global::System.IntPtr.Zero : @event.__Instance;
+            if (ReferenceEquals(@event, null))
+                throw new global::System.ArgumentNullException("@event", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = @event.__Instance;
             var __ret = Internal.GetNumModulesFromEvent_0(arg0);
             return __ret;
         }
 
         public static LLDB.Module GetModuleAtIndexFromEvent(uint idx, LLDB.Event @event)
         {
-            var arg0 = idx;
-            var arg1 = ReferenceEquals(@event, null) ? global::System.IntPtr.Zero : @event.__Instance;
+            if (ReferenceEquals(@event, null))
+                throw new global::System.ArgumentNullException("@event", "Cannot be null because it is a C++ reference (&).");
+            var arg1 = @event.__Instance;
             var __ret = new LLDB.Module.Internal();
-            Internal.GetModuleAtIndexFromEvent_0(new IntPtr(&__ret), arg0, arg1);
+            Internal.GetModuleAtIndexFromEvent_0(new IntPtr(&__ret), idx, arg1);
             return LLDB.Module.__CreateInstance(__ret);
         }
 
@@ -1884,7 +1738,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetNumModules_0(__Instance);
+                var __ret = Internal.GetNumModules_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
         }
@@ -1893,7 +1747,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetByteOrder_0(__Instance);
+                var __ret = Internal.GetByteOrder_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
         }
@@ -1902,7 +1756,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetAddressByteSize_0(__Instance);
+                var __ret = Internal.GetAddressByteSize_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
         }
@@ -1911,7 +1765,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetTriple_0(__Instance);
+                var __ret = Internal.GetTriple_0((__Instance + __PointerAdjustment));
                 return Marshal.PtrToStringAnsi(__ret);
             }
         }
@@ -1920,7 +1774,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetDataByteSize_0(__Instance);
+                var __ret = Internal.GetDataByteSize_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
         }
@@ -1929,7 +1783,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetCodeByteSize_0(__Instance);
+                var __ret = Internal.GetCodeByteSize_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
         }
@@ -1938,7 +1792,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetNumBreakpoints_0(__Instance);
+                var __ret = Internal.GetNumBreakpoints_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
         }
@@ -1947,7 +1801,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetNumWatchpoints_0(__Instance);
+                var __ret = Internal.GetNumWatchpoints_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
         }
@@ -1956,7 +1810,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetStackRedZoneSize_0(__Instance);
+                var __ret = Internal.GetStackRedZoneSize_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
         }
@@ -1965,8 +1819,10 @@ namespace LLDB
         {
             set
             {
-                var arg0 = ReferenceEquals(value, null) ? global::System.IntPtr.Zero : value.__Instance;
-                Internal.SetLaunchInfo_0(__Instance, arg0);
+                if (ReferenceEquals(value, null))
+                    throw new global::System.ArgumentNullException("value", "Cannot be null because it is a C++ reference (&).");
+                var arg0 = value.__Instance;
+                Internal.SetLaunchInfo_0((__Instance + __PointerAdjustment), arg0);
             }
         }
     }

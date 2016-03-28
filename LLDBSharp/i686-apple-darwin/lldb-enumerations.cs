@@ -123,16 +123,17 @@ namespace LLDB
         VectorOfUInt32 = 26,
         VectorOfSInt64 = 27,
         VectorOfUInt64 = 28,
-        VectorOfFloat32 = 29,
-        VectorOfFloat64 = 30,
-        VectorOfUInt128 = 31,
-        ComplexInteger = 32,
-        CharArray = 33,
-        AddressInfo = 34,
-        HexFloat = 35,
-        Instruction = 36,
-        Void = 37,
-        mats = 38
+        VectorOfFloat16 = 29,
+        VectorOfFloat32 = 30,
+        VectorOfFloat64 = 31,
+        VectorOfUInt128 = 32,
+        ComplexInteger = 33,
+        CharArray = 34,
+        AddressInfo = 35,
+        HexFloat = 36,
+        Instruction = 37,
+        Void = 38,
+        mats = 39
     }
 
     public enum DescriptionLevel : uint
@@ -153,10 +154,10 @@ namespace LLDB
 
     public enum RegisterKind : uint
     {
-        GCC = 0,
+        EHFrame = 0,
         DWARF = 1,
         Generic = 2,
-        GDB = 3,
+        ProcessPlugin = 3,
         LLDB = 4,
         inds = 5
     }
@@ -249,26 +250,15 @@ namespace LLDB
     }
 
     /// <summary>
-    /// <para>These mask bits allow a common interface for queries that can
-    /// limit the amount of information that gets parsed to only the information
-    /// that is requested. These bits also can indicate what actually did get
-    /// resolved during query function calls.</para>
+    /// <para>These mask bits allow a common interface for queries that can</para>
     /// </summary>
     /// <remarks>
-    /// <para>/// These mask bits allow a common interface for queries that
-    /// can</para>
-    /// <para>    /// limit the amount of information that gets parsed to only
-    /// the</para>
-    /// <para>    /// information that is requested. These bits also can
-    /// indicate what</para>
-    /// <para>    /// actually did get resolved during query function
-    /// calls.</para>
-    /// <para>    ///</para>
-    /// <para>    /// Each definition corresponds to a one of the member
-    /// variables</para>
-    /// <para>    /// in this class, and requests that that item be resolved,
-    /// or</para>
-    /// <para>    /// indicates that the member did get resolved.</para>
+    /// <para>limit the amount of information that gets parsed to only the</para>
+    /// <para>information that is requested. These bits also can indicate what</para>
+    /// <para>actually did get resolved during query function calls.</para>
+    /// <para>Each definition corresponds to a one of the member variables</para>
+    /// <para>in this class, and requests that that item be resolved, or</para>
+    /// <para>indicates that the member did get resolved.</para>
     /// </remarks>
     public enum SymbolContextItem : uint
     {
@@ -348,14 +338,10 @@ namespace LLDB
     /// <para>Programming language type.</para>
     /// </summary>
     /// <remarks>
-    /// <para>/// Programming language type.</para>
-    /// <para>    ///</para>
-    /// <para>    /// These enumerations use the same language enumerations as
-    /// the DWARF</para>
-    /// <para>    /// specification for ease of use and consistency.</para>
-    /// <para>    /// The enum -&gt; string code is in LanguageRuntime.cpp,
-    /// don't change this</para>
-    /// <para>    /// table without updating that code as well.</para>
+    /// <para>These enumerations use the same language enumerations as the DWARF</para>
+    /// <para>specification for ease of use and consistency.</para>
+    /// <para>The enum -&gt; string code is in LanguageRuntime.cpp, don't change this</para>
+    /// <para>table without updating that code as well.</para>
     /// </remarks>
     public enum LanguageType : uint
     {
@@ -441,7 +427,8 @@ namespace LLDB
     public enum InstrumentationRuntimeType : uint
     {
         AddressSanitizer = 0x0,
-        ypes = 1
+        ThreadSanitizer = 0x1,
+        ypes = 2
     }
 
     public enum DynamicValueType : uint
@@ -600,27 +587,34 @@ namespace LLDB
         DataObjCMessageRefs = 13,
         DataObjCCFStrings = 14,
         DWARFDebugAbbrev = 15,
-        DWARFDebugAranges = 16,
-        DWARFDebugFrame = 17,
-        DWARFDebugInfo = 18,
-        DWARFDebugLine = 19,
-        DWARFDebugLoc = 20,
-        DWARFDebugMacInfo = 21,
-        DWARFDebugPubNames = 22,
-        DWARFDebugPubTypes = 23,
-        DWARFDebugRanges = 24,
-        DWARFDebugStr = 25,
-        DWARFAppleNames = 26,
-        DWARFAppleTypes = 27,
-        DWARFAppleNamespaces = 28,
-        DWARFAppleObjC = 29,
-        ELFSymbolTable = 30,
-        ELFDynamicSymbols = 31,
-        ELFRelocationEntries = 32,
-        ELFDynamicLinkInfo = 33,
-        EHFrame = 34,
-        CompactUnwind = 35,
-        Other = 36
+        DWARFDebugAddr = 16,
+        DWARFDebugAranges = 17,
+        DWARFDebugFrame = 18,
+        DWARFDebugInfo = 19,
+        DWARFDebugLine = 20,
+        DWARFDebugLoc = 21,
+        DWARFDebugMacInfo = 22,
+        DWARFDebugMacro = 23,
+        DWARFDebugPubNames = 24,
+        DWARFDebugPubTypes = 25,
+        DWARFDebugRanges = 26,
+        DWARFDebugStr = 27,
+        DWARFDebugStrOffsets = 28,
+        DWARFAppleNames = 29,
+        DWARFAppleTypes = 30,
+        DWARFAppleNamespaces = 31,
+        DWARFAppleObjC = 32,
+        ELFSymbolTable = 33,
+        ELFDynamicSymbols = 34,
+        ELFRelocationEntries = 35,
+        ELFDynamicLinkInfo = 36,
+        EHFrame = 37,
+        ARMexidx = 38,
+        ARMextab = 39,
+        CompactUnwind = 40,
+        GoSymtab = 41,
+        AbsoluteAddress = 42,
+        Other = 43
     }
 
     public enum EmulateInstructionOptions : uint
@@ -726,7 +720,9 @@ namespace LLDB
         HideChildren = 8,
         HideValue = 16,
         ShowOneLiner = 32,
-        HideNames = 64
+        HideNames = 64,
+        NonCacheable = 128,
+        HideEmptyAggregates = 256
     }
 
     public enum FrameComparison : uint
@@ -871,7 +867,8 @@ namespace LLDB
         IsInteger = 262144,
         IsFloat = 524288,
         IsComplex = 1048576,
-        IsSigned = 2097152
+        IsSigned = 2097152,
+        InstanceIsPointer = 4194304
     }
 
     [Flags]

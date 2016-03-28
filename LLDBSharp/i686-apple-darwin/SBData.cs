@@ -219,36 +219,41 @@ namespace LLDB
         }
 
         public global::System.IntPtr __Instance { get; protected set; }
+
+        protected int __PointerAdjustment;
         public static readonly System.Collections.Concurrent.ConcurrentDictionary<IntPtr, Data> NativeToManagedMap = new System.Collections.Concurrent.ConcurrentDictionary<IntPtr, Data>();
+        protected void*[] __OriginalVTables;
 
-        private readonly bool __ownsNativeInstance;
+        protected bool __ownsNativeInstance;
 
-        public static Data __CreateInstance(global::System.IntPtr native)
+        public static Data __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
         {
-            return new Data((Data.Internal*) native);
+            return new Data(native.ToPointer(), skipVTables);
         }
 
-        public static Data __CreateInstance(Data.Internal native)
+        public static Data __CreateInstance(Data.Internal native, bool skipVTables = false)
         {
-            return new Data(native);
+            return new Data(native, skipVTables);
         }
 
-        private static Data.Internal* __CopyValue(Data.Internal native)
+        private static void* __CopyValue(Data.Internal native)
         {
-            var ret = (Data.Internal*) Marshal.AllocHGlobal(8);
-            *ret = native;
-            return ret;
+            var ret = Marshal.AllocHGlobal(8);
+            LLDB.Data.Internal.cctor_1(ret, new global::System.IntPtr(&native));
+            return ret.ToPointer();
         }
 
-        private Data(Data.Internal native)
-            : this(__CopyValue(native))
+        private Data(Data.Internal native, bool skipVTables = false)
+            : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
         }
 
-        protected Data(Data.Internal* native, bool isInternalImpl = false)
+        protected Data(void* native, bool skipVTables = false)
         {
+            if (native == null)
+                return;
             __Instance = new global::System.IntPtr(native);
         }
 
@@ -257,7 +262,18 @@ namespace LLDB
             __Instance = Marshal.AllocHGlobal(8);
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
-            Internal.ctor_0(__Instance);
+            Internal.ctor_0((__Instance + __PointerAdjustment));
+        }
+
+        public Data(LLDB.Data rhs)
+        {
+            __Instance = Marshal.AllocHGlobal(8);
+            __ownsNativeInstance = true;
+            NativeToManagedMap[__Instance] = this;
+            if (ReferenceEquals(rhs, null))
+                throw new global::System.ArgumentNullException("rhs", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = rhs.__Instance;
+            Internal.cctor_1((__Instance + __PointerAdjustment), arg0);
         }
 
         public void Dispose()
@@ -267,300 +283,318 @@ namespace LLDB
 
         protected virtual void Dispose(bool disposing)
         {
-            DestroyNativeInstance(false);
-        }
-
-        public virtual void DestroyNativeInstance()
-        {
-            DestroyNativeInstance(true);
-        }
-
-        private void DestroyNativeInstance(bool force)
-        {
             LLDB.Data __dummy;
             NativeToManagedMap.TryRemove(__Instance, out __dummy);
-            if (__ownsNativeInstance || force)
-                Internal.dtor_0(__Instance);
+            Internal.dtor_0((__Instance + __PointerAdjustment));
             if (__ownsNativeInstance)
                 Marshal.FreeHGlobal(__Instance);
         }
 
         public void Clear()
         {
-            Internal.Clear_0(__Instance);
+            Internal.Clear_0((__Instance + __PointerAdjustment));
         }
 
         public bool IsValid()
         {
-            var __ret = Internal.IsValid_0(__Instance);
+            var __ret = Internal.IsValid_0((__Instance + __PointerAdjustment));
             return __ret;
         }
 
         public float GetFloat(LLDB.Error error, ulong offset)
         {
-            var arg0 = ReferenceEquals(error, null) ? global::System.IntPtr.Zero : error.__Instance;
-            var arg1 = offset;
-            var __ret = Internal.GetFloat_0(__Instance, arg0, arg1);
+            if (ReferenceEquals(error, null))
+                throw new global::System.ArgumentNullException("error", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = error.__Instance;
+            var __ret = Internal.GetFloat_0((__Instance + __PointerAdjustment), arg0, offset);
             return __ret;
         }
 
         public double GetDouble(LLDB.Error error, ulong offset)
         {
-            var arg0 = ReferenceEquals(error, null) ? global::System.IntPtr.Zero : error.__Instance;
-            var arg1 = offset;
-            var __ret = Internal.GetDouble_0(__Instance, arg0, arg1);
+            if (ReferenceEquals(error, null))
+                throw new global::System.ArgumentNullException("error", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = error.__Instance;
+            var __ret = Internal.GetDouble_0((__Instance + __PointerAdjustment), arg0, offset);
             return __ret;
         }
 
         public void* GetLongDouble(LLDB.Error error, ulong offset)
         {
-            var arg0 = ReferenceEquals(error, null) ? global::System.IntPtr.Zero : error.__Instance;
-            var arg1 = offset;
-            var __ret = Internal.GetLongDouble_0(__Instance, arg0, arg1);
+            if (ReferenceEquals(error, null))
+                throw new global::System.ArgumentNullException("error", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = error.__Instance;
+            var __ret = Internal.GetLongDouble_0((__Instance + __PointerAdjustment), arg0, offset);
             return __ret;
         }
 
         public ulong GetAddress(LLDB.Error error, ulong offset)
         {
-            var arg0 = ReferenceEquals(error, null) ? global::System.IntPtr.Zero : error.__Instance;
-            var arg1 = offset;
-            var __ret = Internal.GetAddress_0(__Instance, arg0, arg1);
+            if (ReferenceEquals(error, null))
+                throw new global::System.ArgumentNullException("error", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = error.__Instance;
+            var __ret = Internal.GetAddress_0((__Instance + __PointerAdjustment), arg0, offset);
             return __ret;
         }
 
         public byte GetUnsignedInt8(LLDB.Error error, ulong offset)
         {
-            var arg0 = ReferenceEquals(error, null) ? global::System.IntPtr.Zero : error.__Instance;
-            var arg1 = offset;
-            var __ret = Internal.GetUnsignedInt8_0(__Instance, arg0, arg1);
+            if (ReferenceEquals(error, null))
+                throw new global::System.ArgumentNullException("error", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = error.__Instance;
+            var __ret = Internal.GetUnsignedInt8_0((__Instance + __PointerAdjustment), arg0, offset);
             return __ret;
         }
 
         public ushort GetUnsignedInt16(LLDB.Error error, ulong offset)
         {
-            var arg0 = ReferenceEquals(error, null) ? global::System.IntPtr.Zero : error.__Instance;
-            var arg1 = offset;
-            var __ret = Internal.GetUnsignedInt16_0(__Instance, arg0, arg1);
+            if (ReferenceEquals(error, null))
+                throw new global::System.ArgumentNullException("error", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = error.__Instance;
+            var __ret = Internal.GetUnsignedInt16_0((__Instance + __PointerAdjustment), arg0, offset);
             return __ret;
         }
 
         public uint GetUnsignedInt32(LLDB.Error error, ulong offset)
         {
-            var arg0 = ReferenceEquals(error, null) ? global::System.IntPtr.Zero : error.__Instance;
-            var arg1 = offset;
-            var __ret = Internal.GetUnsignedInt32_0(__Instance, arg0, arg1);
+            if (ReferenceEquals(error, null))
+                throw new global::System.ArgumentNullException("error", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = error.__Instance;
+            var __ret = Internal.GetUnsignedInt32_0((__Instance + __PointerAdjustment), arg0, offset);
             return __ret;
         }
 
         public ulong GetUnsignedInt64(LLDB.Error error, ulong offset)
         {
-            var arg0 = ReferenceEquals(error, null) ? global::System.IntPtr.Zero : error.__Instance;
-            var arg1 = offset;
-            var __ret = Internal.GetUnsignedInt64_0(__Instance, arg0, arg1);
+            if (ReferenceEquals(error, null))
+                throw new global::System.ArgumentNullException("error", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = error.__Instance;
+            var __ret = Internal.GetUnsignedInt64_0((__Instance + __PointerAdjustment), arg0, offset);
             return __ret;
         }
 
         public sbyte GetSignedInt8(LLDB.Error error, ulong offset)
         {
-            var arg0 = ReferenceEquals(error, null) ? global::System.IntPtr.Zero : error.__Instance;
-            var arg1 = offset;
-            var __ret = Internal.GetSignedInt8_0(__Instance, arg0, arg1);
+            if (ReferenceEquals(error, null))
+                throw new global::System.ArgumentNullException("error", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = error.__Instance;
+            var __ret = Internal.GetSignedInt8_0((__Instance + __PointerAdjustment), arg0, offset);
             return __ret;
         }
 
         public short GetSignedInt16(LLDB.Error error, ulong offset)
         {
-            var arg0 = ReferenceEquals(error, null) ? global::System.IntPtr.Zero : error.__Instance;
-            var arg1 = offset;
-            var __ret = Internal.GetSignedInt16_0(__Instance, arg0, arg1);
+            if (ReferenceEquals(error, null))
+                throw new global::System.ArgumentNullException("error", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = error.__Instance;
+            var __ret = Internal.GetSignedInt16_0((__Instance + __PointerAdjustment), arg0, offset);
             return __ret;
         }
 
         public int GetSignedInt32(LLDB.Error error, ulong offset)
         {
-            var arg0 = ReferenceEquals(error, null) ? global::System.IntPtr.Zero : error.__Instance;
-            var arg1 = offset;
-            var __ret = Internal.GetSignedInt32_0(__Instance, arg0, arg1);
+            if (ReferenceEquals(error, null))
+                throw new global::System.ArgumentNullException("error", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = error.__Instance;
+            var __ret = Internal.GetSignedInt32_0((__Instance + __PointerAdjustment), arg0, offset);
             return __ret;
         }
 
         public long GetSignedInt64(LLDB.Error error, ulong offset)
         {
-            var arg0 = ReferenceEquals(error, null) ? global::System.IntPtr.Zero : error.__Instance;
-            var arg1 = offset;
-            var __ret = Internal.GetSignedInt64_0(__Instance, arg0, arg1);
+            if (ReferenceEquals(error, null))
+                throw new global::System.ArgumentNullException("error", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = error.__Instance;
+            var __ret = Internal.GetSignedInt64_0((__Instance + __PointerAdjustment), arg0, offset);
             return __ret;
         }
 
         public string GetString(LLDB.Error error, ulong offset)
         {
-            var arg0 = ReferenceEquals(error, null) ? global::System.IntPtr.Zero : error.__Instance;
-            var arg1 = offset;
-            var __ret = Internal.GetString_0(__Instance, arg0, arg1);
+            if (ReferenceEquals(error, null))
+                throw new global::System.ArgumentNullException("error", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = error.__Instance;
+            var __ret = Internal.GetString_0((__Instance + __PointerAdjustment), arg0, offset);
             return Marshal.PtrToStringAnsi(__ret);
         }
 
         public uint ReadRawData(LLDB.Error error, ulong offset, global::System.IntPtr buf, uint size)
         {
-            var arg0 = ReferenceEquals(error, null) ? global::System.IntPtr.Zero : error.__Instance;
-            var arg1 = offset;
+            if (ReferenceEquals(error, null))
+                throw new global::System.ArgumentNullException("error", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = error.__Instance;
             var arg2 = buf;
-            var arg3 = size;
-            var __ret = Internal.ReadRawData_0(__Instance, arg0, arg1, arg2, arg3);
+            var __ret = Internal.ReadRawData_0((__Instance + __PointerAdjustment), arg0, offset, arg2, size);
             return __ret;
         }
 
         public bool GetDescription(LLDB.Stream description, ulong base_addr)
         {
-            var arg0 = ReferenceEquals(description, null) ? global::System.IntPtr.Zero : description.__Instance;
-            var arg1 = base_addr;
-            var __ret = Internal.GetDescription_0(__Instance, arg0, arg1);
+            if (ReferenceEquals(description, null))
+                throw new global::System.ArgumentNullException("description", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = description.__Instance;
+            var __ret = Internal.GetDescription_0((__Instance + __PointerAdjustment), arg0, base_addr);
             return __ret;
         }
 
         public void SetData(LLDB.Error error, global::System.IntPtr buf, uint size, LLDB.ByteOrder endian, byte addr_size)
         {
-            var arg0 = ReferenceEquals(error, null) ? global::System.IntPtr.Zero : error.__Instance;
+            if (ReferenceEquals(error, null))
+                throw new global::System.ArgumentNullException("error", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = error.__Instance;
             var arg1 = buf;
-            var arg2 = size;
             var arg3 = endian;
-            var arg4 = addr_size;
-            Internal.SetData_0(__Instance, arg0, arg1, arg2, arg3, arg4);
+            Internal.SetData_0((__Instance + __PointerAdjustment), arg0, arg1, size, arg3, addr_size);
         }
 
         public bool Append(LLDB.Data rhs)
         {
-            var arg0 = ReferenceEquals(rhs, null) ? global::System.IntPtr.Zero : rhs.__Instance;
-            var __ret = Internal.Append_0(__Instance, arg0);
+            if (ReferenceEquals(rhs, null))
+                throw new global::System.ArgumentNullException("rhs", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = rhs.__Instance;
+            var __ret = Internal.Append_0((__Instance + __PointerAdjustment), arg0);
             return __ret;
         }
 
         public bool SetDataFromCString(string data)
         {
             var arg0 = Marshal.StringToHGlobalAnsi(data);
-            var __ret = Internal.SetDataFromCString_0(__Instance, arg0);
+            var __ret = Internal.SetDataFromCString_0((__Instance + __PointerAdjustment), arg0);
             Marshal.FreeHGlobal(arg0);
             return __ret;
         }
 
-        public bool SetDataFromUInt64Array(ulong* array, uint array_len)
+        public bool SetDataFromUInt64Array(ref ulong array, uint array_len)
         {
-            var arg0 = array;
-            var arg1 = array_len;
-            var __ret = Internal.SetDataFromUInt64Array_0(__Instance, arg0, arg1);
-            return __ret;
+            fixed (ulong* __refParamPtr0 = &array)
+            {
+                var arg0 = __refParamPtr0;
+                var __ret = Internal.SetDataFromUInt64Array_0((__Instance + __PointerAdjustment), arg0, array_len);
+                return __ret;
+            }
         }
 
-        public bool SetDataFromUInt32Array(uint* array, uint array_len)
+        public bool SetDataFromUInt32Array(ref uint array, uint array_len)
         {
-            var arg0 = array;
-            var arg1 = array_len;
-            var __ret = Internal.SetDataFromUInt32Array_0(__Instance, arg0, arg1);
-            return __ret;
+            fixed (uint* __refParamPtr0 = &array)
+            {
+                var arg0 = __refParamPtr0;
+                var __ret = Internal.SetDataFromUInt32Array_0((__Instance + __PointerAdjustment), arg0, array_len);
+                return __ret;
+            }
         }
 
-        public bool SetDataFromSInt64Array(long* array, uint array_len)
+        public bool SetDataFromSInt64Array(ref long array, uint array_len)
         {
-            var arg0 = array;
-            var arg1 = array_len;
-            var __ret = Internal.SetDataFromSInt64Array_0(__Instance, arg0, arg1);
-            return __ret;
+            fixed (long* __refParamPtr0 = &array)
+            {
+                var arg0 = __refParamPtr0;
+                var __ret = Internal.SetDataFromSInt64Array_0((__Instance + __PointerAdjustment), arg0, array_len);
+                return __ret;
+            }
         }
 
-        public bool SetDataFromSInt32Array(int* array, uint array_len)
+        public bool SetDataFromSInt32Array(ref int array, uint array_len)
         {
-            var arg0 = array;
-            var arg1 = array_len;
-            var __ret = Internal.SetDataFromSInt32Array_0(__Instance, arg0, arg1);
-            return __ret;
+            fixed (int* __refParamPtr0 = &array)
+            {
+                var arg0 = __refParamPtr0;
+                var __ret = Internal.SetDataFromSInt32Array_0((__Instance + __PointerAdjustment), arg0, array_len);
+                return __ret;
+            }
         }
 
-        public bool SetDataFromDoubleArray(double* array, uint array_len)
+        public bool SetDataFromDoubleArray(ref double array, uint array_len)
         {
-            var arg0 = array;
-            var arg1 = array_len;
-            var __ret = Internal.SetDataFromDoubleArray_0(__Instance, arg0, arg1);
-            return __ret;
+            fixed (double* __refParamPtr0 = &array)
+            {
+                var arg0 = __refParamPtr0;
+                var __ret = Internal.SetDataFromDoubleArray_0((__Instance + __PointerAdjustment), arg0, array_len);
+                return __ret;
+            }
         }
 
         public static LLDB.Data CreateDataFromCString(LLDB.ByteOrder endian, uint addr_byte_size, string data)
         {
             var arg0 = endian;
-            var arg1 = addr_byte_size;
             var arg2 = Marshal.StringToHGlobalAnsi(data);
             var __ret = new LLDB.Data.Internal();
-            Internal.CreateDataFromCString_0(new IntPtr(&__ret), arg0, arg1, arg2);
+            Internal.CreateDataFromCString_0(new IntPtr(&__ret), arg0, addr_byte_size, arg2);
             Marshal.FreeHGlobal(arg2);
             return LLDB.Data.__CreateInstance(__ret);
         }
 
-        public static LLDB.Data CreateDataFromUInt64Array(LLDB.ByteOrder endian, uint addr_byte_size, ulong* array, uint array_len)
+        public static LLDB.Data CreateDataFromUInt64Array(LLDB.ByteOrder endian, uint addr_byte_size, ref ulong array, uint array_len)
         {
             var arg0 = endian;
-            var arg1 = addr_byte_size;
-            var arg2 = array;
-            var arg3 = array_len;
-            var __ret = new LLDB.Data.Internal();
-            Internal.CreateDataFromUInt64Array_0(new IntPtr(&__ret), arg0, arg1, arg2, arg3);
-            return LLDB.Data.__CreateInstance(__ret);
+            fixed (ulong* __refParamPtr2 = &array)
+            {
+                var arg2 = __refParamPtr2;
+                var __ret = new LLDB.Data.Internal();
+                Internal.CreateDataFromUInt64Array_0(new IntPtr(&__ret), arg0, addr_byte_size, arg2, array_len);
+                return LLDB.Data.__CreateInstance(__ret);
+            }
         }
 
-        public static LLDB.Data CreateDataFromUInt32Array(LLDB.ByteOrder endian, uint addr_byte_size, uint* array, uint array_len)
+        public static LLDB.Data CreateDataFromUInt32Array(LLDB.ByteOrder endian, uint addr_byte_size, ref uint array, uint array_len)
         {
             var arg0 = endian;
-            var arg1 = addr_byte_size;
-            var arg2 = array;
-            var arg3 = array_len;
-            var __ret = new LLDB.Data.Internal();
-            Internal.CreateDataFromUInt32Array_0(new IntPtr(&__ret), arg0, arg1, arg2, arg3);
-            return LLDB.Data.__CreateInstance(__ret);
+            fixed (uint* __refParamPtr2 = &array)
+            {
+                var arg2 = __refParamPtr2;
+                var __ret = new LLDB.Data.Internal();
+                Internal.CreateDataFromUInt32Array_0(new IntPtr(&__ret), arg0, addr_byte_size, arg2, array_len);
+                return LLDB.Data.__CreateInstance(__ret);
+            }
         }
 
-        public static LLDB.Data CreateDataFromSInt64Array(LLDB.ByteOrder endian, uint addr_byte_size, long* array, uint array_len)
+        public static LLDB.Data CreateDataFromSInt64Array(LLDB.ByteOrder endian, uint addr_byte_size, ref long array, uint array_len)
         {
             var arg0 = endian;
-            var arg1 = addr_byte_size;
-            var arg2 = array;
-            var arg3 = array_len;
-            var __ret = new LLDB.Data.Internal();
-            Internal.CreateDataFromSInt64Array_0(new IntPtr(&__ret), arg0, arg1, arg2, arg3);
-            return LLDB.Data.__CreateInstance(__ret);
+            fixed (long* __refParamPtr2 = &array)
+            {
+                var arg2 = __refParamPtr2;
+                var __ret = new LLDB.Data.Internal();
+                Internal.CreateDataFromSInt64Array_0(new IntPtr(&__ret), arg0, addr_byte_size, arg2, array_len);
+                return LLDB.Data.__CreateInstance(__ret);
+            }
         }
 
-        public static LLDB.Data CreateDataFromSInt32Array(LLDB.ByteOrder endian, uint addr_byte_size, int* array, uint array_len)
+        public static LLDB.Data CreateDataFromSInt32Array(LLDB.ByteOrder endian, uint addr_byte_size, ref int array, uint array_len)
         {
             var arg0 = endian;
-            var arg1 = addr_byte_size;
-            var arg2 = array;
-            var arg3 = array_len;
-            var __ret = new LLDB.Data.Internal();
-            Internal.CreateDataFromSInt32Array_0(new IntPtr(&__ret), arg0, arg1, arg2, arg3);
-            return LLDB.Data.__CreateInstance(__ret);
+            fixed (int* __refParamPtr2 = &array)
+            {
+                var arg2 = __refParamPtr2;
+                var __ret = new LLDB.Data.Internal();
+                Internal.CreateDataFromSInt32Array_0(new IntPtr(&__ret), arg0, addr_byte_size, arg2, array_len);
+                return LLDB.Data.__CreateInstance(__ret);
+            }
         }
 
-        public static LLDB.Data CreateDataFromDoubleArray(LLDB.ByteOrder endian, uint addr_byte_size, double* array, uint array_len)
+        public static LLDB.Data CreateDataFromDoubleArray(LLDB.ByteOrder endian, uint addr_byte_size, ref double array, uint array_len)
         {
             var arg0 = endian;
-            var arg1 = addr_byte_size;
-            var arg2 = array;
-            var arg3 = array_len;
-            var __ret = new LLDB.Data.Internal();
-            Internal.CreateDataFromDoubleArray_0(new IntPtr(&__ret), arg0, arg1, arg2, arg3);
-            return LLDB.Data.__CreateInstance(__ret);
+            fixed (double* __refParamPtr2 = &array)
+            {
+                var arg2 = __refParamPtr2;
+                var __ret = new LLDB.Data.Internal();
+                Internal.CreateDataFromDoubleArray_0(new IntPtr(&__ret), arg0, addr_byte_size, arg2, array_len);
+                return LLDB.Data.__CreateInstance(__ret);
+            }
         }
 
         public byte AddressByteSize
         {
             get
             {
-                var __ret = Internal.GetAddressByteSize_0(__Instance);
+                var __ret = Internal.GetAddressByteSize_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
 
             set
             {
-                var arg0 = value;
-                Internal.SetAddressByteSize_0(__Instance, arg0);
+                Internal.SetAddressByteSize_0((__Instance + __PointerAdjustment), value);
             }
         }
 
@@ -568,7 +602,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetByteSize_0(__Instance);
+                var __ret = Internal.GetByteSize_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
         }
@@ -577,14 +611,14 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetByteOrder_0(__Instance);
+                var __ret = Internal.GetByteOrder_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
 
             set
             {
                 var arg0 = value;
-                Internal.SetByteOrder_0(__Instance, arg0);
+                Internal.SetByteOrder_0((__Instance + __PointerAdjustment), arg0);
             }
         }
     }

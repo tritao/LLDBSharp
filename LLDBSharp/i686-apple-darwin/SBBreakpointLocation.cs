@@ -149,36 +149,41 @@ namespace LLDB
         }
 
         public global::System.IntPtr __Instance { get; protected set; }
+
+        protected int __PointerAdjustment;
         public static readonly System.Collections.Concurrent.ConcurrentDictionary<IntPtr, BreakpointLocation> NativeToManagedMap = new System.Collections.Concurrent.ConcurrentDictionary<IntPtr, BreakpointLocation>();
+        protected void*[] __OriginalVTables;
 
-        private readonly bool __ownsNativeInstance;
+        protected bool __ownsNativeInstance;
 
-        public static BreakpointLocation __CreateInstance(global::System.IntPtr native)
+        public static BreakpointLocation __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
         {
-            return new BreakpointLocation((BreakpointLocation.Internal*) native);
+            return new BreakpointLocation(native.ToPointer(), skipVTables);
         }
 
-        public static BreakpointLocation __CreateInstance(BreakpointLocation.Internal native)
+        public static BreakpointLocation __CreateInstance(BreakpointLocation.Internal native, bool skipVTables = false)
         {
-            return new BreakpointLocation(native);
+            return new BreakpointLocation(native, skipVTables);
         }
 
-        private static BreakpointLocation.Internal* __CopyValue(BreakpointLocation.Internal native)
+        private static void* __CopyValue(BreakpointLocation.Internal native)
         {
-            var ret = (BreakpointLocation.Internal*) Marshal.AllocHGlobal(8);
-            *ret = native;
-            return ret;
+            var ret = Marshal.AllocHGlobal(8);
+            LLDB.BreakpointLocation.Internal.cctor_1(ret, new global::System.IntPtr(&native));
+            return ret.ToPointer();
         }
 
-        private BreakpointLocation(BreakpointLocation.Internal native)
-            : this(__CopyValue(native))
+        private BreakpointLocation(BreakpointLocation.Internal native, bool skipVTables = false)
+            : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
         }
 
-        protected BreakpointLocation(BreakpointLocation.Internal* native, bool isInternalImpl = false)
+        protected BreakpointLocation(void* native, bool skipVTables = false)
         {
+            if (native == null)
+                return;
             __Instance = new global::System.IntPtr(native);
         }
 
@@ -187,7 +192,18 @@ namespace LLDB
             __Instance = Marshal.AllocHGlobal(8);
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
-            Internal.ctor_0(__Instance);
+            Internal.ctor_0((__Instance + __PointerAdjustment));
+        }
+
+        public BreakpointLocation(LLDB.BreakpointLocation rhs)
+        {
+            __Instance = Marshal.AllocHGlobal(8);
+            __ownsNativeInstance = true;
+            NativeToManagedMap[__Instance] = this;
+            if (ReferenceEquals(rhs, null))
+                throw new global::System.ArgumentNullException("rhs", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = rhs.__Instance;
+            Internal.cctor_1((__Instance + __PointerAdjustment), arg0);
         }
 
         public void Dispose()
@@ -197,40 +213,29 @@ namespace LLDB
 
         protected virtual void Dispose(bool disposing)
         {
-            DestroyNativeInstance(false);
-        }
-
-        public virtual void DestroyNativeInstance()
-        {
-            DestroyNativeInstance(true);
-        }
-
-        private void DestroyNativeInstance(bool force)
-        {
             LLDB.BreakpointLocation __dummy;
             NativeToManagedMap.TryRemove(__Instance, out __dummy);
-            if (__ownsNativeInstance || force)
-                Internal.dtor_0(__Instance);
+            Internal.dtor_0((__Instance + __PointerAdjustment));
             if (__ownsNativeInstance)
                 Marshal.FreeHGlobal(__Instance);
         }
 
         public bool IsValid()
         {
-            var __ret = Internal.IsValid_0(__Instance);
+            var __ret = Internal.IsValid_0((__Instance + __PointerAdjustment));
             return __ret;
         }
 
         public LLDB.Address GetAddress()
         {
             var __ret = new LLDB.Address.Internal();
-            Internal.GetAddress_0(new IntPtr(&__ret), __Instance);
+            Internal.GetAddress_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
             return LLDB.Address.__CreateInstance(__ret);
         }
 
         public bool IsEnabled()
         {
-            var __ret = Internal.IsEnabled_0(__Instance);
+            var __ret = Internal.IsEnabled_0((__Instance + __PointerAdjustment));
             return __ret;
         }
 
@@ -238,29 +243,31 @@ namespace LLDB
         {
             var arg0 = Marshal.StringToHGlobalAnsi(script_body_text);
             var __ret = new LLDB.Error.Internal();
-            Internal.SetScriptCallbackBody_0(new IntPtr(&__ret), __Instance, arg0);
+            Internal.SetScriptCallbackBody_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0);
             Marshal.FreeHGlobal(arg0);
             return LLDB.Error.__CreateInstance(__ret);
         }
 
         public bool IsResolved()
         {
-            var __ret = Internal.IsResolved_0(__Instance);
+            var __ret = Internal.IsResolved_0((__Instance + __PointerAdjustment));
             return __ret;
         }
 
         public bool GetDescription(LLDB.Stream description, LLDB.DescriptionLevel level)
         {
-            var arg0 = ReferenceEquals(description, null) ? global::System.IntPtr.Zero : description.__Instance;
+            if (ReferenceEquals(description, null))
+                throw new global::System.ArgumentNullException("description", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = description.__Instance;
             var arg1 = level;
-            var __ret = Internal.GetDescription_0(__Instance, arg0, arg1);
+            var __ret = Internal.GetDescription_0((__Instance + __PointerAdjustment), arg0, arg1);
             return __ret;
         }
 
         public LLDB.Breakpoint GetBreakpoint()
         {
             var __ret = new LLDB.Breakpoint.Internal();
-            Internal.GetBreakpoint_0(new IntPtr(&__ret), __Instance);
+            Internal.GetBreakpoint_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
             return LLDB.Breakpoint.__CreateInstance(__ret);
         }
 
@@ -268,7 +275,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetID_0(__Instance);
+                var __ret = Internal.GetID_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
         }
@@ -277,7 +284,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetLoadAddress_0(__Instance);
+                var __ret = Internal.GetLoadAddress_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
         }
@@ -286,7 +293,7 @@ namespace LLDB
         {
             set
             {
-                Internal.SetEnabled_0(__Instance, value);
+                Internal.SetEnabled_0((__Instance + __PointerAdjustment), value);
             }
         }
 
@@ -294,14 +301,13 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetIgnoreCount_0(__Instance);
+                var __ret = Internal.GetIgnoreCount_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
 
             set
             {
-                var arg0 = value;
-                Internal.SetIgnoreCount_0(__Instance, arg0);
+                Internal.SetIgnoreCount_0((__Instance + __PointerAdjustment), value);
             }
         }
 
@@ -309,14 +315,14 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetCondition_0(__Instance);
+                var __ret = Internal.GetCondition_0((__Instance + __PointerAdjustment));
                 return Marshal.PtrToStringAnsi(__ret);
             }
 
             set
             {
                 var arg0 = Marshal.StringToHGlobalAnsi(value);
-                Internal.SetCondition_0(__Instance, arg0);
+                Internal.SetCondition_0((__Instance + __PointerAdjustment), arg0);
                 Marshal.FreeHGlobal(arg0);
             }
         }
@@ -326,7 +332,7 @@ namespace LLDB
             set
             {
                 var arg0 = Marshal.StringToHGlobalAnsi(value);
-                Internal.SetScriptCallbackFunction_0(__Instance, arg0);
+                Internal.SetScriptCallbackFunction_0((__Instance + __PointerAdjustment), arg0);
                 Marshal.FreeHGlobal(arg0);
             }
         }
@@ -335,14 +341,13 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetThreadID_0(__Instance);
+                var __ret = Internal.GetThreadID_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
 
             set
             {
-                var arg0 = value;
-                Internal.SetThreadID_0(__Instance, arg0);
+                Internal.SetThreadID_0((__Instance + __PointerAdjustment), value);
             }
         }
 
@@ -350,14 +355,13 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetThreadIndex_0(__Instance);
+                var __ret = Internal.GetThreadIndex_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
 
             set
             {
-                var arg0 = value;
-                Internal.SetThreadIndex_0(__Instance, arg0);
+                Internal.SetThreadIndex_0((__Instance + __PointerAdjustment), value);
             }
         }
 
@@ -365,14 +369,14 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetThreadName_0(__Instance);
+                var __ret = Internal.GetThreadName_0((__Instance + __PointerAdjustment));
                 return Marshal.PtrToStringAnsi(__ret);
             }
 
             set
             {
                 var arg0 = Marshal.StringToHGlobalAnsi(value);
-                Internal.SetThreadName_0(__Instance, arg0);
+                Internal.SetThreadName_0((__Instance + __PointerAdjustment), arg0);
                 Marshal.FreeHGlobal(arg0);
             }
         }
@@ -381,14 +385,14 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetQueueName_0(__Instance);
+                var __ret = Internal.GetQueueName_0((__Instance + __PointerAdjustment));
                 return Marshal.PtrToStringAnsi(__ret);
             }
 
             set
             {
                 var arg0 = Marshal.StringToHGlobalAnsi(value);
-                Internal.SetQueueName_0(__Instance, arg0);
+                Internal.SetQueueName_0((__Instance + __PointerAdjustment), arg0);
                 Marshal.FreeHGlobal(arg0);
             }
         }

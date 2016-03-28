@@ -67,36 +67,41 @@ namespace LLDB
         }
 
         public global::System.IntPtr __Instance { get; protected set; }
+
+        protected int __PointerAdjustment;
         public static readonly System.Collections.Concurrent.ConcurrentDictionary<IntPtr, SymbolContextList> NativeToManagedMap = new System.Collections.Concurrent.ConcurrentDictionary<IntPtr, SymbolContextList>();
+        protected void*[] __OriginalVTables;
 
-        private readonly bool __ownsNativeInstance;
+        protected bool __ownsNativeInstance;
 
-        public static SymbolContextList __CreateInstance(global::System.IntPtr native)
+        public static SymbolContextList __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
         {
-            return new SymbolContextList((SymbolContextList.Internal*) native);
+            return new SymbolContextList(native.ToPointer(), skipVTables);
         }
 
-        public static SymbolContextList __CreateInstance(SymbolContextList.Internal native)
+        public static SymbolContextList __CreateInstance(SymbolContextList.Internal native, bool skipVTables = false)
         {
-            return new SymbolContextList(native);
+            return new SymbolContextList(native, skipVTables);
         }
 
-        private static SymbolContextList.Internal* __CopyValue(SymbolContextList.Internal native)
+        private static void* __CopyValue(SymbolContextList.Internal native)
         {
-            var ret = (SymbolContextList.Internal*) Marshal.AllocHGlobal(4);
-            *ret = native;
-            return ret;
+            var ret = Marshal.AllocHGlobal(4);
+            LLDB.SymbolContextList.Internal.cctor_1(ret, new global::System.IntPtr(&native));
+            return ret.ToPointer();
         }
 
-        private SymbolContextList(SymbolContextList.Internal native)
-            : this(__CopyValue(native))
+        private SymbolContextList(SymbolContextList.Internal native, bool skipVTables = false)
+            : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
         }
 
-        protected SymbolContextList(SymbolContextList.Internal* native, bool isInternalImpl = false)
+        protected SymbolContextList(void* native, bool skipVTables = false)
         {
+            if (native == null)
+                return;
             __Instance = new global::System.IntPtr(native);
         }
 
@@ -105,7 +110,18 @@ namespace LLDB
             __Instance = Marshal.AllocHGlobal(4);
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
-            Internal.ctor_0(__Instance);
+            Internal.ctor_0((__Instance + __PointerAdjustment));
+        }
+
+        public SymbolContextList(LLDB.SymbolContextList rhs)
+        {
+            __Instance = Marshal.AllocHGlobal(4);
+            __ownsNativeInstance = true;
+            NativeToManagedMap[__Instance] = this;
+            if (ReferenceEquals(rhs, null))
+                throw new global::System.ArgumentNullException("rhs", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = rhs.__Instance;
+            Internal.cctor_1((__Instance + __PointerAdjustment), arg0);
         }
 
         public void Dispose()
@@ -115,67 +131,61 @@ namespace LLDB
 
         protected virtual void Dispose(bool disposing)
         {
-            DestroyNativeInstance(false);
-        }
-
-        public virtual void DestroyNativeInstance()
-        {
-            DestroyNativeInstance(true);
-        }
-
-        private void DestroyNativeInstance(bool force)
-        {
             LLDB.SymbolContextList __dummy;
             NativeToManagedMap.TryRemove(__Instance, out __dummy);
-            if (__ownsNativeInstance || force)
-                Internal.dtor_0(__Instance);
+            Internal.dtor_0((__Instance + __PointerAdjustment));
             if (__ownsNativeInstance)
                 Marshal.FreeHGlobal(__Instance);
         }
 
         public bool IsValid()
         {
-            var __ret = Internal.IsValid_0(__Instance);
+            var __ret = Internal.IsValid_0((__Instance + __PointerAdjustment));
             return __ret;
         }
 
         public LLDB.SymbolContext GetContextAtIndex(uint idx)
         {
-            var arg0 = idx;
             var __ret = new LLDB.SymbolContext.Internal();
-            Internal.GetContextAtIndex_0(new IntPtr(&__ret), __Instance, arg0);
+            Internal.GetContextAtIndex_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), idx);
             return LLDB.SymbolContext.__CreateInstance(__ret);
         }
 
         public bool GetDescription(LLDB.Stream description)
         {
-            var arg0 = ReferenceEquals(description, null) ? global::System.IntPtr.Zero : description.__Instance;
-            var __ret = Internal.GetDescription_0(__Instance, arg0);
+            if (ReferenceEquals(description, null))
+                throw new global::System.ArgumentNullException("description", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = description.__Instance;
+            var __ret = Internal.GetDescription_0((__Instance + __PointerAdjustment), arg0);
             return __ret;
         }
 
         public void Append(LLDB.SymbolContext sc)
         {
-            var arg0 = ReferenceEquals(sc, null) ? global::System.IntPtr.Zero : sc.__Instance;
-            Internal.Append_0(__Instance, arg0);
+            if (ReferenceEquals(sc, null))
+                throw new global::System.ArgumentNullException("sc", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = sc.__Instance;
+            Internal.Append_0((__Instance + __PointerAdjustment), arg0);
         }
 
         public void Append(LLDB.SymbolContextList sc_list)
         {
-            var arg0 = ReferenceEquals(sc_list, null) ? global::System.IntPtr.Zero : sc_list.__Instance;
-            Internal.Append_1(__Instance, arg0);
+            if (ReferenceEquals(sc_list, null))
+                throw new global::System.ArgumentNullException("sc_list", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = sc_list.__Instance;
+            Internal.Append_1((__Instance + __PointerAdjustment), arg0);
         }
 
         public void Clear()
         {
-            Internal.Clear_0(__Instance);
+            Internal.Clear_0((__Instance + __PointerAdjustment));
         }
 
         public uint Size
         {
             get
             {
-                var __ret = Internal.GetSize_0(__Instance);
+                var __ret = Internal.GetSize_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
         }

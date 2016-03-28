@@ -14,7 +14,7 @@ namespace LLDB
         public partial struct Internal
         {
             [FieldOffset(8)]
-            public global::System.IntPtr m_opaque_ptr;
+            public global::System.IntPtr m_unused_ptr;
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
@@ -136,36 +136,41 @@ namespace LLDB
         }
 
         public global::System.IntPtr __Instance { get; protected set; }
+
+        protected int __PointerAdjustment;
         public static readonly System.Collections.Concurrent.ConcurrentDictionary<IntPtr, Listener> NativeToManagedMap = new System.Collections.Concurrent.ConcurrentDictionary<IntPtr, Listener>();
+        protected void*[] __OriginalVTables;
 
-        private readonly bool __ownsNativeInstance;
+        protected bool __ownsNativeInstance;
 
-        public static Listener __CreateInstance(global::System.IntPtr native)
+        public static Listener __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
         {
-            return new Listener((Listener.Internal*) native);
+            return new Listener(native.ToPointer(), skipVTables);
         }
 
-        public static Listener __CreateInstance(Listener.Internal native)
+        public static Listener __CreateInstance(Listener.Internal native, bool skipVTables = false)
         {
-            return new Listener(native);
+            return new Listener(native, skipVTables);
         }
 
-        private static Listener.Internal* __CopyValue(Listener.Internal native)
+        private static void* __CopyValue(Listener.Internal native)
         {
-            var ret = (Listener.Internal*) Marshal.AllocHGlobal(12);
-            *ret = native;
-            return ret;
+            var ret = Marshal.AllocHGlobal(12);
+            LLDB.Listener.Internal.cctor_2(ret, new global::System.IntPtr(&native));
+            return ret.ToPointer();
         }
 
-        private Listener(Listener.Internal native)
-            : this(__CopyValue(native))
+        private Listener(Listener.Internal native, bool skipVTables = false)
+            : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
         }
 
-        protected Listener(Listener.Internal* native, bool isInternalImpl = false)
+        protected Listener(void* native, bool skipVTables = false)
         {
+            if (native == null)
+                return;
             __Instance = new global::System.IntPtr(native);
         }
 
@@ -174,7 +179,7 @@ namespace LLDB
             __Instance = Marshal.AllocHGlobal(12);
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
-            Internal.ctor_0(__Instance);
+            Internal.ctor_0((__Instance + __PointerAdjustment));
         }
 
         public Listener(string name)
@@ -183,8 +188,19 @@ namespace LLDB
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
             var arg0 = Marshal.StringToHGlobalAnsi(name);
-            Internal.ctor_1(__Instance, arg0);
+            Internal.ctor_1((__Instance + __PointerAdjustment), arg0);
             Marshal.FreeHGlobal(arg0);
+        }
+
+        public Listener(LLDB.Listener rhs)
+        {
+            __Instance = Marshal.AllocHGlobal(12);
+            __ownsNativeInstance = true;
+            NativeToManagedMap[__Instance] = this;
+            if (ReferenceEquals(rhs, null))
+                throw new global::System.ArgumentNullException("rhs", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = rhs.__Instance;
+            Internal.cctor_2((__Instance + __PointerAdjustment), arg0);
         }
 
         public void Dispose()
@@ -194,156 +210,177 @@ namespace LLDB
 
         protected virtual void Dispose(bool disposing)
         {
-            DestroyNativeInstance(false);
-        }
-
-        public virtual void DestroyNativeInstance()
-        {
-            DestroyNativeInstance(true);
-        }
-
-        private void DestroyNativeInstance(bool force)
-        {
             LLDB.Listener __dummy;
             NativeToManagedMap.TryRemove(__Instance, out __dummy);
-            if (__ownsNativeInstance || force)
-                Internal.dtor_0(__Instance);
+            Internal.dtor_0((__Instance + __PointerAdjustment));
             if (__ownsNativeInstance)
                 Marshal.FreeHGlobal(__Instance);
         }
 
         public void AddEvent(LLDB.Event @event)
         {
-            var arg0 = ReferenceEquals(@event, null) ? global::System.IntPtr.Zero : @event.__Instance;
-            Internal.AddEvent_0(__Instance, arg0);
+            if (ReferenceEquals(@event, null))
+                throw new global::System.ArgumentNullException("@event", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = @event.__Instance;
+            Internal.AddEvent_0((__Instance + __PointerAdjustment), arg0);
         }
 
         public void Clear()
         {
-            Internal.Clear_0(__Instance);
+            Internal.Clear_0((__Instance + __PointerAdjustment));
         }
 
         public bool IsValid()
         {
-            var __ret = Internal.IsValid_0(__Instance);
+            var __ret = Internal.IsValid_0((__Instance + __PointerAdjustment));
             return __ret;
         }
 
         public uint StartListeningForEventClass(LLDB.Debugger debugger, string broadcaster_class, uint event_mask)
         {
-            var arg0 = ReferenceEquals(debugger, null) ? global::System.IntPtr.Zero : debugger.__Instance;
+            if (ReferenceEquals(debugger, null))
+                throw new global::System.ArgumentNullException("debugger", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = debugger.__Instance;
             var arg1 = Marshal.StringToHGlobalAnsi(broadcaster_class);
-            var arg2 = event_mask;
-            var __ret = Internal.StartListeningForEventClass_0(__Instance, arg0, arg1, arg2);
+            var __ret = Internal.StartListeningForEventClass_0((__Instance + __PointerAdjustment), arg0, arg1, event_mask);
             Marshal.FreeHGlobal(arg1);
             return __ret;
         }
 
         public bool StopListeningForEventClass(LLDB.Debugger debugger, string broadcaster_class, uint event_mask)
         {
-            var arg0 = ReferenceEquals(debugger, null) ? global::System.IntPtr.Zero : debugger.__Instance;
+            if (ReferenceEquals(debugger, null))
+                throw new global::System.ArgumentNullException("debugger", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = debugger.__Instance;
             var arg1 = Marshal.StringToHGlobalAnsi(broadcaster_class);
-            var arg2 = event_mask;
-            var __ret = Internal.StopListeningForEventClass_0(__Instance, arg0, arg1, arg2);
+            var __ret = Internal.StopListeningForEventClass_0((__Instance + __PointerAdjustment), arg0, arg1, event_mask);
             Marshal.FreeHGlobal(arg1);
             return __ret;
         }
 
         public uint StartListeningForEvents(LLDB.Broadcaster broadcaster, uint event_mask)
         {
-            var arg0 = ReferenceEquals(broadcaster, null) ? global::System.IntPtr.Zero : broadcaster.__Instance;
-            var arg1 = event_mask;
-            var __ret = Internal.StartListeningForEvents_0(__Instance, arg0, arg1);
+            if (ReferenceEquals(broadcaster, null))
+                throw new global::System.ArgumentNullException("broadcaster", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = broadcaster.__Instance;
+            var __ret = Internal.StartListeningForEvents_0((__Instance + __PointerAdjustment), arg0, event_mask);
             return __ret;
         }
 
         public bool StopListeningForEvents(LLDB.Broadcaster broadcaster, uint event_mask)
         {
-            var arg0 = ReferenceEquals(broadcaster, null) ? global::System.IntPtr.Zero : broadcaster.__Instance;
-            var arg1 = event_mask;
-            var __ret = Internal.StopListeningForEvents_0(__Instance, arg0, arg1);
+            if (ReferenceEquals(broadcaster, null))
+                throw new global::System.ArgumentNullException("broadcaster", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = broadcaster.__Instance;
+            var __ret = Internal.StopListeningForEvents_0((__Instance + __PointerAdjustment), arg0, event_mask);
             return __ret;
         }
 
         public bool WaitForEvent(uint num_seconds, LLDB.Event @event)
         {
-            var arg0 = num_seconds;
-            var arg1 = ReferenceEquals(@event, null) ? global::System.IntPtr.Zero : @event.__Instance;
-            var __ret = Internal.WaitForEvent_0(__Instance, arg0, arg1);
+            if (ReferenceEquals(@event, null))
+                throw new global::System.ArgumentNullException("@event", "Cannot be null because it is a C++ reference (&).");
+            var arg1 = @event.__Instance;
+            var __ret = Internal.WaitForEvent_0((__Instance + __PointerAdjustment), num_seconds, arg1);
             return __ret;
         }
 
         public bool WaitForEventForBroadcaster(uint num_seconds, LLDB.Broadcaster broadcaster, LLDB.Event sb_event)
         {
-            var arg0 = num_seconds;
-            var arg1 = ReferenceEquals(broadcaster, null) ? global::System.IntPtr.Zero : broadcaster.__Instance;
-            var arg2 = ReferenceEquals(sb_event, null) ? global::System.IntPtr.Zero : sb_event.__Instance;
-            var __ret = Internal.WaitForEventForBroadcaster_0(__Instance, arg0, arg1, arg2);
+            if (ReferenceEquals(broadcaster, null))
+                throw new global::System.ArgumentNullException("broadcaster", "Cannot be null because it is a C++ reference (&).");
+            var arg1 = broadcaster.__Instance;
+            if (ReferenceEquals(sb_event, null))
+                throw new global::System.ArgumentNullException("sb_event", "Cannot be null because it is a C++ reference (&).");
+            var arg2 = sb_event.__Instance;
+            var __ret = Internal.WaitForEventForBroadcaster_0((__Instance + __PointerAdjustment), num_seconds, arg1, arg2);
             return __ret;
         }
 
         public bool WaitForEventForBroadcasterWithType(uint num_seconds, LLDB.Broadcaster broadcaster, uint event_type_mask, LLDB.Event sb_event)
         {
-            var arg0 = num_seconds;
-            var arg1 = ReferenceEquals(broadcaster, null) ? global::System.IntPtr.Zero : broadcaster.__Instance;
-            var arg2 = event_type_mask;
-            var arg3 = ReferenceEquals(sb_event, null) ? global::System.IntPtr.Zero : sb_event.__Instance;
-            var __ret = Internal.WaitForEventForBroadcasterWithType_0(__Instance, arg0, arg1, arg2, arg3);
+            if (ReferenceEquals(broadcaster, null))
+                throw new global::System.ArgumentNullException("broadcaster", "Cannot be null because it is a C++ reference (&).");
+            var arg1 = broadcaster.__Instance;
+            if (ReferenceEquals(sb_event, null))
+                throw new global::System.ArgumentNullException("sb_event", "Cannot be null because it is a C++ reference (&).");
+            var arg3 = sb_event.__Instance;
+            var __ret = Internal.WaitForEventForBroadcasterWithType_0((__Instance + __PointerAdjustment), num_seconds, arg1, event_type_mask, arg3);
             return __ret;
         }
 
         public bool PeekAtNextEvent(LLDB.Event sb_event)
         {
-            var arg0 = ReferenceEquals(sb_event, null) ? global::System.IntPtr.Zero : sb_event.__Instance;
-            var __ret = Internal.PeekAtNextEvent_0(__Instance, arg0);
+            if (ReferenceEquals(sb_event, null))
+                throw new global::System.ArgumentNullException("sb_event", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = sb_event.__Instance;
+            var __ret = Internal.PeekAtNextEvent_0((__Instance + __PointerAdjustment), arg0);
             return __ret;
         }
 
         public bool PeekAtNextEventForBroadcaster(LLDB.Broadcaster broadcaster, LLDB.Event sb_event)
         {
-            var arg0 = ReferenceEquals(broadcaster, null) ? global::System.IntPtr.Zero : broadcaster.__Instance;
-            var arg1 = ReferenceEquals(sb_event, null) ? global::System.IntPtr.Zero : sb_event.__Instance;
-            var __ret = Internal.PeekAtNextEventForBroadcaster_0(__Instance, arg0, arg1);
+            if (ReferenceEquals(broadcaster, null))
+                throw new global::System.ArgumentNullException("broadcaster", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = broadcaster.__Instance;
+            if (ReferenceEquals(sb_event, null))
+                throw new global::System.ArgumentNullException("sb_event", "Cannot be null because it is a C++ reference (&).");
+            var arg1 = sb_event.__Instance;
+            var __ret = Internal.PeekAtNextEventForBroadcaster_0((__Instance + __PointerAdjustment), arg0, arg1);
             return __ret;
         }
 
         public bool PeekAtNextEventForBroadcasterWithType(LLDB.Broadcaster broadcaster, uint event_type_mask, LLDB.Event sb_event)
         {
-            var arg0 = ReferenceEquals(broadcaster, null) ? global::System.IntPtr.Zero : broadcaster.__Instance;
-            var arg1 = event_type_mask;
-            var arg2 = ReferenceEquals(sb_event, null) ? global::System.IntPtr.Zero : sb_event.__Instance;
-            var __ret = Internal.PeekAtNextEventForBroadcasterWithType_0(__Instance, arg0, arg1, arg2);
+            if (ReferenceEquals(broadcaster, null))
+                throw new global::System.ArgumentNullException("broadcaster", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = broadcaster.__Instance;
+            if (ReferenceEquals(sb_event, null))
+                throw new global::System.ArgumentNullException("sb_event", "Cannot be null because it is a C++ reference (&).");
+            var arg2 = sb_event.__Instance;
+            var __ret = Internal.PeekAtNextEventForBroadcasterWithType_0((__Instance + __PointerAdjustment), arg0, event_type_mask, arg2);
             return __ret;
         }
 
         public bool GetNextEvent(LLDB.Event sb_event)
         {
-            var arg0 = ReferenceEquals(sb_event, null) ? global::System.IntPtr.Zero : sb_event.__Instance;
-            var __ret = Internal.GetNextEvent_0(__Instance, arg0);
+            if (ReferenceEquals(sb_event, null))
+                throw new global::System.ArgumentNullException("sb_event", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = sb_event.__Instance;
+            var __ret = Internal.GetNextEvent_0((__Instance + __PointerAdjustment), arg0);
             return __ret;
         }
 
         public bool GetNextEventForBroadcaster(LLDB.Broadcaster broadcaster, LLDB.Event sb_event)
         {
-            var arg0 = ReferenceEquals(broadcaster, null) ? global::System.IntPtr.Zero : broadcaster.__Instance;
-            var arg1 = ReferenceEquals(sb_event, null) ? global::System.IntPtr.Zero : sb_event.__Instance;
-            var __ret = Internal.GetNextEventForBroadcaster_0(__Instance, arg0, arg1);
+            if (ReferenceEquals(broadcaster, null))
+                throw new global::System.ArgumentNullException("broadcaster", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = broadcaster.__Instance;
+            if (ReferenceEquals(sb_event, null))
+                throw new global::System.ArgumentNullException("sb_event", "Cannot be null because it is a C++ reference (&).");
+            var arg1 = sb_event.__Instance;
+            var __ret = Internal.GetNextEventForBroadcaster_0((__Instance + __PointerAdjustment), arg0, arg1);
             return __ret;
         }
 
         public bool GetNextEventForBroadcasterWithType(LLDB.Broadcaster broadcaster, uint event_type_mask, LLDB.Event sb_event)
         {
-            var arg0 = ReferenceEquals(broadcaster, null) ? global::System.IntPtr.Zero : broadcaster.__Instance;
-            var arg1 = event_type_mask;
-            var arg2 = ReferenceEquals(sb_event, null) ? global::System.IntPtr.Zero : sb_event.__Instance;
-            var __ret = Internal.GetNextEventForBroadcasterWithType_0(__Instance, arg0, arg1, arg2);
+            if (ReferenceEquals(broadcaster, null))
+                throw new global::System.ArgumentNullException("broadcaster", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = broadcaster.__Instance;
+            if (ReferenceEquals(sb_event, null))
+                throw new global::System.ArgumentNullException("sb_event", "Cannot be null because it is a C++ reference (&).");
+            var arg2 = sb_event.__Instance;
+            var __ret = Internal.GetNextEventForBroadcasterWithType_0((__Instance + __PointerAdjustment), arg0, event_type_mask, arg2);
             return __ret;
         }
 
         public bool HandleBroadcastEvent(LLDB.Event @event)
         {
-            var arg0 = ReferenceEquals(@event, null) ? global::System.IntPtr.Zero : @event.__Instance;
-            var __ret = Internal.HandleBroadcastEvent_0(__Instance, arg0);
+            if (ReferenceEquals(@event, null))
+                throw new global::System.ArgumentNullException("@event", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = @event.__Instance;
+            var __ret = Internal.HandleBroadcastEvent_0((__Instance + __PointerAdjustment), arg0);
             return __ret;
         }
     }

@@ -51,6 +51,11 @@ namespace LLDB
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
+                EntryPoint="_ZN4lldb17SBInstructionList5PrintEP7__sFILE")]
+            internal static extern void Print_0(global::System.IntPtr instance, global::System.IntPtr @out);
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
                 EntryPoint="_ZN4lldb17SBInstructionList14GetDescriptionERNS_8SBStreamE")]
             [return: MarshalAsAttribute(UnmanagedType.I1)]
             internal static extern bool GetDescription_0(global::System.IntPtr instance, global::System.IntPtr description);
@@ -68,36 +73,41 @@ namespace LLDB
         }
 
         public global::System.IntPtr __Instance { get; protected set; }
+
+        protected int __PointerAdjustment;
         public static readonly System.Collections.Concurrent.ConcurrentDictionary<IntPtr, InstructionList> NativeToManagedMap = new System.Collections.Concurrent.ConcurrentDictionary<IntPtr, InstructionList>();
+        protected void*[] __OriginalVTables;
 
-        private readonly bool __ownsNativeInstance;
+        protected bool __ownsNativeInstance;
 
-        public static InstructionList __CreateInstance(global::System.IntPtr native)
+        public static InstructionList __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
         {
-            return new InstructionList((InstructionList.Internal*) native);
+            return new InstructionList(native.ToPointer(), skipVTables);
         }
 
-        public static InstructionList __CreateInstance(InstructionList.Internal native)
+        public static InstructionList __CreateInstance(InstructionList.Internal native, bool skipVTables = false)
         {
-            return new InstructionList(native);
+            return new InstructionList(native, skipVTables);
         }
 
-        private static InstructionList.Internal* __CopyValue(InstructionList.Internal native)
+        private static void* __CopyValue(InstructionList.Internal native)
         {
-            var ret = (InstructionList.Internal*) Marshal.AllocHGlobal(8);
-            *ret = native;
-            return ret;
+            var ret = Marshal.AllocHGlobal(8);
+            LLDB.InstructionList.Internal.cctor_1(ret, new global::System.IntPtr(&native));
+            return ret.ToPointer();
         }
 
-        private InstructionList(InstructionList.Internal native)
-            : this(__CopyValue(native))
+        private InstructionList(InstructionList.Internal native, bool skipVTables = false)
+            : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
         }
 
-        protected InstructionList(InstructionList.Internal* native, bool isInternalImpl = false)
+        protected InstructionList(void* native, bool skipVTables = false)
         {
+            if (native == null)
+                return;
             __Instance = new global::System.IntPtr(native);
         }
 
@@ -106,7 +116,18 @@ namespace LLDB
             __Instance = Marshal.AllocHGlobal(8);
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
-            Internal.ctor_0(__Instance);
+            Internal.ctor_0((__Instance + __PointerAdjustment));
+        }
+
+        public InstructionList(LLDB.InstructionList rhs)
+        {
+            __Instance = Marshal.AllocHGlobal(8);
+            __ownsNativeInstance = true;
+            NativeToManagedMap[__Instance] = this;
+            if (ReferenceEquals(rhs, null))
+                throw new global::System.ArgumentNullException("rhs", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = rhs.__Instance;
+            Internal.cctor_1((__Instance + __PointerAdjustment), arg0);
         }
 
         public void Dispose()
@@ -116,60 +137,56 @@ namespace LLDB
 
         protected virtual void Dispose(bool disposing)
         {
-            DestroyNativeInstance(false);
-        }
-
-        public virtual void DestroyNativeInstance()
-        {
-            DestroyNativeInstance(true);
-        }
-
-        private void DestroyNativeInstance(bool force)
-        {
             LLDB.InstructionList __dummy;
             NativeToManagedMap.TryRemove(__Instance, out __dummy);
-            if (__ownsNativeInstance || force)
-                Internal.dtor_0(__Instance);
+            Internal.dtor_0((__Instance + __PointerAdjustment));
             if (__ownsNativeInstance)
                 Marshal.FreeHGlobal(__Instance);
         }
 
         public bool IsValid()
         {
-            var __ret = Internal.IsValid_0(__Instance);
+            var __ret = Internal.IsValid_0((__Instance + __PointerAdjustment));
             return __ret;
         }
 
         public LLDB.Instruction GetInstructionAtIndex(uint idx)
         {
-            var arg0 = idx;
             var __ret = new LLDB.Instruction.Internal();
-            Internal.GetInstructionAtIndex_0(new IntPtr(&__ret), __Instance, arg0);
+            Internal.GetInstructionAtIndex_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), idx);
             return LLDB.Instruction.__CreateInstance(__ret);
         }
 
         public void Clear()
         {
-            Internal.Clear_0(__Instance);
+            Internal.Clear_0((__Instance + __PointerAdjustment));
         }
 
         public void AppendInstruction(LLDB.Instruction inst)
         {
             var arg0 = ReferenceEquals(inst, null) ? new LLDB.Instruction.Internal() : *(LLDB.Instruction.Internal*) (inst.__Instance);
-            Internal.AppendInstruction_0(__Instance, arg0);
+            Internal.AppendInstruction_0((__Instance + __PointerAdjustment), arg0);
+        }
+
+        public void Print(global::System.IntPtr @out)
+        {
+            var arg0 = @out;
+            Internal.Print_0((__Instance + __PointerAdjustment), arg0);
         }
 
         public bool GetDescription(LLDB.Stream description)
         {
-            var arg0 = ReferenceEquals(description, null) ? global::System.IntPtr.Zero : description.__Instance;
-            var __ret = Internal.GetDescription_0(__Instance, arg0);
+            if (ReferenceEquals(description, null))
+                throw new global::System.ArgumentNullException("description", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = description.__Instance;
+            var __ret = Internal.GetDescription_0((__Instance + __PointerAdjustment), arg0);
             return __ret;
         }
 
         public bool DumpEmulationForAllInstructions(string triple)
         {
             var arg0 = Marshal.StringToHGlobalAnsi(triple);
-            var __ret = Internal.DumpEmulationForAllInstructions_0(__Instance, arg0);
+            var __ret = Internal.DumpEmulationForAllInstructions_0((__Instance + __PointerAdjustment), arg0);
             Marshal.FreeHGlobal(arg0);
             return __ret;
         }
@@ -178,7 +195,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetSize_0(__Instance);
+                var __ret = Internal.GetSize_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
         }

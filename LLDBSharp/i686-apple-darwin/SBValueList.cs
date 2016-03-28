@@ -76,36 +76,41 @@ namespace LLDB
         }
 
         public global::System.IntPtr __Instance { get; protected set; }
+
+        protected int __PointerAdjustment;
         public static readonly System.Collections.Concurrent.ConcurrentDictionary<IntPtr, ValueList> NativeToManagedMap = new System.Collections.Concurrent.ConcurrentDictionary<IntPtr, ValueList>();
+        protected void*[] __OriginalVTables;
 
-        private readonly bool __ownsNativeInstance;
+        protected bool __ownsNativeInstance;
 
-        public static ValueList __CreateInstance(global::System.IntPtr native)
+        public static ValueList __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
         {
-            return new ValueList((ValueList.Internal*) native);
+            return new ValueList(native.ToPointer(), skipVTables);
         }
 
-        public static ValueList __CreateInstance(ValueList.Internal native)
+        public static ValueList __CreateInstance(ValueList.Internal native, bool skipVTables = false)
         {
-            return new ValueList(native);
+            return new ValueList(native, skipVTables);
         }
 
-        private static ValueList.Internal* __CopyValue(ValueList.Internal native)
+        private static void* __CopyValue(ValueList.Internal native)
         {
-            var ret = (ValueList.Internal*) Marshal.AllocHGlobal(4);
-            *ret = native;
-            return ret;
+            var ret = Marshal.AllocHGlobal(4);
+            LLDB.ValueList.Internal.cctor_1(ret, new global::System.IntPtr(&native));
+            return ret.ToPointer();
         }
 
-        private ValueList(ValueList.Internal native)
-            : this(__CopyValue(native))
+        private ValueList(ValueList.Internal native, bool skipVTables = false)
+            : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
         }
 
-        protected ValueList(ValueList.Internal* native, bool isInternalImpl = false)
+        protected ValueList(void* native, bool skipVTables = false)
         {
+            if (native == null)
+                return;
             __Instance = new global::System.IntPtr(native);
         }
 
@@ -114,7 +119,18 @@ namespace LLDB
             __Instance = Marshal.AllocHGlobal(4);
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
-            Internal.ctor_0(__Instance);
+            Internal.ctor_0((__Instance + __PointerAdjustment));
+        }
+
+        public ValueList(LLDB.ValueList rhs)
+        {
+            __Instance = Marshal.AllocHGlobal(4);
+            __ownsNativeInstance = true;
+            NativeToManagedMap[__Instance] = this;
+            if (ReferenceEquals(rhs, null))
+                throw new global::System.ArgumentNullException("rhs", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = rhs.__Instance;
+            Internal.cctor_1((__Instance + __PointerAdjustment), arg0);
         }
 
         public void Dispose()
@@ -124,52 +140,44 @@ namespace LLDB
 
         protected virtual void Dispose(bool disposing)
         {
-            DestroyNativeInstance(false);
-        }
-
-        public virtual void DestroyNativeInstance()
-        {
-            DestroyNativeInstance(true);
-        }
-
-        private void DestroyNativeInstance(bool force)
-        {
             LLDB.ValueList __dummy;
             NativeToManagedMap.TryRemove(__Instance, out __dummy);
-            if (__ownsNativeInstance || force)
-                Internal.dtor_0(__Instance);
+            Internal.dtor_0((__Instance + __PointerAdjustment));
             if (__ownsNativeInstance)
                 Marshal.FreeHGlobal(__Instance);
         }
 
         public bool IsValid()
         {
-            var __ret = Internal.IsValid_0(__Instance);
+            var __ret = Internal.IsValid_0((__Instance + __PointerAdjustment));
             return __ret;
         }
 
         public void Clear()
         {
-            Internal.Clear_0(__Instance);
+            Internal.Clear_0((__Instance + __PointerAdjustment));
         }
 
         public void Append(LLDB.Value val_obj)
         {
-            var arg0 = ReferenceEquals(val_obj, null) ? global::System.IntPtr.Zero : val_obj.__Instance;
-            Internal.Append_0(__Instance, arg0);
+            if (ReferenceEquals(val_obj, null))
+                throw new global::System.ArgumentNullException("val_obj", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = val_obj.__Instance;
+            Internal.Append_0((__Instance + __PointerAdjustment), arg0);
         }
 
         public void Append(LLDB.ValueList value_list)
         {
-            var arg0 = ReferenceEquals(value_list, null) ? global::System.IntPtr.Zero : value_list.__Instance;
-            Internal.Append_1(__Instance, arg0);
+            if (ReferenceEquals(value_list, null))
+                throw new global::System.ArgumentNullException("value_list", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = value_list.__Instance;
+            Internal.Append_1((__Instance + __PointerAdjustment), arg0);
         }
 
         public LLDB.Value GetValueAtIndex(uint idx)
         {
-            var arg0 = idx;
             var __ret = new LLDB.Value.Internal();
-            Internal.GetValueAtIndex_0(new IntPtr(&__ret), __Instance, arg0);
+            Internal.GetValueAtIndex_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), idx);
             return LLDB.Value.__CreateInstance(__ret);
         }
 
@@ -177,22 +185,21 @@ namespace LLDB
         {
             var arg0 = Marshal.StringToHGlobalAnsi(name);
             var __ret = new LLDB.Value.Internal();
-            Internal.GetFirstValueByName_0(new IntPtr(&__ret), __Instance, arg0);
+            Internal.GetFirstValueByName_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0);
             Marshal.FreeHGlobal(arg0);
             return LLDB.Value.__CreateInstance(__ret);
         }
 
         public LLDB.Value FindValueObjectByUID(ulong uid)
         {
-            var arg0 = uid;
             var __ret = new LLDB.Value.Internal();
-            Internal.FindValueObjectByUID_0(new IntPtr(&__ret), __Instance, arg0);
+            Internal.FindValueObjectByUID_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), uid);
             return LLDB.Value.__CreateInstance(__ret);
         }
 
         protected global::System.IntPtr opaque_ptr()
         {
-            var __ret = Internal.opaque_ptr_0(__Instance);
+            var __ret = Internal.opaque_ptr_0((__Instance + __PointerAdjustment));
             return __ret;
         }
 
@@ -200,7 +207,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetSize_0(__Instance);
+                var __ret = Internal.GetSize_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
         }

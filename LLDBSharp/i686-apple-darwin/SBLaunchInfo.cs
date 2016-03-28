@@ -228,36 +228,41 @@ namespace LLDB
         }
 
         public global::System.IntPtr __Instance { get; protected set; }
+
+        protected int __PointerAdjustment;
         public static readonly System.Collections.Concurrent.ConcurrentDictionary<IntPtr, LaunchInfo> NativeToManagedMap = new System.Collections.Concurrent.ConcurrentDictionary<IntPtr, LaunchInfo>();
+        protected void*[] __OriginalVTables;
 
-        private readonly bool __ownsNativeInstance;
+        protected bool __ownsNativeInstance;
 
-        public static LaunchInfo __CreateInstance(global::System.IntPtr native)
+        public static LaunchInfo __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
         {
-            return new LaunchInfo((LaunchInfo.Internal*) native);
+            return new LaunchInfo(native.ToPointer(), skipVTables);
         }
 
-        public static LaunchInfo __CreateInstance(LaunchInfo.Internal native)
+        public static LaunchInfo __CreateInstance(LaunchInfo.Internal native, bool skipVTables = false)
         {
-            return new LaunchInfo(native);
+            return new LaunchInfo(native, skipVTables);
         }
 
-        private static LaunchInfo.Internal* __CopyValue(LaunchInfo.Internal native)
+        private static void* __CopyValue(LaunchInfo.Internal native)
         {
-            var ret = (LaunchInfo.Internal*) Marshal.AllocHGlobal(8);
-            *ret = native;
-            return ret;
+            var ret = Marshal.AllocHGlobal(8);
+            LLDB.LaunchInfo.Internal.cctor_1(ret, new global::System.IntPtr(&native));
+            return ret.ToPointer();
         }
 
-        private LaunchInfo(LaunchInfo.Internal native)
-            : this(__CopyValue(native))
+        private LaunchInfo(LaunchInfo.Internal native, bool skipVTables = false)
+            : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
         }
 
-        protected LaunchInfo(LaunchInfo.Internal* native, bool isInternalImpl = false)
+        protected LaunchInfo(void* native, bool skipVTables = false)
         {
+            if (native == null)
+                return;
             __Instance = new global::System.IntPtr(native);
         }
 
@@ -267,7 +272,18 @@ namespace LLDB
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
             var arg0 = argv;
-            Internal.ctor_0(__Instance, arg0);
+            Internal.ctor_0((__Instance + __PointerAdjustment), arg0);
+        }
+
+        public LaunchInfo(LLDB.LaunchInfo _0)
+        {
+            __Instance = Marshal.AllocHGlobal(8);
+            __ownsNativeInstance = true;
+            NativeToManagedMap[__Instance] = this;
+            if (ReferenceEquals(_0, null))
+                throw new global::System.ArgumentNullException("_0", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = _0.__Instance;
+            Internal.cctor_1((__Instance + __PointerAdjustment), arg0);
         }
 
         public void Dispose()
@@ -277,165 +293,123 @@ namespace LLDB
 
         protected virtual void Dispose(bool disposing)
         {
-            DestroyNativeInstance(false);
-        }
-
-        public virtual void DestroyNativeInstance()
-        {
-            DestroyNativeInstance(true);
-        }
-
-        private void DestroyNativeInstance(bool force)
-        {
             LLDB.LaunchInfo __dummy;
             NativeToManagedMap.TryRemove(__Instance, out __dummy);
-            if (__ownsNativeInstance || force)
-                Internal.dtor_0(__Instance);
+            Internal.dtor_0((__Instance + __PointerAdjustment));
             if (__ownsNativeInstance)
                 Marshal.FreeHGlobal(__Instance);
         }
 
         public bool UserIDIsValid()
         {
-            var __ret = Internal.UserIDIsValid_0(__Instance);
+            var __ret = Internal.UserIDIsValid_0((__Instance + __PointerAdjustment));
             return __ret;
         }
 
         public bool GroupIDIsValid()
         {
-            var __ret = Internal.GroupIDIsValid_0(__Instance);
+            var __ret = Internal.GroupIDIsValid_0((__Instance + __PointerAdjustment));
             return __ret;
         }
 
         public LLDB.FileSpec GetExecutableFile()
         {
             var __ret = new LLDB.FileSpec.Internal();
-            Internal.GetExecutableFile_0(new IntPtr(&__ret), __Instance);
+            Internal.GetExecutableFile_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
             return LLDB.FileSpec.__CreateInstance(__ret);
         }
 
         /// <summary>
-        /// <para>Set the executable file that will be used to launch the process
-        /// and optionally set it as the first argument in the argument vector.</para>
+        /// <para>Set the executable file that will be used to launch the process and</para>
         /// </summary>
         /// <remarks>
-        /// <para>/// Set the executable file that will be used to launch the
-        /// process and</para>
-        /// <para>    /// optionally set it as the first argument in the argument
-        /// vector.</para>
-        /// <para>    ///</para>
-        /// <para>    /// This only needs to be specified if clients wish to
-        /// carefully control</para>
-        /// <para>    /// the exact path will be used to launch a binary. If you
-        /// create a</para>
-        /// <para>    /// target with a symlink, that symlink will get resolved in
-        /// the target</para>
-        /// <para>    /// and the resolved path will get used to launch the
-        /// process. Calling</para>
-        /// <para>    /// this function can help you still launch your process
-        /// using the</para>
-        /// <para>    /// path of your choice.</para>
-        /// <para>    ///</para>
-        /// <para>    /// If this function is not called prior to launching
-        /// with</para>
-        /// <para>    /// SBTarget::Launch(...), the target will use the resolved
-        /// executable</para>
-        /// <para>    /// path that was used to create the target.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @param[in] exe_file</para>
-        /// <para>    ///     The override path to use when launching the
-        /// executable.</para>
-        /// <para>    ///</para>
-        /// <para>    /// @param[in] add_as_first_arg</para>
-        /// <para>    ///     If true, then the path will be inserted into the
-        /// argument vector</para>
-        /// <para>    ///     prior to launching. Otherwise the argument vector
-        /// will be left</para>
-        /// <para>    ///     alone.</para>
+        /// <para>optionally set it as the first argument in the argument vector.</para>
+        /// <para>This only needs to be specified if clients wish to carefully control</para>
+        /// <para>the exact path will be used to launch a binary. If you create a</para>
+        /// <para>target with a symlink, that symlink will get resolved in the target</para>
+        /// <para>and the resolved path will get used to launch the process. Calling</para>
+        /// <para>this function can help you still launch your process using the</para>
+        /// <para>path of your choice.</para>
+        /// <para>If this function is not called prior to launching with</para>
+        /// <para>SBTarget::Launch(...), the target will use the resolved executable</para>
+        /// <para>path that was used to create the target.</para>
+        /// <para> </para>
+        /// <para> </para>
         /// </remarks>
         public void SetExecutableFile(LLDB.FileSpec exe_file, bool add_as_first_arg)
         {
             var arg0 = ReferenceEquals(exe_file, null) ? new LLDB.FileSpec.Internal() : *(LLDB.FileSpec.Internal*) (exe_file.__Instance);
-            Internal.SetExecutableFile_0(__Instance, arg0, add_as_first_arg);
+            Internal.SetExecutableFile_0((__Instance + __PointerAdjustment), arg0, add_as_first_arg);
         }
 
         /// <summary>
-        /// <para>Get the listener that will be used to receive process
-        /// events.</para>
+        /// <para>Get the listener that will be used to receive process events.</para>
         /// </summary>
         /// <remarks>
-        /// <para>/// Get the listener that will be used to receive process
-        /// events.</para>
-        /// <para>    ///</para>
-        /// <para>    /// If no listener has been set via a call to</para>
-        /// <para>    /// SBLaunchInfo::SetListener(), then an invalid SBListener
-        /// will be</para>
-        /// <para>    /// returned (SBListener::IsValid() will return false). If a
-        /// listener</para>
-        /// <para>    /// has been set, then the valid listener object will be
-        /// returned.</para>
+        /// <para>If no listener has been set via a call to</para>
+        /// <para>SBLaunchInfo::SetListener(), then an invalid SBListener will be</para>
+        /// <para>returned (SBListener::IsValid() will return false). If a listener</para>
+        /// <para>has been set, then the valid listener object will be returned.</para>
         /// </remarks>
         public LLDB.Listener GetListener()
         {
             var __ret = new LLDB.Listener.Internal();
-            Internal.GetListener_0(new IntPtr(&__ret), __Instance);
+            Internal.GetListener_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
             return LLDB.Listener.__CreateInstance(__ret);
         }
 
         public string GetArgumentAtIndex(uint idx)
         {
-            var arg0 = idx;
-            var __ret = Internal.GetArgumentAtIndex_0(__Instance, arg0);
+            var __ret = Internal.GetArgumentAtIndex_0((__Instance + __PointerAdjustment), idx);
             return Marshal.PtrToStringAnsi(__ret);
         }
 
         public void SetArguments(sbyte** argv, bool append)
         {
             var arg0 = argv;
-            Internal.SetArguments_0(__Instance, arg0, append);
+            Internal.SetArguments_0((__Instance + __PointerAdjustment), arg0, append);
         }
 
         public string GetEnvironmentEntryAtIndex(uint idx)
         {
-            var arg0 = idx;
-            var __ret = Internal.GetEnvironmentEntryAtIndex_0(__Instance, arg0);
+            var __ret = Internal.GetEnvironmentEntryAtIndex_0((__Instance + __PointerAdjustment), idx);
             return Marshal.PtrToStringAnsi(__ret);
         }
 
         public void SetEnvironmentEntries(sbyte** envp, bool append)
         {
             var arg0 = envp;
-            Internal.SetEnvironmentEntries_0(__Instance, arg0, append);
+            Internal.SetEnvironmentEntries_0((__Instance + __PointerAdjustment), arg0, append);
         }
 
         public void Clear()
         {
-            Internal.Clear_0(__Instance);
+            Internal.Clear_0((__Instance + __PointerAdjustment));
         }
 
         public bool AddCloseFileAction(int fd)
         {
-            var __ret = Internal.AddCloseFileAction_0(__Instance, fd);
+            var __ret = Internal.AddCloseFileAction_0((__Instance + __PointerAdjustment), fd);
             return __ret;
         }
 
         public bool AddDuplicateFileAction(int fd, int dup_fd)
         {
-            var __ret = Internal.AddDuplicateFileAction_0(__Instance, fd, dup_fd);
+            var __ret = Internal.AddDuplicateFileAction_0((__Instance + __PointerAdjustment), fd, dup_fd);
             return __ret;
         }
 
         public bool AddOpenFileAction(int fd, string path, bool read, bool write)
         {
             var arg1 = Marshal.StringToHGlobalAnsi(path);
-            var __ret = Internal.AddOpenFileAction_0(__Instance, fd, arg1, read, write);
+            var __ret = Internal.AddOpenFileAction_0((__Instance + __PointerAdjustment), fd, arg1, read, write);
             Marshal.FreeHGlobal(arg1);
             return __ret;
         }
 
         public bool AddSuppressFileAction(int fd, bool read, bool write)
         {
-            var __ret = Internal.AddSuppressFileAction_0(__Instance, fd, read, write);
+            var __ret = Internal.AddSuppressFileAction_0((__Instance + __PointerAdjustment), fd, read, write);
             return __ret;
         }
 
@@ -443,7 +417,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetProcessID_0(__Instance);
+                var __ret = Internal.GetProcessID_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
         }
@@ -452,14 +426,13 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetUserID_0(__Instance);
+                var __ret = Internal.GetUserID_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
 
             set
             {
-                var arg0 = value;
-                Internal.SetUserID_0(__Instance, arg0);
+                Internal.SetUserID_0((__Instance + __PointerAdjustment), value);
             }
         }
 
@@ -467,14 +440,13 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetGroupID_0(__Instance);
+                var __ret = Internal.GetGroupID_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
 
             set
             {
-                var arg0 = value;
-                Internal.SetGroupID_0(__Instance, arg0);
+                Internal.SetGroupID_0((__Instance + __PointerAdjustment), value);
             }
         }
 
@@ -482,8 +454,10 @@ namespace LLDB
         {
             set
             {
-                var arg0 = ReferenceEquals(value, null) ? global::System.IntPtr.Zero : value.__Instance;
-                Internal.SetListener_0(__Instance, arg0);
+                if (ReferenceEquals(value, null))
+                    throw new global::System.ArgumentNullException("value", "Cannot be null because it is a C++ reference (&).");
+                var arg0 = value.__Instance;
+                Internal.SetListener_0((__Instance + __PointerAdjustment), arg0);
             }
         }
 
@@ -491,7 +465,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetNumArguments_0(__Instance);
+                var __ret = Internal.GetNumArguments_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
         }
@@ -500,7 +474,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetNumEnvironmentEntries_0(__Instance);
+                var __ret = Internal.GetNumEnvironmentEntries_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
         }
@@ -509,14 +483,14 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetWorkingDirectory_0(__Instance);
+                var __ret = Internal.GetWorkingDirectory_0((__Instance + __PointerAdjustment));
                 return Marshal.PtrToStringAnsi(__ret);
             }
 
             set
             {
                 var arg0 = Marshal.StringToHGlobalAnsi(value);
-                Internal.SetWorkingDirectory_0(__Instance, arg0);
+                Internal.SetWorkingDirectory_0((__Instance + __PointerAdjustment), arg0);
                 Marshal.FreeHGlobal(arg0);
             }
         }
@@ -525,14 +499,13 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetLaunchFlags_0(__Instance);
+                var __ret = Internal.GetLaunchFlags_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
 
             set
             {
-                var arg0 = value;
-                Internal.SetLaunchFlags_0(__Instance, arg0);
+                Internal.SetLaunchFlags_0((__Instance + __PointerAdjustment), value);
             }
         }
 
@@ -540,14 +513,14 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetProcessPluginName_0(__Instance);
+                var __ret = Internal.GetProcessPluginName_0((__Instance + __PointerAdjustment));
                 return Marshal.PtrToStringAnsi(__ret);
             }
 
             set
             {
                 var arg0 = Marshal.StringToHGlobalAnsi(value);
-                Internal.SetProcessPluginName_0(__Instance, arg0);
+                Internal.SetProcessPluginName_0((__Instance + __PointerAdjustment), arg0);
                 Marshal.FreeHGlobal(arg0);
             }
         }
@@ -556,14 +529,14 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetShell_0(__Instance);
+                var __ret = Internal.GetShell_0((__Instance + __PointerAdjustment));
                 return Marshal.PtrToStringAnsi(__ret);
             }
 
             set
             {
                 var arg0 = Marshal.StringToHGlobalAnsi(value);
-                Internal.SetShell_0(__Instance, arg0);
+                Internal.SetShell_0((__Instance + __PointerAdjustment), arg0);
                 Marshal.FreeHGlobal(arg0);
             }
         }
@@ -572,13 +545,13 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetShellExpandArguments_0(__Instance);
+                var __ret = Internal.GetShellExpandArguments_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
 
             set
             {
-                Internal.SetShellExpandArguments_0(__Instance, value);
+                Internal.SetShellExpandArguments_0((__Instance + __PointerAdjustment), value);
             }
         }
 
@@ -586,14 +559,13 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetResumeCount_0(__Instance);
+                var __ret = Internal.GetResumeCount_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
 
             set
             {
-                var arg0 = value;
-                Internal.SetResumeCount_0(__Instance, arg0);
+                Internal.SetResumeCount_0((__Instance + __PointerAdjustment), value);
             }
         }
 
@@ -601,14 +573,14 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetLaunchEventData_0(__Instance);
+                var __ret = Internal.GetLaunchEventData_0((__Instance + __PointerAdjustment));
                 return Marshal.PtrToStringAnsi(__ret);
             }
 
             set
             {
                 var arg0 = Marshal.StringToHGlobalAnsi(value);
-                Internal.SetLaunchEventData_0(__Instance, arg0);
+                Internal.SetLaunchEventData_0((__Instance + __PointerAdjustment), arg0);
                 Marshal.FreeHGlobal(arg0);
             }
         }
@@ -617,13 +589,13 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetDetachOnError_0(__Instance);
+                var __ret = Internal.GetDetachOnError_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
 
             set
             {
-                Internal.SetDetachOnError_0(__Instance, value);
+                Internal.SetDetachOnError_0((__Instance + __PointerAdjustment), value);
             }
         }
     }

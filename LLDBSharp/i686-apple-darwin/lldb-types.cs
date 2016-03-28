@@ -12,20 +12,20 @@ namespace LLDB
 
     public class thread_result_t { }
 
-    [UnmanagedFunctionPointerAttribute(global::System.Runtime.InteropServices.CallingConvention.Cdecl)]
+    [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointerAttribute(global::System.Runtime.InteropServices.CallingConvention.Cdecl)]
     public unsafe delegate global::System.IntPtr thread_func_t(global::System.IntPtr _0);
 
-    [UnmanagedFunctionPointerAttribute(global::System.Runtime.InteropServices.CallingConvention.Cdecl)]
+    [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointerAttribute(global::System.Runtime.InteropServices.CallingConvention.Cdecl)]
     public unsafe delegate void LogOutputCallback(global::System.IntPtr _0, global::System.IntPtr baton);
 
-    [UnmanagedFunctionPointerAttribute(global::System.Runtime.InteropServices.CallingConvention.Cdecl)]
+    [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointerAttribute(global::System.Runtime.InteropServices.CallingConvention.Cdecl)]
     public unsafe delegate bool CommandOverrideCallback(global::System.IntPtr baton, sbyte** argv);
 
-    [UnmanagedFunctionPointerAttribute(global::System.Runtime.InteropServices.CallingConvention.Cdecl)]
+    [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointerAttribute(global::System.Runtime.InteropServices.CallingConvention.Cdecl)]
     public unsafe delegate bool CommandOverrideCallbackWithResult(global::System.IntPtr baton, sbyte** argv, global::System.IntPtr result);
 
-    [UnmanagedFunctionPointerAttribute(global::System.Runtime.InteropServices.CallingConvention.Cdecl)]
+    [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointerAttribute(global::System.Runtime.InteropServices.CallingConvention.Cdecl)]
     public unsafe delegate bool ExpressionCancelCallback(LLDB.ExpressionEvaluationPhase phase, global::System.IntPtr baton);
 
-    public class clang_type_t { }
+    public class opaque_compiler_type_t { }
 }

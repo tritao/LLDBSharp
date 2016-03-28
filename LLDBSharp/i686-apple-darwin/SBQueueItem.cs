@@ -66,36 +66,41 @@ namespace LLDB
         }
 
         public global::System.IntPtr __Instance { get; protected set; }
+
+        protected int __PointerAdjustment;
         public static readonly System.Collections.Concurrent.ConcurrentDictionary<IntPtr, QueueItem> NativeToManagedMap = new System.Collections.Concurrent.ConcurrentDictionary<IntPtr, QueueItem>();
+        protected void*[] __OriginalVTables;
 
-        private readonly bool __ownsNativeInstance;
+        protected bool __ownsNativeInstance;
 
-        public static QueueItem __CreateInstance(global::System.IntPtr native)
+        public static QueueItem __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
         {
-            return new QueueItem((QueueItem.Internal*) native);
+            return new QueueItem(native.ToPointer(), skipVTables);
         }
 
-        public static QueueItem __CreateInstance(QueueItem.Internal native)
+        public static QueueItem __CreateInstance(QueueItem.Internal native, bool skipVTables = false)
         {
-            return new QueueItem(native);
+            return new QueueItem(native, skipVTables);
         }
 
-        private static QueueItem.Internal* __CopyValue(QueueItem.Internal native)
+        private static void* __CopyValue(QueueItem.Internal native)
         {
-            var ret = (QueueItem.Internal*) Marshal.AllocHGlobal(8);
-            *ret = native;
-            return ret;
+            var ret = Marshal.AllocHGlobal(8);
+            LLDB.QueueItem.Internal.cctor_2(ret, new global::System.IntPtr(&native));
+            return ret.ToPointer();
         }
 
-        private QueueItem(QueueItem.Internal native)
-            : this(__CopyValue(native))
+        private QueueItem(QueueItem.Internal native, bool skipVTables = false)
+            : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
         }
 
-        protected QueueItem(QueueItem.Internal* native, bool isInternalImpl = false)
+        protected QueueItem(void* native, bool skipVTables = false)
         {
+            if (native == null)
+                return;
             __Instance = new global::System.IntPtr(native);
         }
 
@@ -104,7 +109,18 @@ namespace LLDB
             __Instance = Marshal.AllocHGlobal(8);
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
-            Internal.ctor_0(__Instance);
+            Internal.ctor_0((__Instance + __PointerAdjustment));
+        }
+
+        public QueueItem(LLDB.QueueItem _0)
+        {
+            __Instance = Marshal.AllocHGlobal(8);
+            __ownsNativeInstance = true;
+            NativeToManagedMap[__Instance] = this;
+            if (ReferenceEquals(_0, null))
+                throw new global::System.ArgumentNullException("_0", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = _0.__Instance;
+            Internal.cctor_2((__Instance + __PointerAdjustment), arg0);
         }
 
         public void Dispose()
@@ -114,39 +130,28 @@ namespace LLDB
 
         protected virtual void Dispose(bool disposing)
         {
-            DestroyNativeInstance(false);
-        }
-
-        public virtual void DestroyNativeInstance()
-        {
-            DestroyNativeInstance(true);
-        }
-
-        private void DestroyNativeInstance(bool force)
-        {
             LLDB.QueueItem __dummy;
             NativeToManagedMap.TryRemove(__Instance, out __dummy);
-            if (__ownsNativeInstance || force)
-                Internal.dtor_0(__Instance);
+            Internal.dtor_0((__Instance + __PointerAdjustment));
             if (__ownsNativeInstance)
                 Marshal.FreeHGlobal(__Instance);
         }
 
         public bool IsValid()
         {
-            var __ret = Internal.IsValid_0(__Instance);
+            var __ret = Internal.IsValid_0((__Instance + __PointerAdjustment));
             return __ret;
         }
 
         public void Clear()
         {
-            Internal.Clear_0(__Instance);
+            Internal.Clear_0((__Instance + __PointerAdjustment));
         }
 
         public LLDB.Address GetAddress()
         {
             var __ret = new LLDB.Address.Internal();
-            Internal.GetAddress_0(new IntPtr(&__ret), __Instance);
+            Internal.GetAddress_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
             return LLDB.Address.__CreateInstance(__ret);
         }
 
@@ -154,7 +159,7 @@ namespace LLDB
         {
             var arg0 = Marshal.StringToHGlobalAnsi(type);
             var __ret = new LLDB.Thread.Internal();
-            Internal.GetExtendedBacktraceThread_0(new IntPtr(&__ret), __Instance, arg0);
+            Internal.GetExtendedBacktraceThread_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0);
             Marshal.FreeHGlobal(arg0);
             return LLDB.Thread.__CreateInstance(__ret);
         }
@@ -163,14 +168,14 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetKind_0(__Instance);
+                var __ret = Internal.GetKind_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
 
             set
             {
                 var arg0 = value;
-                Internal.SetKind_0(__Instance, arg0);
+                Internal.SetKind_0((__Instance + __PointerAdjustment), arg0);
             }
         }
 
@@ -179,7 +184,7 @@ namespace LLDB
             set
             {
                 var arg0 = ReferenceEquals(value, null) ? new LLDB.Address.Internal() : *(LLDB.Address.Internal*) (value.__Instance);
-                Internal.SetAddress_0(__Instance, arg0);
+                Internal.SetAddress_0((__Instance + __PointerAdjustment), arg0);
             }
         }
     }

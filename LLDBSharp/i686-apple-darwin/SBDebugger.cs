@@ -10,23 +10,13 @@ namespace LLDB
 {
     public unsafe partial class InputReader : IDisposable
     {
-        [StructLayout(LayoutKind.Explicit, Size = 1)]
+        [StructLayout(LayoutKind.Explicit, Size = 0)]
         public partial struct Internal
         {
             [SuppressUnmanagedCodeSecurity]
             [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="_ZN4lldb13SBInputReaderC2Ev")]
-            internal static extern void ctor_0(global::System.IntPtr instance);
-
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
                 EntryPoint="_ZN4lldb13SBInputReaderC2ERKS0_")]
             internal static extern void cctor_1(global::System.IntPtr instance, global::System.IntPtr _0);
-
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="_ZN4lldb13SBInputReaderD2Ev")]
-            internal static extern void dtor_0(global::System.IntPtr instance);
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
@@ -45,49 +35,61 @@ namespace LLDB
             internal static extern void SetIsDone_0(global::System.IntPtr instance, bool _0);
         }
 
-        [UnmanagedFunctionPointerAttribute(global::System.Runtime.InteropServices.CallingConvention.Cdecl)]
+        [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointerAttribute(global::System.Runtime.InteropServices.CallingConvention.Cdecl)]
         public unsafe delegate uint __AnonymousDelegate0(global::System.IntPtr _0, global::System.IntPtr _1, LLDB.InputReaderAction _2, global::System.IntPtr _3, uint _4);
 
         public global::System.IntPtr __Instance { get; protected set; }
+
+        protected int __PointerAdjustment;
         public static readonly System.Collections.Concurrent.ConcurrentDictionary<IntPtr, InputReader> NativeToManagedMap = new System.Collections.Concurrent.ConcurrentDictionary<IntPtr, InputReader>();
+        protected void*[] __OriginalVTables;
 
-        private readonly bool __ownsNativeInstance;
+        protected bool __ownsNativeInstance;
 
-        public static InputReader __CreateInstance(global::System.IntPtr native)
+        public static InputReader __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
         {
-            return new InputReader((InputReader.Internal*) native);
+            return new InputReader(native.ToPointer(), skipVTables);
         }
 
-        public static InputReader __CreateInstance(InputReader.Internal native)
+        public static InputReader __CreateInstance(InputReader.Internal native, bool skipVTables = false)
         {
-            return new InputReader(native);
+            return new InputReader(native, skipVTables);
         }
 
-        private static InputReader.Internal* __CopyValue(InputReader.Internal native)
+        private static void* __CopyValue(InputReader.Internal native)
         {
-            var ret = (InputReader.Internal*) Marshal.AllocHGlobal(1);
-            *ret = native;
-            return ret;
+            var ret = Marshal.AllocHGlobal(0);
+            *(InputReader.Internal*) ret = native;
+            return ret.ToPointer();
         }
 
-        private InputReader(InputReader.Internal native)
-            : this(__CopyValue(native))
+        private InputReader(InputReader.Internal native, bool skipVTables = false)
+            : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
         }
 
-        protected InputReader(InputReader.Internal* native, bool isInternalImpl = false)
+        protected InputReader(void* native, bool skipVTables = false)
         {
+            if (native == null)
+                return;
             __Instance = new global::System.IntPtr(native);
         }
 
         public InputReader()
         {
-            __Instance = Marshal.AllocHGlobal(1);
+            __Instance = Marshal.AllocHGlobal(0);
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
-            Internal.ctor_0(__Instance);
+        }
+
+        public InputReader(LLDB.InputReader _0)
+        {
+            __Instance = Marshal.AllocHGlobal(0);
+            __ownsNativeInstance = true;
+            NativeToManagedMap[__Instance] = this;
+            *((InputReader.Internal*) __Instance) = *((InputReader.Internal*) _0.__Instance);
         }
 
         public void Dispose()
@@ -97,34 +99,24 @@ namespace LLDB
 
         protected virtual void Dispose(bool disposing)
         {
-            DestroyNativeInstance(false);
-        }
-
-        public virtual void DestroyNativeInstance()
-        {
-            DestroyNativeInstance(true);
-        }
-
-        private void DestroyNativeInstance(bool force)
-        {
             LLDB.InputReader __dummy;
             NativeToManagedMap.TryRemove(__Instance, out __dummy);
-            if (__ownsNativeInstance || force)
-                Internal.dtor_0(__Instance);
             if (__ownsNativeInstance)
                 Marshal.FreeHGlobal(__Instance);
         }
 
         public LLDB.Error Initialize(LLDB.Debugger _0, LLDB.InputReader.__AnonymousDelegate0 _1, global::System.IntPtr _2, LLDB.InputReaderGranularity _3, string _4, string _5, bool _6)
         {
-            var arg0 = ReferenceEquals(_0, null) ? global::System.IntPtr.Zero : _0.__Instance;
-            var arg1 = Marshal.GetFunctionPointerForDelegate(_1);
+            if (ReferenceEquals(_0, null))
+                throw new global::System.ArgumentNullException("_0", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = _0.__Instance;
+            var arg1 = _1 == null ? global::System.IntPtr.Zero : Marshal.GetFunctionPointerForDelegate(_1);
             var arg2 = _2;
             var arg3 = _3;
             var arg4 = Marshal.StringToHGlobalAnsi(_4);
             var arg5 = Marshal.StringToHGlobalAnsi(_5);
             var __ret = new LLDB.Error.Internal();
-            Internal.Initialize_0(new IntPtr(&__ret), __Instance, arg0, arg1, arg2, arg3, arg4, arg5, _6);
+            Internal.Initialize_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0, arg1, arg2, arg3, arg4, arg5, _6);
             Marshal.FreeHGlobal(arg4);
             Marshal.FreeHGlobal(arg5);
             return LLDB.Error.__CreateInstance(__ret);
@@ -132,7 +124,7 @@ namespace LLDB
 
         public bool IsActive()
         {
-            var __ret = Internal.IsActive_0(__Instance);
+            var __ret = Internal.IsActive_0((__Instance + __PointerAdjustment));
             return __ret;
         }
 
@@ -140,7 +132,7 @@ namespace LLDB
         {
             set
             {
-                Internal.SetIsDone_0(__Instance, value);
+                Internal.SetIsDone_0((__Instance + __PointerAdjustment), value);
             }
         }
     }
@@ -223,6 +215,21 @@ namespace LLDB
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
+                EntryPoint="_ZN4lldb10SBDebugger18SetInputFileHandleEP7__sFILEb")]
+            internal static extern void SetInputFileHandle_0(global::System.IntPtr instance, global::System.IntPtr f, bool transfer_ownership);
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
+                EntryPoint="_ZN4lldb10SBDebugger19SetOutputFileHandleEP7__sFILEb")]
+            internal static extern void SetOutputFileHandle_0(global::System.IntPtr instance, global::System.IntPtr f, bool transfer_ownership);
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
+                EntryPoint="_ZN4lldb10SBDebugger18SetErrorFileHandleEP7__sFILEb")]
+            internal static extern void SetErrorFileHandle_0(global::System.IntPtr instance, global::System.IntPtr f, bool transfer_ownership);
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
                 EntryPoint="_ZN4lldb10SBDebugger22SaveInputTerminalStateEv")]
             internal static extern void SaveInputTerminalState_0(global::System.IntPtr instance);
 
@@ -245,6 +252,11 @@ namespace LLDB
             [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
                 EntryPoint="_ZN4lldb10SBDebugger11GetListenerEv")]
             internal static extern void GetListener_0(global::System.IntPtr @return, global::System.IntPtr instance);
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
+                EntryPoint="_ZN4lldb10SBDebugger18HandleProcessEventERKNS_9SBProcessERKNS_7SBEventEP7__sFILES8_")]
+            internal static extern void HandleProcessEvent_0(global::System.IntPtr instance, global::System.IntPtr process, global::System.IntPtr @event, global::System.IntPtr @out, global::System.IntPtr err);
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
@@ -423,9 +435,54 @@ namespace LLDB
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
+                EntryPoint="_ZN4lldb10SBDebugger11GetCategoryEPKc")]
+            internal static extern void GetCategory_0(global::System.IntPtr @return, global::System.IntPtr instance, global::System.IntPtr category_name);
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
+                EntryPoint="_ZN4lldb10SBDebugger11GetCategoryENS_12LanguageTypeE")]
+            internal static extern void GetCategory_1(global::System.IntPtr @return, global::System.IntPtr instance, LLDB.LanguageType lang_type);
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
+                EntryPoint="_ZN4lldb10SBDebugger14CreateCategoryEPKc")]
+            internal static extern void CreateCategory_0(global::System.IntPtr @return, global::System.IntPtr instance, global::System.IntPtr category_name);
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
                 EntryPoint="_ZN4lldb10SBDebugger14DeleteCategoryEPKc")]
             [return: MarshalAsAttribute(UnmanagedType.I1)]
             internal static extern bool DeleteCategory_0(global::System.IntPtr instance, global::System.IntPtr category_name);
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
+                EntryPoint="_ZN4lldb10SBDebugger18GetCategoryAtIndexEj")]
+            internal static extern void GetCategoryAtIndex_0(global::System.IntPtr @return, global::System.IntPtr instance, uint _0);
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
+                EntryPoint="_ZN4lldb10SBDebugger18GetDefaultCategoryEv")]
+            internal static extern void GetDefaultCategory_0(global::System.IntPtr @return, global::System.IntPtr instance);
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
+                EntryPoint="_ZN4lldb10SBDebugger16GetFormatForTypeENS_19SBTypeNameSpecifierE")]
+            internal static extern void GetFormatForType_0(global::System.IntPtr @return, global::System.IntPtr instance, LLDB.TypeNameSpecifier.Internal _0);
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
+                EntryPoint="_ZN4lldb10SBDebugger17GetSummaryForTypeENS_19SBTypeNameSpecifierE")]
+            internal static extern void GetSummaryForType_0(global::System.IntPtr @return, global::System.IntPtr instance, LLDB.TypeNameSpecifier.Internal _0);
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
+                EntryPoint="_ZN4lldb10SBDebugger16GetFilterForTypeENS_19SBTypeNameSpecifierE")]
+            internal static extern void GetFilterForType_0(global::System.IntPtr @return, global::System.IntPtr instance, LLDB.TypeNameSpecifier.Internal _0);
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
+                EntryPoint="_ZN4lldb10SBDebugger19GetSyntheticForTypeENS_19SBTypeNameSpecifierE")]
+            internal static extern void GetSyntheticForType_0(global::System.IntPtr @return, global::System.IntPtr instance, LLDB.TypeNameSpecifier.Internal _0);
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
@@ -439,6 +496,11 @@ namespace LLDB
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
+                EntryPoint="_ZN4lldb10SBDebugger7RunREPLENS_12LanguageTypeEPKc")]
+            internal static extern void RunREPL_0(global::System.IntPtr @return, global::System.IntPtr instance, LLDB.LanguageType language, global::System.IntPtr repl_options);
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
                 EntryPoint="_ZN4lldb10SBDebugger8GetAsyncEv")]
             [return: MarshalAsAttribute(UnmanagedType.I1)]
             internal static extern bool GetAsync_0(global::System.IntPtr instance);
@@ -447,6 +509,21 @@ namespace LLDB
             [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
                 EntryPoint="_ZN4lldb10SBDebugger8SetAsyncEb")]
             internal static extern void SetAsync_0(global::System.IntPtr instance, bool b);
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
+                EntryPoint="_ZN4lldb10SBDebugger18GetInputFileHandleEv")]
+            internal static extern global::System.IntPtr GetInputFileHandle_0(global::System.IntPtr instance);
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
+                EntryPoint="_ZN4lldb10SBDebugger19GetOutputFileHandleEv")]
+            internal static extern global::System.IntPtr GetOutputFileHandle_0(global::System.IntPtr instance);
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
+                EntryPoint="_ZN4lldb10SBDebugger18GetErrorFileHandleEv")]
+            internal static extern global::System.IntPtr GetErrorFileHandle_0(global::System.IntPtr instance);
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
@@ -538,36 +615,41 @@ namespace LLDB
         }
 
         public global::System.IntPtr __Instance { get; protected set; }
+
+        protected int __PointerAdjustment;
         public static readonly System.Collections.Concurrent.ConcurrentDictionary<IntPtr, Debugger> NativeToManagedMap = new System.Collections.Concurrent.ConcurrentDictionary<IntPtr, Debugger>();
+        protected void*[] __OriginalVTables;
 
-        private readonly bool __ownsNativeInstance;
+        protected bool __ownsNativeInstance;
 
-        public static Debugger __CreateInstance(global::System.IntPtr native)
+        public static Debugger __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
         {
-            return new Debugger((Debugger.Internal*) native);
+            return new Debugger(native.ToPointer(), skipVTables);
         }
 
-        public static Debugger __CreateInstance(Debugger.Internal native)
+        public static Debugger __CreateInstance(Debugger.Internal native, bool skipVTables = false)
         {
-            return new Debugger(native);
+            return new Debugger(native, skipVTables);
         }
 
-        private static Debugger.Internal* __CopyValue(Debugger.Internal native)
+        private static void* __CopyValue(Debugger.Internal native)
         {
-            var ret = (Debugger.Internal*) Marshal.AllocHGlobal(8);
-            *ret = native;
-            return ret;
+            var ret = Marshal.AllocHGlobal(8);
+            LLDB.Debugger.Internal.cctor_1(ret, new global::System.IntPtr(&native));
+            return ret.ToPointer();
         }
 
-        private Debugger(Debugger.Internal native)
-            : this(__CopyValue(native))
+        private Debugger(Debugger.Internal native, bool skipVTables = false)
+            : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
         }
 
-        protected Debugger(Debugger.Internal* native, bool isInternalImpl = false)
+        protected Debugger(void* native, bool skipVTables = false)
         {
+            if (native == null)
+                return;
             __Instance = new global::System.IntPtr(native);
         }
 
@@ -576,7 +658,18 @@ namespace LLDB
             __Instance = Marshal.AllocHGlobal(8);
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
-            Internal.ctor_0(__Instance);
+            Internal.ctor_0((__Instance + __PointerAdjustment));
+        }
+
+        public Debugger(LLDB.Debugger rhs)
+        {
+            __Instance = Marshal.AllocHGlobal(8);
+            __ownsNativeInstance = true;
+            NativeToManagedMap[__Instance] = this;
+            if (ReferenceEquals(rhs, null))
+                throw new global::System.ArgumentNullException("rhs", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = rhs.__Instance;
+            Internal.cctor_1((__Instance + __PointerAdjustment), arg0);
         }
 
         public void Dispose()
@@ -586,74 +679,94 @@ namespace LLDB
 
         protected virtual void Dispose(bool disposing)
         {
-            DestroyNativeInstance(false);
-        }
-
-        public virtual void DestroyNativeInstance()
-        {
-            DestroyNativeInstance(true);
-        }
-
-        private void DestroyNativeInstance(bool force)
-        {
             LLDB.Debugger __dummy;
             NativeToManagedMap.TryRemove(__Instance, out __dummy);
-            if (__ownsNativeInstance || force)
-                Internal.dtor_0(__Instance);
+            Internal.dtor_0((__Instance + __PointerAdjustment));
             if (__ownsNativeInstance)
                 Marshal.FreeHGlobal(__Instance);
         }
 
         public bool IsValid()
         {
-            var __ret = Internal.IsValid_0(__Instance);
+            var __ret = Internal.IsValid_0((__Instance + __PointerAdjustment));
             return __ret;
         }
 
         public void Clear()
         {
-            Internal.Clear_0(__Instance);
+            Internal.Clear_0((__Instance + __PointerAdjustment));
         }
 
         public void SkipLLDBInitFiles(bool b)
         {
-            Internal.SkipLLDBInitFiles_0(__Instance, b);
+            Internal.SkipLLDBInitFiles_0((__Instance + __PointerAdjustment), b);
         }
 
         public void SkipAppInitFiles(bool b)
         {
-            Internal.SkipAppInitFiles_0(__Instance, b);
+            Internal.SkipAppInitFiles_0((__Instance + __PointerAdjustment), b);
+        }
+
+        public void SetInputFileHandle(global::System.IntPtr f, bool transfer_ownership)
+        {
+            var arg0 = f;
+            Internal.SetInputFileHandle_0((__Instance + __PointerAdjustment), arg0, transfer_ownership);
+        }
+
+        public void SetOutputFileHandle(global::System.IntPtr f, bool transfer_ownership)
+        {
+            var arg0 = f;
+            Internal.SetOutputFileHandle_0((__Instance + __PointerAdjustment), arg0, transfer_ownership);
+        }
+
+        public void SetErrorFileHandle(global::System.IntPtr f, bool transfer_ownership)
+        {
+            var arg0 = f;
+            Internal.SetErrorFileHandle_0((__Instance + __PointerAdjustment), arg0, transfer_ownership);
         }
 
         public void SaveInputTerminalState()
         {
-            Internal.SaveInputTerminalState_0(__Instance);
+            Internal.SaveInputTerminalState_0((__Instance + __PointerAdjustment));
         }
 
         public void RestoreInputTerminalState()
         {
-            Internal.RestoreInputTerminalState_0(__Instance);
+            Internal.RestoreInputTerminalState_0((__Instance + __PointerAdjustment));
         }
 
         public LLDB.CommandInterpreter GetCommandInterpreter()
         {
             var __ret = new LLDB.CommandInterpreter.Internal();
-            Internal.GetCommandInterpreter_0(new IntPtr(&__ret), __Instance);
+            Internal.GetCommandInterpreter_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
             return LLDB.CommandInterpreter.__CreateInstance(__ret);
         }
 
         public void HandleCommand(string command)
         {
             var arg0 = Marshal.StringToHGlobalAnsi(command);
-            Internal.HandleCommand_0(__Instance, arg0);
+            Internal.HandleCommand_0((__Instance + __PointerAdjustment), arg0);
             Marshal.FreeHGlobal(arg0);
         }
 
         public LLDB.Listener GetListener()
         {
             var __ret = new LLDB.Listener.Internal();
-            Internal.GetListener_0(new IntPtr(&__ret), __Instance);
+            Internal.GetListener_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
             return LLDB.Listener.__CreateInstance(__ret);
+        }
+
+        public void HandleProcessEvent(LLDB.Process process, LLDB.Event @event, global::System.IntPtr @out, global::System.IntPtr err)
+        {
+            if (ReferenceEquals(process, null))
+                throw new global::System.ArgumentNullException("process", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = process.__Instance;
+            if (ReferenceEquals(@event, null))
+                throw new global::System.ArgumentNullException("@event", "Cannot be null because it is a C++ reference (&).");
+            var arg1 = @event.__Instance;
+            var arg2 = @out;
+            var arg3 = err;
+            Internal.HandleProcessEvent_0((__Instance + __PointerAdjustment), arg0, arg1, arg2, arg3);
         }
 
         public LLDB.Target CreateTarget(string filename, string target_triple, string platform_name, bool add_dependent_modules, LLDB.Error error)
@@ -661,9 +774,11 @@ namespace LLDB
             var arg0 = Marshal.StringToHGlobalAnsi(filename);
             var arg1 = Marshal.StringToHGlobalAnsi(target_triple);
             var arg2 = Marshal.StringToHGlobalAnsi(platform_name);
-            var arg4 = ReferenceEquals(error, null) ? global::System.IntPtr.Zero : error.__Instance;
+            if (ReferenceEquals(error, null))
+                throw new global::System.ArgumentNullException("error", "Cannot be null because it is a C++ reference (&).");
+            var arg4 = error.__Instance;
             var __ret = new LLDB.Target.Internal();
-            Internal.CreateTarget_0(new IntPtr(&__ret), __Instance, arg0, arg1, arg2, add_dependent_modules, arg4);
+            Internal.CreateTarget_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0, arg1, arg2, add_dependent_modules, arg4);
             Marshal.FreeHGlobal(arg0);
             Marshal.FreeHGlobal(arg1);
             Marshal.FreeHGlobal(arg2);
@@ -675,7 +790,7 @@ namespace LLDB
             var arg0 = Marshal.StringToHGlobalAnsi(filename);
             var arg1 = Marshal.StringToHGlobalAnsi(target_triple);
             var __ret = new LLDB.Target.Internal();
-            Internal.CreateTargetWithFileAndTargetTriple_0(new IntPtr(&__ret), __Instance, arg0, arg1);
+            Internal.CreateTargetWithFileAndTargetTriple_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0, arg1);
             Marshal.FreeHGlobal(arg0);
             Marshal.FreeHGlobal(arg1);
             return LLDB.Target.__CreateInstance(__ret);
@@ -686,7 +801,7 @@ namespace LLDB
             var arg0 = Marshal.StringToHGlobalAnsi(filename);
             var arg1 = Marshal.StringToHGlobalAnsi(archname);
             var __ret = new LLDB.Target.Internal();
-            Internal.CreateTargetWithFileAndArch_0(new IntPtr(&__ret), __Instance, arg0, arg1);
+            Internal.CreateTargetWithFileAndArch_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0, arg1);
             Marshal.FreeHGlobal(arg0);
             Marshal.FreeHGlobal(arg1);
             return LLDB.Target.__CreateInstance(__ret);
@@ -696,38 +811,38 @@ namespace LLDB
         {
             var arg0 = Marshal.StringToHGlobalAnsi(filename);
             var __ret = new LLDB.Target.Internal();
-            Internal.CreateTarget_1(new IntPtr(&__ret), __Instance, arg0);
+            Internal.CreateTarget_1(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0);
             Marshal.FreeHGlobal(arg0);
             return LLDB.Target.__CreateInstance(__ret);
         }
 
         public bool DeleteTarget(LLDB.Target target)
         {
-            var arg0 = ReferenceEquals(target, null) ? global::System.IntPtr.Zero : target.__Instance;
-            var __ret = Internal.DeleteTarget_0(__Instance, arg0);
+            if (ReferenceEquals(target, null))
+                throw new global::System.ArgumentNullException("target", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = target.__Instance;
+            var __ret = Internal.DeleteTarget_0((__Instance + __PointerAdjustment), arg0);
             return __ret;
         }
 
         public LLDB.Target GetTargetAtIndex(uint idx)
         {
-            var arg0 = idx;
             var __ret = new LLDB.Target.Internal();
-            Internal.GetTargetAtIndex_0(new IntPtr(&__ret), __Instance, arg0);
+            Internal.GetTargetAtIndex_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), idx);
             return LLDB.Target.__CreateInstance(__ret);
         }
 
         public uint GetIndexOfTarget(LLDB.Target target)
         {
             var arg0 = ReferenceEquals(target, null) ? new LLDB.Target.Internal() : *(LLDB.Target.Internal*) (target.__Instance);
-            var __ret = Internal.GetIndexOfTarget_0(__Instance, arg0);
+            var __ret = Internal.GetIndexOfTarget_0((__Instance + __PointerAdjustment), arg0);
             return __ret;
         }
 
         public LLDB.Target FindTargetWithProcessID(ulong pid)
         {
-            var arg0 = pid;
             var __ret = new LLDB.Target.Internal();
-            Internal.FindTargetWithProcessID_0(new IntPtr(&__ret), __Instance, arg0);
+            Internal.FindTargetWithProcessID_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), pid);
             return LLDB.Target.__CreateInstance(__ret);
         }
 
@@ -736,7 +851,7 @@ namespace LLDB
             var arg0 = Marshal.StringToHGlobalAnsi(filename);
             var arg1 = Marshal.StringToHGlobalAnsi(arch);
             var __ret = new LLDB.Target.Internal();
-            Internal.FindTargetWithFileAndArch_0(new IntPtr(&__ret), __Instance, arg0, arg1);
+            Internal.FindTargetWithFileAndArch_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0, arg1);
             Marshal.FreeHGlobal(arg0);
             Marshal.FreeHGlobal(arg1);
             return LLDB.Target.__CreateInstance(__ret);
@@ -745,21 +860,21 @@ namespace LLDB
         public LLDB.Target GetSelectedTarget()
         {
             var __ret = new LLDB.Target.Internal();
-            Internal.GetSelectedTarget_0(new IntPtr(&__ret), __Instance);
+            Internal.GetSelectedTarget_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
             return LLDB.Target.__CreateInstance(__ret);
         }
 
         public LLDB.Platform GetSelectedPlatform()
         {
             var __ret = new LLDB.Platform.Internal();
-            Internal.GetSelectedPlatform_0(new IntPtr(&__ret), __Instance);
+            Internal.GetSelectedPlatform_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
             return LLDB.Platform.__CreateInstance(__ret);
         }
 
         public LLDB.SourceManager GetSourceManager()
         {
             var __ret = new LLDB.SourceManager.Internal();
-            Internal.GetSourceManager_0(new IntPtr(&__ret), __Instance);
+            Internal.GetSourceManager_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
             return LLDB.SourceManager.__CreateInstance(__ret);
         }
 
@@ -767,7 +882,7 @@ namespace LLDB
         {
             var arg0 = Marshal.StringToHGlobalAnsi(platform_name);
             var __ret = new LLDB.Error.Internal();
-            Internal.SetCurrentPlatform_0(new IntPtr(&__ret), __Instance, arg0);
+            Internal.SetCurrentPlatform_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0);
             Marshal.FreeHGlobal(arg0);
             return LLDB.Error.__CreateInstance(__ret);
         }
@@ -775,27 +890,27 @@ namespace LLDB
         public bool SetCurrentPlatformSDKRoot(string sysroot)
         {
             var arg0 = Marshal.StringToHGlobalAnsi(sysroot);
-            var __ret = Internal.SetCurrentPlatformSDKRoot_0(__Instance, arg0);
+            var __ret = Internal.SetCurrentPlatformSDKRoot_0((__Instance + __PointerAdjustment), arg0);
             Marshal.FreeHGlobal(arg0);
             return __ret;
         }
 
         public bool SetUseExternalEditor(bool input)
         {
-            var __ret = Internal.SetUseExternalEditor_0(__Instance, input);
+            var __ret = Internal.SetUseExternalEditor_0((__Instance + __PointerAdjustment), input);
             return __ret;
         }
 
         public bool SetUseColor(bool use_color)
         {
-            var __ret = Internal.SetUseColor_0(__Instance, use_color);
+            var __ret = Internal.SetUseColor_0((__Instance + __PointerAdjustment), use_color);
             return __ret;
         }
 
         public LLDB.ScriptLanguage GetScriptingLanguage(string script_language_name)
         {
             var arg0 = Marshal.StringToHGlobalAnsi(script_language_name);
-            var __ret = Internal.GetScriptingLanguage_0(__Instance, arg0);
+            var __ret = Internal.GetScriptingLanguage_0((__Instance + __PointerAdjustment), arg0);
             Marshal.FreeHGlobal(arg0);
             return __ret;
         }
@@ -804,76 +919,171 @@ namespace LLDB
         {
             var arg0 = Marshal.StringToHGlobalAnsi(channel);
             var arg1 = categories;
-            var __ret = Internal.EnableLog_0(__Instance, arg0, arg1);
+            var __ret = Internal.EnableLog_0((__Instance + __PointerAdjustment), arg0, arg1);
             Marshal.FreeHGlobal(arg0);
             return __ret;
         }
 
         public void SetLoggingCallback(LLDB.LogOutputCallback log_callback, global::System.IntPtr baton)
         {
-            var arg0 = Marshal.GetFunctionPointerForDelegate(log_callback);
+            var arg0 = log_callback == null ? global::System.IntPtr.Zero : Marshal.GetFunctionPointerForDelegate(log_callback);
             var arg1 = baton;
-            Internal.SetLoggingCallback_0(__Instance, arg0, arg1);
+            Internal.SetLoggingCallback_0((__Instance + __PointerAdjustment), arg0, arg1);
         }
 
         public void DispatchInput(global::System.IntPtr baton, global::System.IntPtr data, uint data_len)
         {
             var arg0 = baton;
             var arg1 = data;
-            var arg2 = data_len;
-            Internal.DispatchInput_0(__Instance, arg0, arg1, arg2);
+            Internal.DispatchInput_0((__Instance + __PointerAdjustment), arg0, arg1, data_len);
         }
 
         public void DispatchInput(global::System.IntPtr data, uint data_len)
         {
             var arg0 = data;
-            var arg1 = data_len;
-            Internal.DispatchInput_1(__Instance, arg0, arg1);
+            Internal.DispatchInput_1((__Instance + __PointerAdjustment), arg0, data_len);
         }
 
         public void DispatchInputInterrupt()
         {
-            Internal.DispatchInputInterrupt_0(__Instance);
+            Internal.DispatchInputInterrupt_0((__Instance + __PointerAdjustment));
         }
 
         public void DispatchInputEndOfFile()
         {
-            Internal.DispatchInputEndOfFile_0(__Instance);
+            Internal.DispatchInputEndOfFile_0((__Instance + __PointerAdjustment));
         }
 
         public void PushInputReader(LLDB.InputReader reader)
         {
-            var arg0 = ReferenceEquals(reader, null) ? global::System.IntPtr.Zero : reader.__Instance;
-            Internal.PushInputReader_0(__Instance, arg0);
+            if (ReferenceEquals(reader, null))
+                throw new global::System.ArgumentNullException("reader", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = reader.__Instance;
+            Internal.PushInputReader_0((__Instance + __PointerAdjustment), arg0);
         }
 
         public bool GetDescription(LLDB.Stream description)
         {
-            var arg0 = ReferenceEquals(description, null) ? global::System.IntPtr.Zero : description.__Instance;
-            var __ret = Internal.GetDescription_0(__Instance, arg0);
+            if (ReferenceEquals(description, null))
+                throw new global::System.ArgumentNullException("description", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = description.__Instance;
+            var __ret = Internal.GetDescription_0((__Instance + __PointerAdjustment), arg0);
             return __ret;
+        }
+
+        public LLDB.TypeCategory GetCategory(string category_name)
+        {
+            var arg0 = Marshal.StringToHGlobalAnsi(category_name);
+            var __ret = new LLDB.TypeCategory.Internal();
+            Internal.GetCategory_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0);
+            Marshal.FreeHGlobal(arg0);
+            return LLDB.TypeCategory.__CreateInstance(__ret);
+        }
+
+        public LLDB.TypeCategory GetCategory(LLDB.LanguageType lang_type)
+        {
+            var arg0 = lang_type;
+            var __ret = new LLDB.TypeCategory.Internal();
+            Internal.GetCategory_1(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0);
+            return LLDB.TypeCategory.__CreateInstance(__ret);
+        }
+
+        public LLDB.TypeCategory CreateCategory(string category_name)
+        {
+            var arg0 = Marshal.StringToHGlobalAnsi(category_name);
+            var __ret = new LLDB.TypeCategory.Internal();
+            Internal.CreateCategory_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0);
+            Marshal.FreeHGlobal(arg0);
+            return LLDB.TypeCategory.__CreateInstance(__ret);
         }
 
         public bool DeleteCategory(string category_name)
         {
             var arg0 = Marshal.StringToHGlobalAnsi(category_name);
-            var __ret = Internal.DeleteCategory_0(__Instance, arg0);
+            var __ret = Internal.DeleteCategory_0((__Instance + __PointerAdjustment), arg0);
             Marshal.FreeHGlobal(arg0);
             return __ret;
         }
 
-        public void RunCommandInterpreter(bool auto_handle_events, bool spawn_thread)
+        public LLDB.TypeCategory GetCategoryAtIndex(uint _0)
         {
-            Internal.RunCommandInterpreter_0(__Instance, auto_handle_events, spawn_thread);
+            var __ret = new LLDB.TypeCategory.Internal();
+            Internal.GetCategoryAtIndex_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), _0);
+            return LLDB.TypeCategory.__CreateInstance(__ret);
         }
 
-        public void RunCommandInterpreter(bool auto_handle_events, bool spawn_thread, LLDB.CommandInterpreterRunOptions options, int* num_errors, bool* quit_requested, bool* stopped_for_crash)
+        public LLDB.TypeCategory GetDefaultCategory()
         {
-            var arg2 = ReferenceEquals(options, null) ? global::System.IntPtr.Zero : options.__Instance;
-            var arg3 = num_errors;
-            var arg4 = quit_requested;
-            var arg5 = stopped_for_crash;
-            Internal.RunCommandInterpreter_1(__Instance, auto_handle_events, spawn_thread, arg2, arg3, arg4, arg5);
+            var __ret = new LLDB.TypeCategory.Internal();
+            Internal.GetDefaultCategory_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
+            return LLDB.TypeCategory.__CreateInstance(__ret);
+        }
+
+        public LLDB.TypeFormat GetFormatForType(LLDB.TypeNameSpecifier _0)
+        {
+            var arg0 = ReferenceEquals(_0, null) ? new LLDB.TypeNameSpecifier.Internal() : *(LLDB.TypeNameSpecifier.Internal*) (_0.__Instance);
+            var __ret = new LLDB.TypeFormat.Internal();
+            Internal.GetFormatForType_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0);
+            return LLDB.TypeFormat.__CreateInstance(__ret);
+        }
+
+        public LLDB.TypeSummary GetSummaryForType(LLDB.TypeNameSpecifier _0)
+        {
+            var arg0 = ReferenceEquals(_0, null) ? new LLDB.TypeNameSpecifier.Internal() : *(LLDB.TypeNameSpecifier.Internal*) (_0.__Instance);
+            var __ret = new LLDB.TypeSummary.Internal();
+            Internal.GetSummaryForType_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0);
+            return LLDB.TypeSummary.__CreateInstance(__ret);
+        }
+
+        public LLDB.TypeFilter GetFilterForType(LLDB.TypeNameSpecifier _0)
+        {
+            var arg0 = ReferenceEquals(_0, null) ? new LLDB.TypeNameSpecifier.Internal() : *(LLDB.TypeNameSpecifier.Internal*) (_0.__Instance);
+            var __ret = new LLDB.TypeFilter.Internal();
+            Internal.GetFilterForType_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0);
+            return LLDB.TypeFilter.__CreateInstance(__ret);
+        }
+
+        public LLDB.TypeSynthetic GetSyntheticForType(LLDB.TypeNameSpecifier _0)
+        {
+            var arg0 = ReferenceEquals(_0, null) ? new LLDB.TypeNameSpecifier.Internal() : *(LLDB.TypeNameSpecifier.Internal*) (_0.__Instance);
+            var __ret = new LLDB.TypeSynthetic.Internal();
+            Internal.GetSyntheticForType_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0);
+            return LLDB.TypeSynthetic.__CreateInstance(__ret);
+        }
+
+        public void RunCommandInterpreter(bool auto_handle_events, bool spawn_thread)
+        {
+            Internal.RunCommandInterpreter_0((__Instance + __PointerAdjustment), auto_handle_events, spawn_thread);
+        }
+
+        public void RunCommandInterpreter(bool auto_handle_events, bool spawn_thread, LLDB.CommandInterpreterRunOptions options, ref int num_errors, ref bool quit_requested, ref bool stopped_for_crash)
+        {
+            if (ReferenceEquals(options, null))
+                throw new global::System.ArgumentNullException("options", "Cannot be null because it is a C++ reference (&).");
+            var arg2 = options.__Instance;
+            fixed (int* __refParamPtr3 = &num_errors)
+            {
+                var arg3 = __refParamPtr3;
+                fixed (bool* __refParamPtr4 = &quit_requested)
+                {
+                    var arg4 = __refParamPtr4;
+                    fixed (bool* __refParamPtr5 = &stopped_for_crash)
+                    {
+                        var arg5 = __refParamPtr5;
+                        Internal.RunCommandInterpreter_1((__Instance + __PointerAdjustment), auto_handle_events, spawn_thread, arg2, arg3, arg4, arg5);
+                    }
+                }
+            }
+        }
+
+        public LLDB.Error RunREPL(LLDB.LanguageType language, string repl_options)
+        {
+            var arg0 = language;
+            var arg1 = Marshal.StringToHGlobalAnsi(repl_options);
+            var __ret = new LLDB.Error.Internal();
+            Internal.RunREPL_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment), arg0, arg1);
+            Marshal.FreeHGlobal(arg1);
+            return LLDB.Error.__CreateInstance(__ret);
         }
 
         public static void Initialize()
@@ -902,7 +1112,7 @@ namespace LLDB
 
         public static LLDB.Debugger Create(bool source_init_files, LLDB.LogOutputCallback log_callback, global::System.IntPtr baton)
         {
-            var arg1 = Marshal.GetFunctionPointerForDelegate(log_callback);
+            var arg1 = log_callback == null ? global::System.IntPtr.Zero : Marshal.GetFunctionPointerForDelegate(log_callback);
             var arg2 = baton;
             var __ret = new LLDB.Debugger.Internal();
             Internal.Create_2(new IntPtr(&__ret), source_init_files, arg1, arg2);
@@ -911,7 +1121,9 @@ namespace LLDB
 
         public static void Destroy(LLDB.Debugger debugger)
         {
-            var arg0 = ReferenceEquals(debugger, null) ? global::System.IntPtr.Zero : debugger.__Instance;
+            if (ReferenceEquals(debugger, null))
+                throw new global::System.ArgumentNullException("debugger", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = debugger.__Instance;
             Internal.Destroy_0(arg0);
         }
 
@@ -923,8 +1135,7 @@ namespace LLDB
         public static bool GetDefaultArchitecture(sbyte* arch_name, uint arch_name_len)
         {
             var arg0 = arch_name;
-            var arg1 = arch_name_len;
-            var __ret = Internal.GetDefaultArchitecture_0(arg0, arg1);
+            var __ret = Internal.GetDefaultArchitecture_0(arg0, arch_name_len);
             return __ret;
         }
 
@@ -992,13 +1203,40 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetAsync_0(__Instance);
+                var __ret = Internal.GetAsync_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
 
             set
             {
-                Internal.SetAsync_0(__Instance, value);
+                Internal.SetAsync_0((__Instance + __PointerAdjustment), value);
+            }
+        }
+
+        public global::System.IntPtr InputFileHandle
+        {
+            get
+            {
+                var __ret = Internal.GetInputFileHandle_0((__Instance + __PointerAdjustment));
+                return __ret;
+            }
+        }
+
+        public global::System.IntPtr OutputFileHandle
+        {
+            get
+            {
+                var __ret = Internal.GetOutputFileHandle_0((__Instance + __PointerAdjustment));
+                return __ret;
+            }
+        }
+
+        public global::System.IntPtr ErrorFileHandle
+        {
+            get
+            {
+                var __ret = Internal.GetErrorFileHandle_0((__Instance + __PointerAdjustment));
+                return __ret;
             }
         }
 
@@ -1006,7 +1244,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetNumTargets_0(__Instance);
+                var __ret = Internal.GetNumTargets_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
         }
@@ -1015,8 +1253,10 @@ namespace LLDB
         {
             set
             {
-                var arg0 = ReferenceEquals(value, null) ? global::System.IntPtr.Zero : value.__Instance;
-                Internal.SetSelectedTarget_0(__Instance, arg0);
+                if (ReferenceEquals(value, null))
+                    throw new global::System.ArgumentNullException("value", "Cannot be null because it is a C++ reference (&).");
+                var arg0 = value.__Instance;
+                Internal.SetSelectedTarget_0((__Instance + __PointerAdjustment), arg0);
             }
         }
 
@@ -1024,8 +1264,10 @@ namespace LLDB
         {
             set
             {
-                var arg0 = ReferenceEquals(value, null) ? global::System.IntPtr.Zero : value.__Instance;
-                Internal.SetSelectedPlatform_0(__Instance, arg0);
+                if (ReferenceEquals(value, null))
+                    throw new global::System.ArgumentNullException("value", "Cannot be null because it is a C++ reference (&).");
+                var arg0 = value.__Instance;
+                Internal.SetSelectedPlatform_0((__Instance + __PointerAdjustment), arg0);
             }
         }
 
@@ -1033,7 +1275,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetUseExternalEditor_0(__Instance);
+                var __ret = Internal.GetUseExternalEditor_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
         }
@@ -1042,7 +1284,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetUseColor_0(__Instance);
+                var __ret = Internal.GetUseColor_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
         }
@@ -1060,7 +1302,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetInstanceName_0(__Instance);
+                var __ret = Internal.GetInstanceName_0((__Instance + __PointerAdjustment));
                 return Marshal.PtrToStringAnsi(__ret);
             }
         }
@@ -1069,14 +1311,13 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetTerminalWidth_0(__Instance);
+                var __ret = Internal.GetTerminalWidth_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
 
             set
             {
-                var arg0 = value;
-                Internal.SetTerminalWidth_0(__Instance, arg0);
+                Internal.SetTerminalWidth_0((__Instance + __PointerAdjustment), value);
             }
         }
 
@@ -1084,7 +1325,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetID_0(__Instance);
+                var __ret = Internal.GetID_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
         }
@@ -1093,14 +1334,14 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetPrompt_0(__Instance);
+                var __ret = Internal.GetPrompt_0((__Instance + __PointerAdjustment));
                 return Marshal.PtrToStringAnsi(__ret);
             }
 
             set
             {
                 var arg0 = Marshal.StringToHGlobalAnsi(value);
-                Internal.SetPrompt_0(__Instance, arg0);
+                Internal.SetPrompt_0((__Instance + __PointerAdjustment), arg0);
                 Marshal.FreeHGlobal(arg0);
             }
         }
@@ -1109,14 +1350,14 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetScriptLanguage_0(__Instance);
+                var __ret = Internal.GetScriptLanguage_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
 
             set
             {
                 var arg0 = value;
-                Internal.SetScriptLanguage_0(__Instance, arg0);
+                Internal.SetScriptLanguage_0((__Instance + __PointerAdjustment), arg0);
             }
         }
 
@@ -1124,13 +1365,13 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetCloseInputOnEOF_0(__Instance);
+                var __ret = Internal.GetCloseInputOnEOF_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
 
             set
             {
-                Internal.SetCloseInputOnEOF_0(__Instance, value);
+                Internal.SetCloseInputOnEOF_0((__Instance + __PointerAdjustment), value);
             }
         }
 
@@ -1138,7 +1379,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetNumCategories_0(__Instance);
+                var __ret = Internal.GetNumCategories_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
         }

@@ -70,36 +70,41 @@ namespace LLDB
         }
 
         public global::System.IntPtr __Instance { get; protected set; }
+
+        protected int __PointerAdjustment;
         public static readonly System.Collections.Concurrent.ConcurrentDictionary<IntPtr, ExecutionContext> NativeToManagedMap = new System.Collections.Concurrent.ConcurrentDictionary<IntPtr, ExecutionContext>();
+        protected void*[] __OriginalVTables;
 
-        private readonly bool __ownsNativeInstance;
+        protected bool __ownsNativeInstance;
 
-        public static ExecutionContext __CreateInstance(global::System.IntPtr native)
+        public static ExecutionContext __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
         {
-            return new ExecutionContext((ExecutionContext.Internal*) native);
+            return new ExecutionContext(native.ToPointer(), skipVTables);
         }
 
-        public static ExecutionContext __CreateInstance(ExecutionContext.Internal native)
+        public static ExecutionContext __CreateInstance(ExecutionContext.Internal native, bool skipVTables = false)
         {
-            return new ExecutionContext(native);
+            return new ExecutionContext(native, skipVTables);
         }
 
-        private static ExecutionContext.Internal* __CopyValue(ExecutionContext.Internal native)
+        private static void* __CopyValue(ExecutionContext.Internal native)
         {
-            var ret = (ExecutionContext.Internal*) Marshal.AllocHGlobal(8);
-            *ret = native;
-            return ret;
+            var ret = Marshal.AllocHGlobal(8);
+            LLDB.ExecutionContext.Internal.cctor_1(ret, new global::System.IntPtr(&native));
+            return ret.ToPointer();
         }
 
-        private ExecutionContext(ExecutionContext.Internal native)
-            : this(__CopyValue(native))
+        private ExecutionContext(ExecutionContext.Internal native, bool skipVTables = false)
+            : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
         }
 
-        protected ExecutionContext(ExecutionContext.Internal* native, bool isInternalImpl = false)
+        protected ExecutionContext(void* native, bool skipVTables = false)
         {
+            if (native == null)
+                return;
             __Instance = new global::System.IntPtr(native);
         }
 
@@ -108,7 +113,18 @@ namespace LLDB
             __Instance = Marshal.AllocHGlobal(8);
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
-            Internal.ctor_0(__Instance);
+            Internal.ctor_0((__Instance + __PointerAdjustment));
+        }
+
+        public ExecutionContext(LLDB.ExecutionContext rhs)
+        {
+            __Instance = Marshal.AllocHGlobal(8);
+            __ownsNativeInstance = true;
+            NativeToManagedMap[__Instance] = this;
+            if (ReferenceEquals(rhs, null))
+                throw new global::System.ArgumentNullException("rhs", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = rhs.__Instance;
+            Internal.cctor_1((__Instance + __PointerAdjustment), arg0);
         }
 
         public ExecutionContext(LLDB.Target target)
@@ -116,8 +132,10 @@ namespace LLDB
             __Instance = Marshal.AllocHGlobal(8);
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
-            var arg0 = ReferenceEquals(target, null) ? global::System.IntPtr.Zero : target.__Instance;
-            Internal.ctor_3(__Instance, arg0);
+            if (ReferenceEquals(target, null))
+                throw new global::System.ArgumentNullException("target", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = target.__Instance;
+            Internal.ctor_3((__Instance + __PointerAdjustment), arg0);
         }
 
         public ExecutionContext(LLDB.Process process)
@@ -125,8 +143,10 @@ namespace LLDB
             __Instance = Marshal.AllocHGlobal(8);
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
-            var arg0 = ReferenceEquals(process, null) ? global::System.IntPtr.Zero : process.__Instance;
-            Internal.ctor_4(__Instance, arg0);
+            if (ReferenceEquals(process, null))
+                throw new global::System.ArgumentNullException("process", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = process.__Instance;
+            Internal.ctor_4((__Instance + __PointerAdjustment), arg0);
         }
 
         public ExecutionContext(LLDB.Thread thread)
@@ -135,7 +155,7 @@ namespace LLDB
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
             var arg0 = ReferenceEquals(thread, null) ? new LLDB.Thread.Internal() : *(LLDB.Thread.Internal*) (thread.__Instance);
-            Internal.ctor_5(__Instance, arg0);
+            Internal.ctor_5((__Instance + __PointerAdjustment), arg0);
         }
 
         public ExecutionContext(LLDB.Frame frame)
@@ -143,8 +163,10 @@ namespace LLDB
             __Instance = Marshal.AllocHGlobal(8);
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
-            var arg0 = ReferenceEquals(frame, null) ? global::System.IntPtr.Zero : frame.__Instance;
-            Internal.ctor_6(__Instance, arg0);
+            if (ReferenceEquals(frame, null))
+                throw new global::System.ArgumentNullException("frame", "Cannot be null because it is a C++ reference (&).");
+            var arg0 = frame.__Instance;
+            Internal.ctor_6((__Instance + __PointerAdjustment), arg0);
         }
 
         public void Dispose()
@@ -154,20 +176,9 @@ namespace LLDB
 
         protected virtual void Dispose(bool disposing)
         {
-            DestroyNativeInstance(false);
-        }
-
-        public virtual void DestroyNativeInstance()
-        {
-            DestroyNativeInstance(true);
-        }
-
-        private void DestroyNativeInstance(bool force)
-        {
             LLDB.ExecutionContext __dummy;
             NativeToManagedMap.TryRemove(__Instance, out __dummy);
-            if (__ownsNativeInstance || force)
-                Internal.dtor_0(__Instance);
+            Internal.dtor_0((__Instance + __PointerAdjustment));
             if (__ownsNativeInstance)
                 Marshal.FreeHGlobal(__Instance);
         }
@@ -175,28 +186,28 @@ namespace LLDB
         public LLDB.Target GetTarget()
         {
             var __ret = new LLDB.Target.Internal();
-            Internal.GetTarget_0(new IntPtr(&__ret), __Instance);
+            Internal.GetTarget_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
             return LLDB.Target.__CreateInstance(__ret);
         }
 
         public LLDB.Process GetProcess()
         {
             var __ret = new LLDB.Process.Internal();
-            Internal.GetProcess_0(new IntPtr(&__ret), __Instance);
+            Internal.GetProcess_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
             return LLDB.Process.__CreateInstance(__ret);
         }
 
         public LLDB.Thread GetThread()
         {
             var __ret = new LLDB.Thread.Internal();
-            Internal.GetThread_0(new IntPtr(&__ret), __Instance);
+            Internal.GetThread_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
             return LLDB.Thread.__CreateInstance(__ret);
         }
 
         public LLDB.Frame GetFrame()
         {
             var __ret = new LLDB.Frame.Internal();
-            Internal.GetFrame_0(new IntPtr(&__ret), __Instance);
+            Internal.GetFrame_0(new IntPtr(&__ret), (__Instance + __PointerAdjustment));
             return LLDB.Frame.__CreateInstance(__ret);
         }
     }

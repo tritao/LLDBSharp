@@ -14,7 +14,7 @@ namespace LLDB
         public partial struct Internal
         {
             [FieldOffset(4)]
-            public bool m_is_file;
+            public byte m_is_file;
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
@@ -44,6 +44,11 @@ namespace LLDB
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
+                EntryPoint="_ZN4lldb8SBStream20RedirectToFileHandleEP7__sFILEb")]
+            internal static extern void RedirectToFileHandle_0(global::System.IntPtr instance, global::System.IntPtr fh, bool transfer_fh_ownership);
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("lldb", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
                 EntryPoint="_ZN4lldb8SBStream24RedirectToFileDescriptorEib")]
             internal static extern void RedirectToFileDescriptor_0(global::System.IntPtr instance, int fd, bool transfer_fh_ownership);
 
@@ -64,36 +69,41 @@ namespace LLDB
         }
 
         public global::System.IntPtr __Instance { get; protected set; }
+
+        protected int __PointerAdjustment;
         public static readonly System.Collections.Concurrent.ConcurrentDictionary<IntPtr, Stream> NativeToManagedMap = new System.Collections.Concurrent.ConcurrentDictionary<IntPtr, Stream>();
+        protected void*[] __OriginalVTables;
 
-        private readonly bool __ownsNativeInstance;
+        protected bool __ownsNativeInstance;
 
-        public static Stream __CreateInstance(global::System.IntPtr native)
+        public static Stream __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
         {
-            return new Stream((Stream.Internal*) native);
+            return new Stream(native.ToPointer(), skipVTables);
         }
 
-        public static Stream __CreateInstance(Stream.Internal native)
+        public static Stream __CreateInstance(Stream.Internal native, bool skipVTables = false)
         {
-            return new Stream(native);
+            return new Stream(native, skipVTables);
         }
 
-        private static Stream.Internal* __CopyValue(Stream.Internal native)
+        private static void* __CopyValue(Stream.Internal native)
         {
-            var ret = (Stream.Internal*) Marshal.AllocHGlobal(8);
-            *ret = native;
-            return ret;
+            var ret = Marshal.AllocHGlobal(8);
+            *(Stream.Internal*) ret = native;
+            return ret.ToPointer();
         }
 
-        private Stream(Stream.Internal native)
-            : this(__CopyValue(native))
+        private Stream(Stream.Internal native, bool skipVTables = false)
+            : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
         }
 
-        protected Stream(Stream.Internal* native, bool isInternalImpl = false)
+        protected Stream(void* native, bool skipVTables = false)
         {
+            if (native == null)
+                return;
             __Instance = new global::System.IntPtr(native);
         }
 
@@ -102,7 +112,7 @@ namespace LLDB
             __Instance = Marshal.AllocHGlobal(8);
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
-            Internal.ctor_0(__Instance);
+            Internal.ctor_0((__Instance + __PointerAdjustment));
         }
 
         public void Dispose()
@@ -112,59 +122,54 @@ namespace LLDB
 
         protected virtual void Dispose(bool disposing)
         {
-            DestroyNativeInstance(false);
-        }
-
-        public virtual void DestroyNativeInstance()
-        {
-            DestroyNativeInstance(true);
-        }
-
-        private void DestroyNativeInstance(bool force)
-        {
             LLDB.Stream __dummy;
             NativeToManagedMap.TryRemove(__Instance, out __dummy);
-            if (__ownsNativeInstance || force)
-                Internal.dtor_0(__Instance);
+            Internal.dtor_0((__Instance + __PointerAdjustment));
             if (__ownsNativeInstance)
                 Marshal.FreeHGlobal(__Instance);
         }
 
         public bool IsValid()
         {
-            var __ret = Internal.IsValid_0(__Instance);
+            var __ret = Internal.IsValid_0((__Instance + __PointerAdjustment));
             return __ret;
         }
 
         public void Printf(string format)
         {
             var arg0 = Marshal.StringToHGlobalAnsi(format);
-            Internal.Printf_0(__Instance, arg0);
+            Internal.Printf_0((__Instance + __PointerAdjustment), arg0);
             Marshal.FreeHGlobal(arg0);
         }
 
         public void RedirectToFile(string path, bool append)
         {
             var arg0 = Marshal.StringToHGlobalAnsi(path);
-            Internal.RedirectToFile_0(__Instance, arg0, append);
+            Internal.RedirectToFile_0((__Instance + __PointerAdjustment), arg0, append);
             Marshal.FreeHGlobal(arg0);
+        }
+
+        public void RedirectToFileHandle(global::System.IntPtr fh, bool transfer_fh_ownership)
+        {
+            var arg0 = fh;
+            Internal.RedirectToFileHandle_0((__Instance + __PointerAdjustment), arg0, transfer_fh_ownership);
         }
 
         public void RedirectToFileDescriptor(int fd, bool transfer_fh_ownership)
         {
-            Internal.RedirectToFileDescriptor_0(__Instance, fd, transfer_fh_ownership);
+            Internal.RedirectToFileDescriptor_0((__Instance + __PointerAdjustment), fd, transfer_fh_ownership);
         }
 
         public void Clear()
         {
-            Internal.Clear_0(__Instance);
+            Internal.Clear_0((__Instance + __PointerAdjustment));
         }
 
         public string Data
         {
             get
             {
-                var __ret = Internal.GetData_0(__Instance);
+                var __ret = Internal.GetData_0((__Instance + __PointerAdjustment));
                 return Marshal.PtrToStringAnsi(__ret);
             }
         }
@@ -173,7 +178,7 @@ namespace LLDB
         {
             get
             {
-                var __ret = Internal.GetSize_0(__Instance);
+                var __ret = Internal.GetSize_0((__Instance + __PointerAdjustment));
                 return __ret;
             }
         }
