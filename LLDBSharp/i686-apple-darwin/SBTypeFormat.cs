@@ -99,7 +99,7 @@ namespace LLDB
             internal static extern void SetOptions_0(global::System.IntPtr instance, uint _0);
         }
 
-        protected enum Type
+        protected internal enum Type
         {
             KeepSame = 0,
             Format = 1,

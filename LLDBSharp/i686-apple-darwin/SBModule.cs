@@ -342,8 +342,10 @@ namespace LLDB
         /// <para>This function returns the file for the module on the host system</para>
         /// <para>that is running LLDB. This can differ from the path on the </para>
         /// <para>platform since we might be doing remote debugging.</para>
-        /// <para> </para>
         /// </remarks>
+        /// <returns>
+        /// <para>A const reference to the file specification object.</para>
+        /// </returns>
         public LLDB.FileSpec GetFileSpec()
         {
             var __ret = new LLDB.FileSpec.Internal();
@@ -363,8 +365,10 @@ namespace LLDB
         /// <para>platform file could be something like:</para>
         /// <para>'/tmp/lldb/platform-cache/remote.host.computer/usr/lib/liba.dylib'</para>
         /// <para>The file could also be cached in a local developer kit directory.</para>
-        /// <para> </para>
         /// </remarks>
+        /// <returns>
+        /// <para>A const reference to the file specification object.</para>
+        /// </returns>
         public LLDB.FileSpec GetPlatformFileSpec()
         {
             var __ret = new LLDB.FileSpec.Internal();
@@ -390,8 +394,10 @@ namespace LLDB
         /// <para>install path is set, every time the process is about to launch</para>
         /// <para>the target will install this module on the remote platform prior</para>
         /// <para>to launching.</para>
-        /// <para> </para>
         /// </remarks>
+        /// <returns>
+        /// <para>A file specification object.</para>
+        /// </returns>
         public LLDB.FileSpec GetRemoteInstallFileSpec()
         {
             var __ret = new LLDB.FileSpec.Internal();
@@ -414,8 +420,10 @@ namespace LLDB
         /// <para>(no directory specified, or the path is partial like &quot;usr/lib&quot;</para>
         /// <para>or &quot;./usr/lib&quot;, then the install path will be resolved using</para>
         /// <para>the platform's current working directory as the base path.</para>
-        /// <para> </para>
         /// </remarks>
+        /// <param name="file">
+        /// <para>A file specification object.</para>
+        /// </param>
         public bool SetRemoteInstallFileSpec(LLDB.FileSpec file)
         {
             if (ReferenceEquals(file, null))
@@ -540,11 +548,20 @@ namespace LLDB
         /// <summary>
         /// <para>Find functions by name.</para>
         /// </summary>
-        /// <remarks>
-        /// <para> </para>
-        /// <para> </para>
-        /// <para> </para>
-        /// </remarks>
+        /// <param name="name">
+        /// <para>The name of the function we are looking for.</para>
+        /// </param>
+        /// <param name="name_type_mask">
+        /// <para>A logical OR of one or more FunctionNameType enum bits that</para>
+        /// <para>indicate what kind of names should be used when doing the</para>
+        /// <para>lookup. Bits include fully qualified names, base names,</para>
+        /// <para>C++ methods, or ObjC selectors.</para>
+        /// <para>See FunctionNameType for more details.</para>
+        /// </param>
+        /// <returns>
+        /// <para>A lldb::SBSymbolContextList that gets filled in with all of</para>
+        /// <para>the symbol contexts for all the matches.</para>
+        /// </returns>
         public LLDB.SymbolContextList FindFunctions(string name, uint name_type_mask)
         {
             var arg0 = Marshal.StringToHGlobalAnsi(name);
@@ -557,12 +574,19 @@ namespace LLDB
         /// <summary>
         /// <para>Find global and static variables by name.</para>
         /// </summary>
-        /// <remarks>
-        /// <para> </para>
-        /// <para> </para>
-        /// <para> </para>
-        /// <para> </para>
-        /// </remarks>
+        /// <param name="target">
+        /// <para>A valid SBTarget instance representing the debuggee.</para>
+        /// </param>
+        /// <param name="name">
+        /// <para>The name of the global or static variable we are looking</para>
+        /// <para>for.</para>
+        /// </param>
+        /// <param name="max_matches">
+        /// <para>Allow the number of matches to be limited to</para>
+        /// </param>
+        /// <returns>
+        /// <para>A list of matched variables in an SBValueList.</para>
+        /// </returns>
         public LLDB.ValueList FindGlobalVariables(LLDB.Target target, string name, uint max_matches)
         {
             if (ReferenceEquals(target, null))
@@ -578,11 +602,16 @@ namespace LLDB
         /// <summary>
         /// <para>Find the first global (or static) variable by name.</para>
         /// </summary>
-        /// <remarks>
-        /// <para> </para>
-        /// <para> </para>
-        /// <para> </para>
-        /// </remarks>
+        /// <param name="target">
+        /// <para>A valid SBTarget instance representing the debuggee.</para>
+        /// </param>
+        /// <param name="name">
+        /// <para>The name of the global or static variable we are looking</para>
+        /// <para>for.</para>
+        /// </param>
+        /// <returns>
+        /// <para>An SBValue that gets filled in with the found variable (if any).</para>
+        /// </returns>
         public LLDB.Value FindFirstGlobalVariable(LLDB.Target target, string name)
         {
             if (ReferenceEquals(target, null))
@@ -621,9 +650,14 @@ namespace LLDB
         /// <para>types, but it is sometimes useful when debugging type issues to</para>
         /// <para>be able to grab a type using its type ID.</para>
         /// <para>For DWARF debug info, the type ID is the DIE offset.</para>
-        /// <para> </para>
-        /// <para> </para>
         /// </remarks>
+        /// <param name="uid">
+        /// <para>The type user ID.</para>
+        /// </param>
+        /// <returns>
+        /// <para>An SBType for the given type ID, or an empty SBType if the</para>
+        /// <para>type was not found.</para>
+        /// </returns>
         public LLDB.Type GetTypeByID(ulong uid)
         {
             var __ret = new LLDB.Type.Internal();
@@ -641,13 +675,19 @@ namespace LLDB
 
         /// <summary>
         /// <para>Get all types matching </para>
-        /// </summary>
-        /// <remarks>
         /// <para>from debug info in this</para>
         /// <para>module.</para>
-        /// <para> </para>
-        /// <para> </para>
-        /// </remarks>
+        /// </summary>
+        /// <param name="type_mask">
+        /// <para>A bitfield that consists of one or more bits logically OR'ed</para>
+        /// <para>together from the lldb::TypeClass enumeration. This allows</para>
+        /// <para>you to request only structure types, or only class, struct</para>
+        /// <para>and union types. Passing in lldb::eTypeClassAny will return</para>
+        /// <para>all types found in the debug information for this module.</para>
+        /// </param>
+        /// <returns>
+        /// <para>A list of types in this module that match</para>
+        /// </returns>
         public LLDB.TypeList GetTypes(uint type_mask)
         {
             var __ret = new LLDB.TypeList.Internal();
@@ -672,10 +712,40 @@ namespace LLDB
         /// <para>and </para>
         /// <para>that</para>
         /// <para>has enough storage to store some or all version numbers.</para>
-        /// <para> </para>
-        /// <para> </para>
-        /// <para> </para>
         /// </remarks>
+        /// <param name="versions">
+        /// <para>A pointer to an array of uint32_t types that is</para>
+        /// <para>long. If this value is NULL, the return value will indicate</para>
+        /// <para>how many version numbers are required for a subsequent call</para>
+        /// <para>to this function so that all versions can be retrieved. If</para>
+        /// <para>the value is non-NULL, then at most</para>
+        /// <para>of the</para>
+        /// <para>existing versions numbers will be filled into</para>
+        /// <para>If there is no version information available,</para>
+        /// <para>will be filled with</para>
+        /// <para>UINT32_MAX values</para>
+        /// <para>and zero will be returned.</para>
+        /// </param>
+        /// <param name="num_versions">
+        /// <para>The maximum number of entries to fill into</para>
+        /// <para>If</para>
+        /// <para>this value is zero, then the return value will indicate</para>
+        /// <para>how many version numbers there are in total so another call</para>
+        /// <para>to this function can be make with adequate storage in</para>
+        /// <para></para>
+        /// <para>to get all of the version numbers. If</para>
+        /// <para>is less than the actual number of version</para>
+        /// <para>numbers in this object file, only</para>
+        /// <para>will be</para>
+        /// <para>filled into</para>
+        /// <para>(if</para>
+        /// <para>is non-NULL).</para>
+        /// </param>
+        /// <returns>
+        /// <para>This function always returns the number of version numbers</para>
+        /// <para>that this object file has regardless of the number of</para>
+        /// <para>version numbers that were copied into</para>
+        /// </returns>
         public uint GetVersion(ref uint versions, uint num_versions)
         {
             fixed (uint* __refParamPtr0 = &versions)
@@ -694,8 +764,10 @@ namespace LLDB
         /// <para>be provided in separate file. Therefore if you debugging something</para>
         /// <para>like '/usr/lib/liba.dylib' then debug information can be located</para>
         /// <para>in folder like '/usr/lib/liba.dylib.dSYM/'.</para>
-        /// <para> </para>
         /// </remarks>
+        /// <returns>
+        /// <para>A const reference to the file specification object.</para>
+        /// </returns>
         public LLDB.FileSpec GetSymbolFileSpec()
         {
             var __ret = new LLDB.FileSpec.Internal();

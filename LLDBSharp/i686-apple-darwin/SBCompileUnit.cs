@@ -230,13 +230,20 @@ namespace LLDB
 
         /// <summary>
         /// <para>Get all types matching </para>
-        /// </summary>
-        /// <remarks>
         /// <para>from debug info in this</para>
         /// <para>compile unit.</para>
-        /// <para> </para>
-        /// <para> </para>
-        /// </remarks>
+        /// </summary>
+        /// <param name="type_mask">
+        /// <para>A bitfield that consists of one or more bits logically OR'ed</para>
+        /// <para>together from the lldb::TypeClass enumeration. This allows</para>
+        /// <para>you to request only structure types, or only class, struct</para>
+        /// <para>and union types. Passing in lldb::eTypeClassAny will return</para>
+        /// <para>all types found in the debug information for this compile</para>
+        /// <para>unit.</para>
+        /// </param>
+        /// <returns>
+        /// <para>A list of types in this compile unit that match</para>
+        /// </returns>
         public LLDB.TypeList GetTypes(uint type_mask)
         {
             var __ret = new LLDB.TypeList.Internal();

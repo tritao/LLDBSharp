@@ -751,11 +751,24 @@ namespace LLDB
         /// <para>case the array can create 'synthetic' child values for indexes </para>
         /// <para>that aren't in the array bounds using positive or negative </para>
         /// <para>indexes.</para>
-        /// <para> </para>
-        /// <para> </para>
-        /// <para> </para>
-        /// <para> </para>
         /// </remarks>
+        /// <param name="idx">
+        /// <para>The index of the child value to get</para>
+        /// </param>
+        /// <param name="use_dynamic">
+        /// <para>An enumeration that specifies whether to get dynamic values,</para>
+        /// <para>and also if the target can be run to figure out the dynamic</para>
+        /// <para>type of the child value.</para>
+        /// </param>
+        /// <param name="can_create_synthetic">
+        /// <para>If</para>
+        /// <para>then allow child values to be created by index</para>
+        /// <para>for pointers and arrays for indexes that normally wouldn't</para>
+        /// <para>be allowed.</para>
+        /// </param>
+        /// <returns>
+        /// <para>A new SBValue object that represents the child member value.</para>
+        /// </returns>
         public LLDB.Value GetChildAtIndex(uint idx, LLDB.DynamicValueType use_dynamic, bool can_create_synthetic)
         {
             var arg1 = use_dynamic;
@@ -821,10 +834,21 @@ namespace LLDB
         /// <para>This method will dereference the current SBValue, if its</para>
         /// <para>data type is a T* or T[], and extract item_count elements</para>
         /// <para>of type T from it, copying their contents in an SBData. </para>
-        /// <para> </para>
-        /// <para> </para>
-        /// <para> </para>
         /// </remarks>
+        /// <param name="item_idx">
+        /// <para>The index of the first item to retrieve. For an array</para>
+        /// <para>this is equivalent to array[item_idx], for a pointer</para>
+        /// <para>to *(pointer + item_idx). In either case, the measurement</para>
+        /// <para>unit for item_idx is the sizeof(T) rather than the byte</para>
+        /// </param>
+        /// <param name="item_count">
+        /// <para>How many items should be copied into the output. By default</para>
+        /// <para>only one item is copied, but more can be asked for.</para>
+        /// </param>
+        /// <returns>
+        /// <para>An SBData with the contents of the copied items, on success.</para>
+        /// <para>An empty SBData otherwise.</para>
+        /// </returns>
         public LLDB.Data GetPointeeData(uint item_idx, uint item_count)
         {
             var __ret = new LLDB.Data.Internal();
@@ -838,8 +862,11 @@ namespace LLDB
         /// <remarks>
         /// <para>This method will read the contents of this object in memory</para>
         /// <para>and copy them into an SBData for future use. </para>
-        /// <para> </para>
         /// </remarks>
+        /// <returns>
+        /// <para>An SBData with the contents of this SBValue, on success.</para>
+        /// <para>An empty SBData otherwise.</para>
+        /// </returns>
         public LLDB.Data GetData()
         {
             var __ret = new LLDB.Data.Internal();
@@ -877,8 +904,12 @@ namespace LLDB
         /// <para>This function returns true for class, union, structure,</para>
         /// <para>pointers, references, arrays and more. Again, it does so without</para>
         /// <para>doing any expensive type completion.</para>
-        /// <para> </para>
         /// </remarks>
+        /// <returns>
+        /// <para>Returns</para>
+        /// <para>if the SBValue might have children, or</para>
+        /// <para>otherwise.</para>
+        /// </returns>
         public bool MightHaveChildren()
         {
             var __ret = Internal.MightHaveChildren_0((__Instance + __PointerAdjustment));
@@ -984,12 +1015,29 @@ namespace LLDB
         /// </summary>
         /// <remarks>
         /// <para>Sets a watchpoint on the value.</para>
-        /// <para> </para>
-        /// <para> </para>
-        /// <para> </para>
-        /// <para> </para>
-        /// <para> </para>
         /// </remarks>
+        /// <param name="resolve_location">
+        /// <para>Resolve the location of this value once and watch its address.</para>
+        /// <para>This value must currently be set to</para>
+        /// <para>as watching all</para>
+        /// <para>locations of a variable or a variable path is not yet supported,</para>
+        /// <para>though we plan to support it in the future.</para>
+        /// </param>
+        /// <param name="read">
+        /// <para>Stop when this value is accessed.</para>
+        /// </param>
+        /// <param name="write">
+        /// <para>Stop when this value is modified</para>
+        /// </param>
+        /// <param name="error">
+        /// <para>An error object. Contains the reason if there is some failure.</para>
+        /// </param>
+        /// <returns>
+        /// <para>An SBWatchpoint object. This object might not be valid upon</para>
+        /// <para>return due to a value not being contained in memory, too</para>
+        /// <para>large, or watchpoint resources are not available or all in</para>
+        /// <para>use.</para>
+        /// </returns>
         public LLDB.Watchpoint Watch(bool resolve_location, bool read, bool write, LLDB.Error error)
         {
             if (ReferenceEquals(error, null))
@@ -1012,12 +1060,29 @@ namespace LLDB
         /// </summary>
         /// <remarks>
         /// <para>Sets a watchpoint on the value.</para>
-        /// <para> </para>
-        /// <para> </para>
-        /// <para> </para>
-        /// <para> </para>
-        /// <para> </para>
         /// </remarks>
+        /// <param name="resolve_location">
+        /// <para>Resolve the location of this value once and watch its address.</para>
+        /// <para>This value must currently be set to</para>
+        /// <para>as watching all</para>
+        /// <para>locations of a variable or a variable path is not yet supported,</para>
+        /// <para>though we plan to support it in the future.</para>
+        /// </param>
+        /// <param name="read">
+        /// <para>Stop when this value is accessed.</para>
+        /// </param>
+        /// <param name="write">
+        /// <para>Stop when this value is modified</para>
+        /// </param>
+        /// <param name="error">
+        /// <para>An error object. Contains the reason if there is some failure.</para>
+        /// </param>
+        /// <returns>
+        /// <para>An SBWatchpoint object. This object might not be valid upon</para>
+        /// <para>return due to a value not being contained in memory, too</para>
+        /// <para>large, or watchpoint resources are not available or all in</para>
+        /// <para>use.</para>
+        /// </returns>
         public LLDB.Watchpoint WatchPointee(bool resolve_location, bool read, bool write, LLDB.Error error)
         {
             if (ReferenceEquals(error, null))

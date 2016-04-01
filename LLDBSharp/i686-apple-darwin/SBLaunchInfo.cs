@@ -321,9 +321,9 @@ namespace LLDB
 
         /// <summary>
         /// <para>Set the executable file that will be used to launch the process and</para>
+        /// <para>optionally set it as the first argument in the argument vector.</para>
         /// </summary>
         /// <remarks>
-        /// <para>optionally set it as the first argument in the argument vector.</para>
         /// <para>This only needs to be specified if clients wish to carefully control</para>
         /// <para>the exact path will be used to launch a binary. If you create a</para>
         /// <para>target with a symlink, that symlink will get resolved in the target</para>
@@ -333,9 +333,15 @@ namespace LLDB
         /// <para>If this function is not called prior to launching with</para>
         /// <para>SBTarget::Launch(...), the target will use the resolved executable</para>
         /// <para>path that was used to create the target.</para>
-        /// <para> </para>
-        /// <para> </para>
         /// </remarks>
+        /// <param name="exe_file">
+        /// <para>The override path to use when launching the executable.</para>
+        /// </param>
+        /// <param name="add_as_first_arg">
+        /// <para>If true, then the path will be inserted into the argument vector</para>
+        /// <para>prior to launching. Otherwise the argument vector will be left</para>
+        /// <para>alone.</para>
+        /// </param>
         public void SetExecutableFile(LLDB.FileSpec exe_file, bool add_as_first_arg)
         {
             var arg0 = ReferenceEquals(exe_file, null) ? new LLDB.FileSpec.Internal() : *(LLDB.FileSpec.Internal*) (exe_file.__Instance);

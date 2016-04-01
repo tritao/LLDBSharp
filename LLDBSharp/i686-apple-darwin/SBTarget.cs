@@ -650,8 +650,10 @@ namespace LLDB
         /// <remarks>
         /// <para>After return, the platform object should be checked for</para>
         /// <para>validity.</para>
-        /// <para> </para>
         /// </remarks>
+        /// <returns>
+        /// <para>A platform object.</para>
+        /// </returns>
         public LLDB.Platform GetPlatform()
         {
             var __ret = new LLDB.Platform.Internal();
@@ -669,8 +671,11 @@ namespace LLDB
         /// <para>installed on the remote platform. If the main executable doesn't</para>
         /// <para>have an install location set, it will be installed in the remote</para>
         /// <para>platform's working directory.</para>
-        /// <para> </para>
         /// </remarks>
+        /// <returns>
+        /// <para>An error describing anything that went wrong during</para>
+        /// <para>installation.</para>
+        /// </returns>
         public LLDB.Error Install()
         {
             var __ret = new LLDB.Error.Internal();
@@ -691,20 +696,55 @@ namespace LLDB
         /// <para>optionally re-directed to </para>
         /// <para> </para>
         /// <para>and</para>
-        /// <para> </para>
-        /// <para> </para>
-        /// <para> </para>
-        /// <para> </para>
-        /// <para> </para>
-        /// <para> </para>
-        /// <para> </para>
-        /// <para> </para>
-        /// <para> </para>
-        /// <para> </para>
-        /// <para> </para>
-        /// <para> </para>
-        /// <para> </para>
         /// </remarks>
+        /// <param name="listener">
+        /// <para>An optional listener that will receive all process events.</para>
+        /// <para>If</para>
+        /// <para>is valid then</para>
+        /// <para>will listen to all</para>
+        /// <para>process events. If not valid, then this target's debugger</para>
+        /// <para>(SBTarget::GetDebugger()) will listen to all process events.</para>
+        /// </param>
+        /// <param name="argv">
+        /// <para>The argument array.</para>
+        /// </param>
+        /// <param name="envp">
+        /// <para>The environment array.</para>
+        /// </param>
+        /// <param name="launch_flags">
+        /// <para>Flags to modify the launch (</para>
+        /// </param>
+        /// <param name="stdin_path">
+        /// <para>The path to use when re-directing the STDIN of the new</para>
+        /// <para>process. If all stdXX_path arguments are nullptr, a pseudo</para>
+        /// <para>terminal will be used.</para>
+        /// </param>
+        /// <param name="stdout_path">
+        /// <para>The path to use when re-directing the STDOUT of the new</para>
+        /// <para>process. If all stdXX_path arguments are nullptr, a pseudo</para>
+        /// <para>terminal will be used.</para>
+        /// </param>
+        /// <param name="stderr_path">
+        /// <para>The path to use when re-directing the STDERR of the new</para>
+        /// <para>process. If all stdXX_path arguments are nullptr, a pseudo</para>
+        /// <para>terminal will be used.</para>
+        /// </param>
+        /// <param name="working_directory">
+        /// <para>The working directory to have the child process run in</para>
+        /// </param>
+        /// <param name="launch_flags">
+        /// <para>Some launch options specified by logical OR'ing</para>
+        /// <para>lldb::LaunchFlags enumeration values together.</para>
+        /// </param>
+        /// <param name="stop_at_entry">
+        /// <para>If false do not stop the inferior at the entry point.</para>
+        /// </param>
+        /// <param name="error">
+        /// <para>An error object. Contains the reason if there is some failure.</para>
+        /// </param>
+        /// <returns>
+        /// <para>A process object for the newly created process.</para>
+        /// </returns>
         public LLDB.Process Launch(LLDB.Listener listener, sbyte** argv, sbyte** envp, string stdin_path, string stdout_path, string stderr_path, string working_directory, uint launch_flags, bool stop_at_entry, out LLDB.Error error)
         {
             if (ReferenceEquals(listener, null))
@@ -747,20 +787,26 @@ namespace LLDB
         /// <summary>
         /// <para>Launch a new process with sensible defaults.</para>
         /// </summary>
-        /// <remarks>
-        /// <para> </para>
-        /// <para> </para>
-        /// <para> </para>
+        /// <param name="argv">
+        /// <para>The argument array.</para>
+        /// </param>
+        /// <param name="envp">
+        /// <para>The environment array.</para>
+        /// </param>
+        /// <param name="working_directory">
+        /// <para>The working directory to have the child process run in</para>
         /// <para>Default: listener</para>
-        /// <para>     Set to the target's debugger (SBTarget::GetDebugger())</para>
+        /// <para>Set to the target's debugger (SBTarget::GetDebugger())</para>
         /// <para>Default: launch_flags</para>
-        /// <para>     Empty launch flags</para>
+        /// <para>Empty launch flags</para>
         /// <para>Default: stdin_path</para>
         /// <para>Default: stdout_path</para>
         /// <para>Default: stderr_path</para>
-        /// <para>     A pseudo terminal will be used.</para>
-        /// <para> </para>
-        /// </remarks>
+        /// <para>A pseudo terminal will be used.</para>
+        /// </param>
+        /// <returns>
+        /// <para>A process object for the newly created process.</para>
+        /// </returns>
         public LLDB.Process LaunchSimple(sbyte** argv, sbyte** envp, string working_directory)
         {
             var arg0 = argv;
@@ -801,12 +847,23 @@ namespace LLDB
         /// <summary>
         /// <para>Attach to process with pid.</para>
         /// </summary>
-        /// <remarks>
-        /// <para> </para>
-        /// <para> </para>
-        /// <para> </para>
-        /// <para> </para>
-        /// </remarks>
+        /// <param name="listener">
+        /// <para>An optional listener that will receive all process events.</para>
+        /// <para>If</para>
+        /// <para>is valid then</para>
+        /// <para>will listen to all</para>
+        /// <para>process events. If not valid, then this target's debugger</para>
+        /// <para>(SBTarget::GetDebugger()) will listen to all process events.</para>
+        /// </param>
+        /// <param name="pid">
+        /// <para>The process ID to attach to.</para>
+        /// </param>
+        /// <param name="error">
+        /// <para>An error explaining what went wrong if attach fails.</para>
+        /// </param>
+        /// <returns>
+        /// <para>A process object for the attached process.</para>
+        /// </returns>
         public LLDB.Process AttachToProcessWithID(LLDB.Listener listener, ulong pid, LLDB.Error error)
         {
             if (ReferenceEquals(listener, null))
@@ -836,13 +893,26 @@ namespace LLDB
         /// <summary>
         /// <para>Attach to process with name.</para>
         /// </summary>
-        /// <remarks>
-        /// <para> </para>
-        /// <para> </para>
-        /// <para> </para>
-        /// <para> </para>
-        /// <para> </para>
-        /// </remarks>
+        /// <param name="listener">
+        /// <para>An optional listener that will receive all process events.</para>
+        /// <para>If</para>
+        /// <para>is valid then</para>
+        /// <para>will listen to all</para>
+        /// <para>process events. If not valid, then this target's debugger</para>
+        /// <para>(SBTarget::GetDebugger()) will listen to all process events.</para>
+        /// </param>
+        /// <param name="name">
+        /// <para>Basename of process to attach to.</para>
+        /// </param>
+        /// <param name="wait_for">
+        /// <para>If true wait for a new instance of 'name' to be launched.</para>
+        /// </param>
+        /// <param name="error">
+        /// <para>An error explaining what went wrong if attach fails.</para>
+        /// </param>
+        /// <returns>
+        /// <para>A process object for the attached process.</para>
+        /// </returns>
         public LLDB.Process AttachToProcessWithName(LLDB.Listener listener, string name, bool wait_for, LLDB.Error error)
         {
             if (ReferenceEquals(listener, null))
@@ -861,13 +931,26 @@ namespace LLDB
         /// <summary>
         /// <para>Connect to a remote debug server with url.</para>
         /// </summary>
-        /// <remarks>
-        /// <para> </para>
-        /// <para> </para>
-        /// <para> </para>
-        /// <para> </para>
-        /// <para> </para>
-        /// </remarks>
+        /// <param name="listener">
+        /// <para>An optional listener that will receive all process events.</para>
+        /// <para>If</para>
+        /// <para>is valid then</para>
+        /// <para>will listen to all</para>
+        /// <para>process events. If not valid, then this target's debugger</para>
+        /// <para>(SBTarget::GetDebugger()) will listen to all process events.</para>
+        /// </param>
+        /// <param name="url">
+        /// <para>The url to connect to, e.g., 'connect://localhost:12345'.</para>
+        /// </param>
+        /// <param name="plugin_name">
+        /// <para>The plugin name to be used; can be nullptr.</para>
+        /// </param>
+        /// <param name="error">
+        /// <para>An error explaining what went wrong if the connect fails.</para>
+        /// </param>
+        /// <returns>
+        /// <para>A process object for the connected process.</para>
+        /// </returns>
         public LLDB.Process ConnectRemote(LLDB.Listener listener, string url, string plugin_name, LLDB.Error error)
         {
             if (ReferenceEquals(listener, null))
@@ -973,11 +1056,17 @@ namespace LLDB
         /// <summary>
         /// <para>Set the base load address for a module section.</para>
         /// </summary>
-        /// <remarks>
-        /// <para> </para>
-        /// <para> </para>
-        /// <para> </para>
-        /// </remarks>
+        /// <param name="section">
+        /// <para>The section whose base load address will be set within this</para>
+        /// <para>target.</para>
+        /// </param>
+        /// <param name="section_base_addr">
+        /// <para>The base address for the section.</para>
+        /// </param>
+        /// <returns>
+        /// <para>An error to indicate success, fail, and any reason for</para>
+        /// <para>failure.</para>
+        /// </returns>
         public LLDB.Error SetSectionLoadAddress(LLDB.Section section, ulong section_base_addr)
         {
             var arg0 = ReferenceEquals(section, null) ? new LLDB.Section.Internal() : *(LLDB.Section.Internal*) (section.__Instance);
@@ -989,10 +1078,14 @@ namespace LLDB
         /// <summary>
         /// <para>Clear the base load address for a module section.</para>
         /// </summary>
-        /// <remarks>
-        /// <para> </para>
-        /// <para> </para>
-        /// </remarks>
+        /// <param name="section">
+        /// <para>The section whose base load address will be cleared within</para>
+        /// <para>this target.</para>
+        /// </param>
+        /// <returns>
+        /// <para>An error to indicate success, fail, and any reason for</para>
+        /// <para>failure.</para>
+        /// </returns>
         public LLDB.Error ClearSectionLoadAddress(LLDB.Section section)
         {
             var arg0 = ReferenceEquals(section, null) ? new LLDB.Section.Internal() : *(LLDB.Section.Internal*) (section.__Instance);
@@ -1003,17 +1096,25 @@ namespace LLDB
 
         /// <summary>
         /// <para>Slide all file addresses for all module sections so that </para>
+        /// <para>appears to loaded at these slide addresses.</para>
         /// </summary>
         /// <remarks>
-        /// <para>appears to loaded at these slide addresses.</para>
         /// <para>When you need all sections within a module to be loaded at a </para>
         /// <para>rigid slide from the addresses found in the module object file,</para>
         /// <para>this function will allow you to easily and quickly slide all</para>
         /// <para>module sections.</para>
-        /// <para> </para>
-        /// <para> </para>
-        /// <para> </para>
         /// </remarks>
+        /// <param name="module">
+        /// <para>The module to load.</para>
+        /// </param>
+        /// <param name="sections_offset">
+        /// <para>An offset that will be applied to all section file addresses</para>
+        /// <para>(the virtual addresses found in the object file itself).</para>
+        /// </param>
+        /// <returns>
+        /// <para>An error to indicate success, fail, and any reason for</para>
+        /// <para>failure.</para>
+        /// </returns>
         public LLDB.Error SetModuleLoadAddress(LLDB.Module module, long sections_offset)
         {
             var arg0 = ReferenceEquals(module, null) ? new LLDB.Module.Internal() : *(LLDB.Module.Internal*) (module.__Instance);
@@ -1025,10 +1126,13 @@ namespace LLDB
         /// <summary>
         /// <para>Clear the section base load addresses for all sections in a module.</para>
         /// </summary>
-        /// <remarks>
-        /// <para> </para>
-        /// <para> </para>
-        /// </remarks>
+        /// <param name="module">
+        /// <para>The module to unload.</para>
+        /// </param>
+        /// <returns>
+        /// <para>An error to indicate success, fail, and any reason for</para>
+        /// <para>failure.</para>
+        /// </returns>
         public LLDB.Error ClearModuleLoadAddress(LLDB.Module module)
         {
             var arg0 = ReferenceEquals(module, null) ? new LLDB.Module.Internal() : *(LLDB.Module.Internal*) (module.__Instance);
@@ -1040,11 +1144,20 @@ namespace LLDB
         /// <summary>
         /// <para>Find functions by name.</para>
         /// </summary>
-        /// <remarks>
-        /// <para> </para>
-        /// <para> </para>
-        /// <para> </para>
-        /// </remarks>
+        /// <param name="name">
+        /// <para>The name of the function we are looking for.</para>
+        /// </param>
+        /// <param name="name_type_mask">
+        /// <para>A logical OR of one or more FunctionNameType enum bits that</para>
+        /// <para>indicate what kind of names should be used when doing the</para>
+        /// <para>lookup. Bits include fully qualified names, base names,</para>
+        /// <para>C++ methods, or ObjC selectors.</para>
+        /// <para>See FunctionNameType for more details.</para>
+        /// </param>
+        /// <returns>
+        /// <para>A lldb::SBSymbolContextList that gets filled in with all of</para>
+        /// <para>the symbol contexts for all the matches.</para>
+        /// </returns>
         public LLDB.SymbolContextList FindFunctions(string name, uint name_type_mask)
         {
             var arg0 = Marshal.StringToHGlobalAnsi(name);
@@ -1057,11 +1170,16 @@ namespace LLDB
         /// <summary>
         /// <para>Find global and static variables by name.</para>
         /// </summary>
-        /// <remarks>
-        /// <para> </para>
-        /// <para> </para>
-        /// <para> </para>
-        /// </remarks>
+        /// <param name="name">
+        /// <para>The name of the global or static variable we are looking</para>
+        /// <para>for.</para>
+        /// </param>
+        /// <param name="max_matches">
+        /// <para>Allow the number of matches to be limited to</para>
+        /// </param>
+        /// <returns>
+        /// <para>A list of matched variables in an SBValueList.</para>
+        /// </returns>
         public LLDB.ValueList FindGlobalVariables(string name, uint max_matches)
         {
             var arg0 = Marshal.StringToHGlobalAnsi(name);
@@ -1074,10 +1192,13 @@ namespace LLDB
         /// <summary>
         /// <para>Find the first global (or static) variable by name.</para>
         /// </summary>
-        /// <remarks>
-        /// <para> </para>
-        /// <para> </para>
-        /// </remarks>
+        /// <param name="name">
+        /// <para>The name of the global or static variable we are looking</para>
+        /// <para>for.</para>
+        /// </param>
+        /// <returns>
+        /// <para>An SBValue that gets filled in with the found variable (if any).</para>
+        /// </returns>
         public LLDB.Value FindFirstGlobalVariable(string name)
         {
             var arg0 = Marshal.StringToHGlobalAnsi(name);
@@ -1090,11 +1211,18 @@ namespace LLDB
         /// <summary>
         /// <para>Find global and static variables by pattern.</para>
         /// </summary>
-        /// <remarks>
-        /// <para> </para>
-        /// <para> </para>
-        /// <para> </para>
-        /// </remarks>
+        /// <param name="name">
+        /// <para>The pattern to search for global or static variables</para>
+        /// </param>
+        /// <param name="max_matches">
+        /// <para>Allow the number of matches to be limited to</para>
+        /// </param>
+        /// <param name="matchtype">
+        /// <para>The match type to use.</para>
+        /// </param>
+        /// <returns>
+        /// <para>A list of matched variables in an SBValueList.</para>
+        /// </returns>
         public LLDB.ValueList FindGlobalVariables(string name, uint max_matches, LLDB.MatchType matchtype)
         {
             var arg0 = Marshal.StringToHGlobalAnsi(name);
@@ -1108,11 +1236,18 @@ namespace LLDB
         /// <summary>
         /// <para>Find global functions by their name with pattern matching.</para>
         /// </summary>
-        /// <remarks>
-        /// <para> </para>
-        /// <para> </para>
-        /// <para> </para>
-        /// </remarks>
+        /// <param name="name">
+        /// <para>The pattern to search for global or static variables</para>
+        /// </param>
+        /// <param name="max_matches">
+        /// <para>Allow the number of matches to be limited to</para>
+        /// </param>
+        /// <param name="matchtype">
+        /// <para>The match type to use.</para>
+        /// </param>
+        /// <returns>
+        /// <para>A list of matched variables in an SBValueList.</para>
+        /// </returns>
         public LLDB.SymbolContextList FindGlobalFunctions(string name, uint max_matches, LLDB.MatchType matchtype)
         {
             var arg0 = Marshal.StringToHGlobalAnsi(name);
@@ -1131,10 +1266,9 @@ namespace LLDB
         /// <summary>
         /// <para>Resolve a current file address into a section offset address.</para>
         /// </summary>
-        /// <remarks>
-        /// <para> </para>
-        /// <para> </para>
-        /// </remarks>
+        /// <returns>
+        /// <para>An SBAddress which will be valid if...</para>
+        /// </returns>
         public LLDB.Address ResolveFileAddress(ulong file_addr)
         {
             var __ret = new LLDB.Address.Internal();
@@ -1145,10 +1279,18 @@ namespace LLDB
         /// <summary>
         /// <para>Resolve a current load address into a section offset address.</para>
         /// </summary>
-        /// <remarks>
-        /// <para> </para>
-        /// <para> </para>
-        /// </remarks>
+        /// <param name="vm_addr">
+        /// <para>A virtual address from the current process state that is to</para>
+        /// <para>be translated into a section offset address.</para>
+        /// </param>
+        /// <returns>
+        /// <para>An SBAddress which will be valid if</para>
+        /// <para>was</para>
+        /// <para>successfully resolved into a section offset address, or an</para>
+        /// <para>invalid SBAddress if</para>
+        /// <para>doesn't resolve to a section</para>
+        /// <para>in a module.</para>
+        /// </returns>
         public LLDB.Address ResolveLoadAddress(ulong vm_addr)
         {
             var __ret = new LLDB.Address.Internal();
@@ -1158,13 +1300,28 @@ namespace LLDB
 
         /// <summary>
         /// <para>Resolve a current load address into a section offset address</para>
-        /// </summary>
-        /// <remarks>
         /// <para>using the process stop ID to identify a time in the past.</para>
-        /// <para> </para>
-        /// <para> </para>
-        /// <para> </para>
-        /// </remarks>
+        /// </summary>
+        /// <param name="stop_id">
+        /// <para>Each time a process stops, the process stop ID integer gets</para>
+        /// <para>incremented. These stop IDs are used to identify past times</para>
+        /// <para>and can be used in history objects as a cheap way to store</para>
+        /// <para>the time at which the sample was taken. Specifying</para>
+        /// <para>UINT32_MAX will always resolve the address using the</para>
+        /// <para>currently loaded sections.</para>
+        /// </param>
+        /// <param name="vm_addr">
+        /// <para>A virtual address from the current process state that is to</para>
+        /// <para>be translated into a section offset address.</para>
+        /// </param>
+        /// <returns>
+        /// <para>An SBAddress which will be valid if</para>
+        /// <para>was</para>
+        /// <para>successfully resolved into a section offset address, or an</para>
+        /// <para>invalid SBAddress if</para>
+        /// <para>doesn't resolve to a section</para>
+        /// <para>in a module.</para>
+        /// </returns>
         public LLDB.Address ResolvePastLoadAddress(uint stop_id, ulong vm_addr)
         {
             var __ret = new LLDB.Address.Internal();
@@ -1184,17 +1341,26 @@ namespace LLDB
 
         /// <summary>
         /// <para>Read target memory. If a target process is running then memory  </para>
-        /// </summary>
-        /// <remarks>
         /// <para>is read from here. Otherwise the memory is read from the object</para>
         /// <para>files. For a target whose bytes are sized as a multiple of host</para>
         /// <para>bytes, the data read back will preserve the target's byte order.</para>
-        /// <para> </para>
-        /// <para> </para>
-        /// <para> </para>
-        /// <para> </para>
-        /// <para> </para>
-        /// </remarks>
+        /// </summary>
+        /// <param name="addr">
+        /// <para>A target address to read from.</para>
+        /// </param>
+        /// <param name="buf">
+        /// <para>The buffer to read memory into.</para>
+        /// </param>
+        /// <param name="size">
+        /// <para>The maximum number of host bytes to read in the buffer passed</para>
+        /// <para>into this call</para>
+        /// </param>
+        /// <param name="error">
+        /// <para>Error information is written here if the memory read fails.</para>
+        /// </param>
+        /// <returns>
+        /// <para>The amount of data read in host bytes.</para>
+        /// </returns>
         public uint ReadMemory(LLDB.Address addr, global::System.IntPtr buf, uint size, LLDB.Error error)
         {
             var arg0 = ReferenceEquals(addr, null) ? new LLDB.Address.Internal() : *(LLDB.Address.Internal*) (addr.__Instance);

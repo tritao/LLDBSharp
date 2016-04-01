@@ -403,10 +403,8 @@ namespace LLDB
 
         /// <summary>
         /// <para>The version that doesn't supply a 'use_dynamic' value will use the</para>
-        /// </summary>
-        /// <remarks>
         /// <para>target's default.</para>
-        /// </remarks>
+        /// </summary>
         public LLDB.Value EvaluateExpression(string expr)
         {
             var arg0 = Marshal.StringToHGlobalAnsi(expr);
@@ -450,8 +448,6 @@ namespace LLDB
 
         /// <summary>
         /// <para>Gets the lexical block that defines the stack frame. Another way to think</para>
-        /// </summary>
-        /// <remarks>
         /// <para>of this is it will return the block that contains all of the variables</para>
         /// <para>for a stack frame. Inlined functions are represented as SBBlock objects</para>
         /// <para>that have inlined function information: the name of the inlined function,</para>
@@ -463,7 +459,7 @@ namespace LLDB
         /// <para>in one of those inlined functions, this method will return the inlined</para>
         /// <para>block that defines this frame. If the PC isn't currently in an inlined</para>
         /// <para>function, the lexical block that defines the function is returned.</para>
-        /// </remarks>
+        /// </summary>
         public LLDB.Block GetFrameBlock()
         {
             var __ret = new LLDB.Block.Internal();
@@ -534,10 +530,8 @@ namespace LLDB
 
         /// <summary>
         /// <para>The version that doesn't supply a 'use_dynamic' value will use the</para>
-        /// </summary>
-        /// <remarks>
         /// <para>target's default.</para>
-        /// </remarks>
+        /// </summary>
         public LLDB.ValueList GetVariables(bool arguments, bool locals, bool statics, bool in_scope_only)
         {
             var __ret = new LLDB.ValueList.Internal();
@@ -581,10 +575,8 @@ namespace LLDB
 
         /// <summary>
         /// <para>The version that doesn't supply a 'use_dynamic' value will use the</para>
-        /// </summary>
-        /// <remarks>
         /// <para>target's default.</para>
-        /// </remarks>
+        /// </summary>
         public LLDB.Value FindVariable(string var_name)
         {
             var arg0 = Marshal.StringToHGlobalAnsi(var_name);
@@ -616,10 +608,8 @@ namespace LLDB
 
         /// <summary>
         /// <para>The version that doesn't supply a 'use_dynamic' value will use the</para>
-        /// </summary>
-        /// <remarks>
         /// <para>target's default.</para>
-        /// </remarks>
+        /// </summary>
         public LLDB.Value GetValueForVariablePath(string var_path)
         {
             var arg0 = Marshal.StringToHGlobalAnsi(var_path);
@@ -631,9 +621,9 @@ namespace LLDB
 
         /// <summary>
         /// <para>Find variables, register sets, registers, or persistent variables using</para>
+        /// <para>the frame as the scope.</para>
         /// </summary>
         /// <remarks>
-        /// <para>the frame as the scope.</para>
         /// <para>NB. This function does not look up ivars in the function object pointer.</para>
         /// <para>To do that use GetValueForVariablePath.</para>
         /// <para>The version that doesn't supply a 'use_dynamic' value will use the</para>

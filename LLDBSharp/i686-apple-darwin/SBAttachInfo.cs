@@ -262,9 +262,16 @@ namespace LLDB
         /// <remarks>
         /// <para>This function implies that a future call to SBTarget::Attach(...)</para>
         /// <para>will be synchronous.</para>
-        /// <para> </para>
-        /// <para> </para>
         /// </remarks>
+        /// <param name="path">
+        /// <para>A full or partial name for the process to attach to.</para>
+        /// </param>
+        /// <param name="wait_for">
+        /// <para>If</para>
+        /// <para>attach to an existing process whose name matches.</para>
+        /// <para>If</para>
+        /// <para>then wait for the next process whose name matches.</para>
+        /// </param>
         public AttachInfo(string path, bool wait_for)
         {
             __Instance = Marshal.AllocHGlobal(8);
@@ -282,10 +289,29 @@ namespace LLDB
         /// <para>Future calls to SBTarget::Attach(...) will be synchronous or</para>
         /// <para>asynchronous depending on the </para>
         /// <para>argument.</para>
-        /// <para> </para>
-        /// <para> </para>
-        /// <para> </para>
         /// </remarks>
+        /// <param name="path">
+        /// <para>A full or partial name for the process to attach to.</para>
+        /// </param>
+        /// <param name="wait_for">
+        /// <para>If</para>
+        /// <para>attach to an existing process whose name matches.</para>
+        /// <para>If</para>
+        /// <para>then wait for the next process whose name matches.</para>
+        /// </param>
+        /// <param name="async">
+        /// <para>If</para>
+        /// <para>then the SBTarget::Attach(...) call will be a</para>
+        /// <para>synchronous call with no way to cancel the attach in</para>
+        /// <para>progress.</para>
+        /// <para>If</para>
+        /// <para>then the SBTarget::Attach(...) function will</para>
+        /// <para>return immediately and clients are expected to wait for a</para>
+        /// <para>process eStateStopped event if a suitable process is</para>
+        /// <para>eventually found. If the client wants to cancel the event,</para>
+        /// <para>SBProcess::Stop() can be called and an eStateExited process</para>
+        /// <para>event will be delivered.</para>
+        /// </param>
         public AttachInfo(string path, bool wait_for, bool async)
         {
             __Instance = Marshal.AllocHGlobal(8);
@@ -342,9 +368,26 @@ namespace LLDB
         /// <para>Future calls to SBTarget::Attach(...) will be synchronous or</para>
         /// <para>asynchronous depending on the </para>
         /// <para>argument.</para>
-        /// <para> </para>
-        /// <para> </para>
         /// </remarks>
+        /// <param name="wait_for">
+        /// <para>If</para>
+        /// <para>attach to an existing process whose name matches.</para>
+        /// <para>If</para>
+        /// <para>then wait for the next process whose name matches.</para>
+        /// </param>
+        /// <param name="async">
+        /// <para>If</para>
+        /// <para>then the SBTarget::Attach(...) call will be a</para>
+        /// <para>synchronous call with no way to cancel the attach in</para>
+        /// <para>progress.</para>
+        /// <para>If</para>
+        /// <para>then the SBTarget::Attach(...) function will</para>
+        /// <para>return immediately and clients are expected to wait for a</para>
+        /// <para>process eStateStopped event if a suitable process is</para>
+        /// <para>eventually found. If the client wants to cancel the event,</para>
+        /// <para>SBProcess::Stop() can be called and an eStateExited process</para>
+        /// <para>event will be delivered.</para>
+        /// </param>
         public void SetWaitForLaunch(bool b, bool async)
         {
             Internal.SetWaitForLaunch_1((__Instance + __PointerAdjustment), b, async);

@@ -549,8 +549,6 @@ namespace LLDB
 
         /// <summary>
         /// <para>LLDB currently supports process centric debugging which means when any</para>
-        /// </summary>
-        /// <remarks>
         /// <para>thread in a process stops, all other threads are stopped. The Suspend()</para>
         /// <para>call here tells our process to suspend a thread and not let it run when</para>
         /// <para>the other threads in a process are allowed to run. So when </para>
@@ -558,6 +556,8 @@ namespace LLDB
         /// <para>be allowed to run. If any of the SBThread functions for stepping are </para>
         /// <para>called (StepOver, StepInto, StepOut, StepInstruction, RunToAddress), the</para>
         /// <para>thread will not be allowed to run and these functions will simply return.</para>
+        /// </summary>
+        /// <remarks>
         /// <para>Eventually we plan to add support for thread centric debugging where</para>
         /// <para>each thread is controlled individually and each thread would broadcast</para>
         /// <para>its state, but we haven't implemented this yet.</para>

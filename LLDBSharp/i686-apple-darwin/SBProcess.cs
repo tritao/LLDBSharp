@@ -531,11 +531,9 @@ namespace LLDB
 
         /// <summary>
         /// <para>Remote connection related functions. These will fail if the</para>
-        /// </summary>
-        /// <remarks>
         /// <para>process is not in eStateConnected. They are intended for use</para>
         /// <para>when connecting to an externally managed debugserver instance.</para>
-        /// </remarks>
+        /// </summary>
         public bool RemoteAttachToProcessWithID(ulong pid, LLDB.Error error)
         {
             if (ReferenceEquals(error, null))
@@ -696,12 +694,14 @@ namespace LLDB
 
         /// <summary>
         /// <para>Note that it wasn't fully implemented and tracks only the stop</para>
-        /// </summary>
-        /// <remarks>
         /// <para>event for the last natural stop ID.</para>
-        /// <para> </para>
-        /// <para> </para>
-        /// </remarks>
+        /// </summary>
+        /// <param name="stop_id">
+        /// <para>The ID of the stop event to return.</para>
+        /// </param>
+        /// <returns>
+        /// <para>The stop event corresponding to stop ID.</para>
+        /// </returns>
         public LLDB.Event GetStopEventForStopID(uint stop_id)
         {
             var __ret = new LLDB.Event.Internal();
@@ -785,11 +785,20 @@ namespace LLDB
         /// <summary>
         /// <para>Load a shared library into this process.</para>
         /// </summary>
-        /// <remarks>
-        /// <para> </para>
-        /// <para> </para>
-        /// <para> </para>
-        /// </remarks>
+        /// <param name="remote_image_spec">
+        /// <para>The path for the shared library on the target what you want</para>
+        /// <para>to load.</para>
+        /// </param>
+        /// <param name="error">
+        /// <para>An error object that gets filled in with any errors that</para>
+        /// <para>might occur when trying to load the shared library.</para>
+        /// </param>
+        /// <returns>
+        /// <para>A token that represents the shared library that can be</para>
+        /// <para>later used to unload the shared library. A value of</para>
+        /// <para>LLDB_INVALID_IMAGE_TOKEN will be returned if the shared</para>
+        /// <para>library can't be opened.</para>
+        /// </returns>
         public uint LoadImage(LLDB.FileSpec remote_image_spec, LLDB.Error error)
         {
             if (ReferenceEquals(remote_image_spec, null))
@@ -805,12 +814,29 @@ namespace LLDB
         /// <summary>
         /// <para>Load a shared library into this process.</para>
         /// </summary>
-        /// <remarks>
-        /// <para> </para>
-        /// <para> </para>
-        /// <para> </para>
-        /// <para> </para>
-        /// </remarks>
+        /// <param name="local_image_spec">
+        /// <para>The file spec that points to the shared library that you</para>
+        /// <para>want to load if the library is located on the host. The</para>
+        /// <para>library will be copied over to the location specified by</para>
+        /// <para>remote_image_spec or into the current working directory with</para>
+        /// <para>the same filename if the remote_image_spec isn't specified.</para>
+        /// </param>
+        /// <param name="remote_image_spec">
+        /// <para>If local_image_spec is specified then the location where the</para>
+        /// <para>library should be copied over from the host. If</para>
+        /// <para>local_image_spec isn't specified, then the path for the</para>
+        /// <para>shared library on the target what you want to load.</para>
+        /// </param>
+        /// <param name="error">
+        /// <para>An error object that gets filled in with any errors that</para>
+        /// <para>might occur when trying to load the shared library.</para>
+        /// </param>
+        /// <returns>
+        /// <para>A token that represents the shared library that can be</para>
+        /// <para>later used to unload the shared library. A value of</para>
+        /// <para>LLDB_INVALID_IMAGE_TOKEN will be returned if the shared</para>
+        /// <para>library can't be opened.</para>
+        /// </returns>
         public uint LoadImage(LLDB.FileSpec local_image_spec, LLDB.FileSpec remote_image_spec, LLDB.Error error)
         {
             if (ReferenceEquals(local_image_spec, null))
@@ -844,12 +870,17 @@ namespace LLDB
 
         /// <summary>
         /// <para>Return the name of one of the thread-origin extended backtrace </para>
-        /// </summary>
-        /// <remarks>
         /// <para>methods.</para>
-        /// <para> </para>
-        /// <para> </para>
-        /// </remarks>
+        /// </summary>
+        /// <param name="idx">
+        /// <para>The index of the name to return.  They will be returned in</para>
+        /// <para>the order that the user will most likely want to see them.</para>
+        /// <para>e.g. if the type at index 0 is not available for a thread,</para>
+        /// <para>see if the type at index 1 provides an extended backtrace.</para>
+        /// </param>
+        /// <returns>
+        /// <para>The name at that index.</para>
+        /// </returns>
         public string GetExtendedBacktraceTypeAtIndex(uint idx)
         {
             var __ret = Internal.GetExtendedBacktraceTypeAtIndex_0((__Instance + __PointerAdjustment), idx);

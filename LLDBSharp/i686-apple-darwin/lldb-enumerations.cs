@@ -251,11 +251,11 @@ namespace LLDB
 
     /// <summary>
     /// <para>These mask bits allow a common interface for queries that can</para>
-    /// </summary>
-    /// <remarks>
     /// <para>limit the amount of information that gets parsed to only the</para>
     /// <para>information that is requested. These bits also can indicate what</para>
     /// <para>actually did get resolved during query function calls.</para>
+    /// </summary>
+    /// <remarks>
     /// <para>Each definition corresponds to a one of the member variables</para>
     /// <para>in this class, and requests that that item be resolved, or</para>
     /// <para>indicates that the member did get resolved.</para>

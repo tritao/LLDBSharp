@@ -277,9 +277,13 @@ namespace LLDB
         /// <summary>
         /// <para>Get the inlined block that contains this block.</para>
         /// </summary>
-        /// <remarks>
-        /// <para> </para>
-        /// </remarks>
+        /// <returns>
+        /// <para>If this block is inlined, it will return this block, else</para>
+        /// <para>parent blocks will be searched to see if any contain this</para>
+        /// <para>block and are themselves inlined. An invalid SBBlock will</para>
+        /// <para>be returned if this block nor any parent blocks are inlined</para>
+        /// <para>function blocks.</para>
+        /// </returns>
         public LLDB.Block GetContainingInlinedBlock()
         {
             var __ret = new LLDB.Block.Internal();

@@ -684,16 +684,22 @@ namespace LLDB
 
         /// <summary>
         /// <para>Get the string that needs to be written to the debugger stdin file</para>
+        /// <para>handle when a control character is typed.</para>
         /// </summary>
         /// <remarks>
-        /// <para>handle when a control character is typed.</para>
         /// <para>Some GUI programs will intercept &quot;control + char&quot; sequences and want</para>
         /// <para>to have them do what normally would happen when using a real</para>
         /// <para>terminal, so this function allows GUI programs to emulate this</para>
         /// <para>functionality.</para>
-        /// <para> </para>
-        /// <para> </para>
         /// </remarks>
+        /// <param name="ch">
+        /// <para>The character that was typed along with the control key</para>
+        /// </param>
+        /// <returns>
+        /// <para>The string that should be written into the file handle that is</para>
+        /// <para>feeding the input stream for the debugger, or nullptr if there is</para>
+        /// <para>no string for this control key.</para>
+        /// </returns>
         public string GetIOHandlerControlSequence(sbyte ch)
         {
             var arg0 = ch;
@@ -703,10 +709,8 @@ namespace LLDB
 
         /// <summary>
         /// <para>Resolve the command just as HandleCommand would, expanding abbreviations</para>
-        /// </summary>
-        /// <remarks>
         /// <para>and aliases.  If successful, result-&gt;GetOutput has the full expansion.</para>
-        /// </remarks>
+        /// </summary>
         public void ResolveCommand(string command_line, LLDB.CommandReturnObject result)
         {
             var arg0 = Marshal.StringToHGlobalAnsi(command_line);

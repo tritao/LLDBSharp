@@ -202,8 +202,10 @@ namespace LLDB
         /// <para>This function returns the file for the module on the host system</para>
         /// <para>that is running LLDB. This can differ from the path on the </para>
         /// <para>platform since we might be doing remote debugging.</para>
-        /// <para> </para>
         /// </remarks>
+        /// <returns>
+        /// <para>A const reference to the file specification object.</para>
+        /// </returns>
         public LLDB.FileSpec GetFileSpec()
         {
             var __ret = new LLDB.FileSpec.Internal();
@@ -223,8 +225,10 @@ namespace LLDB
         /// <para>platform file could be something like:</para>
         /// <para>'/tmp/lldb/platform-cache/remote.host.computer/usr/lib/liba.dylib'</para>
         /// <para>The file could also be cached in a local developer kit directory.</para>
-        /// <para> </para>
         /// </remarks>
+        /// <returns>
+        /// <para>A const reference to the file specification object.</para>
+        /// </returns>
         public LLDB.FileSpec GetPlatformFileSpec()
         {
             var __ret = new LLDB.FileSpec.Internal();
