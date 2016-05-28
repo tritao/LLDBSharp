@@ -48,7 +48,7 @@ namespace LLDBSharp
 			unsafe {
 				fixed (IntPtr* ptr = stringArgsArr) {
 					process = target.Launch (debugger.GetListener (), (sbyte**)ptr, null, null, null, null, currentDir,
-						0, false, error);
+						0, false, out error);
 				}
 			}
 

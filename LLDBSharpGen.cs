@@ -9,13 +9,12 @@ namespace Mono
 {
     class LLDBSharpGen : ILibrary
     {
-        const string LLDBPath = @"D:\llvm-new\tools\lldb\include";
+        const string LLDBPath = @"G:\llvm-new\tools\lldb\include";
 
         public void Setup(Driver driver)
         {
             var options = driver.Options;
             options.LibraryName = "lldb";
-            options.OutputDir = "LLDBSharp";
             options.Verbose = false;
             options.GenerateLibraryNamespace = false;
 
@@ -24,18 +23,22 @@ namespace Mono
             else if (Platform.IsWindows)
                 options.TargetTriple = "i686-pc-windows-msvc";
 
+            var outputDir = GetSourceDirectory("LLDBSharp");
+            options.OutputDir = Path.GetFullPath(Path.Combine(outputDir, options.TargetTriple));
+
             options.addIncludeDirs(Path.GetFullPath(LLDBPath));
             options.Headers.Add("lldb/lldb-defines.h");
             options.Headers.Add("lldb/API/LLDB.h");
 
             options.GenerateProperties = true;
-            options.CompileCode = true;
+            options.CompileCode = false;
         }
 
         public void SetupPasses(Driver driver)
         {
             driver.TranslationUnitPasses.RemovePrefix("SB");
             driver.AddTranslationUnitPass(new FixEnumsName());
+            driver.AddTranslationUnitPass(new FixParameterUsageFromComments());
         }
 
         public void Preprocess(Driver driver, ASTContext ctx)
@@ -43,8 +46,8 @@ namespace Mono
             ctx.IgnoreHeadersWithName("lldb/lldb-forward.h");
             ctx.IgnoreHeadersWithName("lldb/API/SBDefines.h");
 
-            ctx.SetMethodParameterUsage("lldb::SBTarget", "LaunchSimple", 1, ParameterUsage.Out);
-            ctx.SetMethodParameterUsage("lldb::SBTarget", "Launch", 9, ParameterUsage.Out);
+            ctx.SetMethodParameterUsage("lldb::SBTarget", "Launch", 2, 2, ParameterUsage.Out);
+            ctx.SetMethodParameterUsage("lldb::SBTarget", "Launch", 10, 10, ParameterUsage.Out);
 
             ctx.RemoveEnumItemsPrefix("lldb::StateType", "eState");
             ctx.RemoveEnumItemsPrefix("lldb::LaunchFlags", "eLaunchFlag");
@@ -80,6 +83,25 @@ namespace Mono
 
         public void Postprocess(Driver driver, ASTContext ctx)
         {
+            ctx.SetMethodParameterUsage("LLDB::Target", "ReadMemory", 4, 2, ParameterUsage.In);
+        }
+
+        static string GetSourceDirectory(string dir)
+        {
+            var directory = new DirectoryInfo(Directory.GetCurrentDirectory());
+
+            while (directory != null)
+            {
+                var path = Path.Combine(directory.FullName, dir);
+
+                if (Directory.Exists(path) &&
+                    Directory.Exists(Path.Combine(directory.FullName, "tests")))
+                    return path;
+
+                directory = directory.Parent;
+            }
+
+            throw new Exception("Could not find build directory: " + dir);
         }
 
         static class Program

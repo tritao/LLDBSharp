@@ -1,5 +1,5 @@
 
-local CPPSHARP_DIR = "C:\\Development\\CppSharp\\build\\vs2013\\lib\\Release_x32\\"
+local CPPSHARP_DIR = "G:\\Dev\\CppSharp\\build\\vs2015\\lib\\Release_x32\\"
 local NEWTONSOFT_DIR = "Newtonsoft.Json.6.0.8/lib/net45/"
 
 action = _ACTION or ""
@@ -22,7 +22,8 @@ solution "LLDBSharp"
 
     kind  "ConsoleApp"
     language "C#"
-
+    dotnetframework "4.6"
+    
     files { "LLDBSharpGen.cs" }
     links
     {
